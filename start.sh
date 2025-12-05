@@ -16,6 +16,66 @@ DOTFILES="$HOME/.dotfiles"
 GITHUB_USER="mhismail3"  # GitHub username, not email
 
 ###############################################################################
+# Machine-Specific Configuration (prompted on first run)
+###############################################################################
+
+CONFIG_FILE="$HOME/.dotfiles_config"
+
+if [[ -f "$CONFIG_FILE" ]]; then
+    # Load existing config
+    source "$CONFIG_FILE"
+    echo ""
+    echo "📋 Using saved configuration:"
+    echo "   Computer name: $COMPUTER_NAME"
+    echo "   macOS username: $MACOS_USER"
+    echo ""
+    read -q "REPLY?Use these settings? (Y/n) " || true
+    echo ""
+    if [[ "$REPLY" =~ ^[Nn]$ ]]; then
+        rm "$CONFIG_FILE"
+    fi
+fi
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🖥️  Machine Configuration"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+    # Get current values as defaults
+    CURRENT_COMPUTER_NAME=$(scutil --get ComputerName 2>/dev/null || echo "My-Mac")
+    CURRENT_USER=$(whoami)
+    
+    # Prompt for computer name
+    echo "Computer name (for network, sharing, Terminal prompt)"
+    echo -n "  [$CURRENT_COMPUTER_NAME]: "
+    read INPUT_COMPUTER_NAME
+    COMPUTER_NAME="${INPUT_COMPUTER_NAME:-$CURRENT_COMPUTER_NAME}"
+    
+    # Prompt for macOS username (for SSH access restriction)
+    echo ""
+    echo "macOS username (for SSH access restriction)"
+    echo -n "  [$CURRENT_USER]: "
+    read INPUT_USER
+    MACOS_USER="${INPUT_USER:-$CURRENT_USER}"
+    
+    # Save config for future runs
+    echo "# Dotfiles machine-specific configuration" > "$CONFIG_FILE"
+    echo "# Generated on $(date)" >> "$CONFIG_FILE"
+    echo "export COMPUTER_NAME=\"$COMPUTER_NAME\"" >> "$CONFIG_FILE"
+    echo "export MACOS_USER=\"$MACOS_USER\"" >> "$CONFIG_FILE"
+    
+    echo ""
+    echo "✅ Configuration saved to $CONFIG_FILE"
+    echo ""
+fi
+
+# Export for use in .macos
+export COMPUTER_NAME
+export MACOS_USER
+
+###############################################################################
 # Helper Functions
 ###############################################################################
 

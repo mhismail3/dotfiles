@@ -24,7 +24,11 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Computer Identity
 ###############################################################################
 
-COMPUTER_NAME="moose-home-server"
+# Use environment variable from start.sh, or default
+COMPUTER_NAME="${COMPUTER_NAME:-$(scutil --get ComputerName 2>/dev/null || echo 'My-Mac')}"
+MACOS_USER="${MACOS_USER:-$(whoami)}"
+
+echo "Setting computer name to: $COMPUTER_NAME"
 
 sudo scutil --set ComputerName "$COMPUTER_NAME"
 sudo scutil --set HostName "$COMPUTER_NAME"
@@ -45,7 +49,7 @@ sudo systemsetup -setremotelogin on 2>/dev/null || {
 
 # Restrict SSH to specific user
 sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
-sudo dseditgroup -o edit -a moose -t user com.apple.access_ssh 2>/dev/null || true
+sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
 
 # Enable Screen Sharing
 # Note: Modern macOS requires enabling this in System Settings
@@ -306,7 +310,7 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 chflags nohidden ~/Library 2>/dev/null
 
 # Sidebar: Note - Sidebar items require manual setup or mysides tool
-# Favorites should be: moose (home), Downloads, SynologyDrive, iCloud Drive
+# Favorites should be: $MACOS_USER (home), Downloads, SynologyDrive, iCloud Drive
 # Locations: Trash only
 
 ###############################################################################
@@ -462,7 +466,7 @@ echo "  □ System Settings → Displays → Night Shift → Schedule: Sunset to
 echo ""
 echo "FINDER SIDEBAR:"
 echo "  □ Finder → Settings → Sidebar → Configure favorites:"
-echo "    - moose (home), Downloads, SynologyDrive, iCloud Drive"
+echo "    - $MACOS_USER (home), Downloads, SynologyDrive, iCloud Drive"
 echo "    - Locations: Trash only"
 echo "  □ Finder → Go → Connect to Server → smb://MooseStation → Add to Favorites (⌘T)"
 echo ""
