@@ -1,0 +1,100 @@
+[user]
+    name = moose
+    email = mhismail3@gmail.com
+    # Uncomment and set to use GPG signing:
+    # signingkey = YOUR_GPG_KEY_ID
+
+[core]
+    editor = nvim
+    excludesfile = ~/.gitignore_global
+    autocrlf = input
+    pager = delta
+    # Improve performance for large repos
+    preloadindex = true
+    fscache = true
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    autoSetupRemote = true
+    default = current
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = default
+
+[merge]
+    conflictstyle = diff3
+
+[alias]
+    s = status -sb
+    a = add
+    aa = add --all
+    c = commit
+    cm = commit -m
+    ca = commit --amend
+    p = push
+    pl = pull
+    co = checkout
+    cb = checkout -b
+    b = branch
+    d = diff
+    ds = diff --staged
+    l = log --oneline -20
+    lg = log --graph --oneline --decorate --all
+    last = log -1 HEAD --stat
+    undo = reset HEAD~1 --mixed
+    unstage = reset HEAD --
+    stash-all = stash save --include-untracked
+    aliases = config --get-regexp alias
+
+[color]
+    ui = auto
+
+[credential]
+    helper = osxkeychain
+
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    light = false
+    line-numbers = true
+    side-by-side = false
+    syntax-theme = Dracula
+
+# Signing (uncomment to enable commit signing)
+# [commit]
+#     gpgsign = true
+# [tag]
+#     gpgsign = true
+
+[rerere]
+    # Remember how you resolved merge conflicts
+    enabled = true
+
+[column]
+    # Use columns for branch list
+    ui = auto
+
+[branch]
+    # Sort branches by most recent commit
+    sort = -committerdate
+
+[url "git@github.com:"]
+    # Use SSH for GitHub instead of HTTPS (faster, no password prompts)
+    insteadOf = https://github.com/
+

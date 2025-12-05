@@ -1,0 +1,502 @@
+#!/usr/bin/env bash
+
+# ~/.macos — macOS preferences for moose-home-server
+# Run LAST by fresh.sh (restarts system processes at the end)
+
+###############################################################################
+# Preamble
+###############################################################################
+
+# Close System Settings to prevent it from overriding settings
+osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
+osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
+
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing `sudo` timestamp until script has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+# Note: Some settings may require Full Disk Access for Terminal.app in:
+# System Settings → Privacy & Security → Full Disk Access
+
+###############################################################################
+# Computer Identity
+###############################################################################
+
+COMPUTER_NAME="moose-home-server"
+
+sudo scutil --set ComputerName "$COMPUTER_NAME"
+sudo scutil --set HostName "$COMPUTER_NAME"
+sudo scutil --set LocalHostName "$COMPUTER_NAME"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$COMPUTER_NAME"
+
+###############################################################################
+# Remote Access (SSH + Screen Sharing)
+###############################################################################
+
+# Enable Remote Login (SSH)
+# Note: On newer macOS, this may require enabling in System Settings manually
+# or granting Full Disk Access to Terminal
+sudo systemsetup -setremotelogin on 2>/dev/null || {
+    echo "⚠️  Could not enable SSH via systemsetup."
+    echo "   Please enable manually: System Settings → General → Sharing → Remote Login"
+}
+
+# Restrict SSH to specific user
+sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
+sudo dseditgroup -o edit -a moose -t user com.apple.access_ssh 2>/dev/null || true
+
+# Enable Screen Sharing
+# Note: Modern macOS requires enabling this in System Settings
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || {
+    echo "⚠️  Could not enable Screen Sharing via launchctl."
+    echo "   Please enable manually: System Settings → General → Sharing → Screen Sharing"
+}
+
+# Enable Remote Management (ARD)
+# Note: kickstart may require SIP disabled or MDM on newer macOS
+if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
+    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
+        -activate -configure -access -on \
+        -restart -agent -privs -all 2>/dev/null || {
+        echo "⚠️  Could not configure Remote Management."
+        echo "   Please enable manually: System Settings → General → Sharing → Remote Management"
+    }
+fi
+
+###############################################################################
+# Power Management (always-on server)
+###############################################################################
+
+# Prevent system sleep (0 = never)
+sudo pmset -a sleep 0
+
+# Display sleep after 10 minutes (set to 0 for never)
+sudo pmset -a displaysleep 10
+
+# Prevent disk sleep
+sudo pmset -a disksleep 0
+
+# Wake on network access (Magic Packet)
+sudo pmset -a womp 1
+
+# Auto restart after power failure
+sudo pmset -a autorestart 1
+
+# Disable hibernation (speeds up sleep/wake for desktop)
+sudo pmset -a hibernatemode 0
+
+# Restart automatically if the computer freezes
+sudo systemsetup -setrestartfreeze on 2>/dev/null || true
+
+# Note: On Apple Silicon Macs, some power settings behave differently
+# Check current settings with: pmset -g
+
+###############################################################################
+# General UI/UX
+###############################################################################
+
+# Dark mode
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+
+# Accent color: Multicolor (auto)
+defaults delete NSGlobalDomain AppleAccentColor 2>/dev/null
+defaults delete NSGlobalDomain AppleHighlightColor 2>/dev/null
+
+# UI sound effects on
+defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -bool true
+
+# Volume change feedback sound on
+defaults write NSGlobalDomain com.apple.sound.beep.feedback -bool true
+
+# Natural scrolling (trackpad-style)
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
+
+# Scrollbar click: jump to clicked spot
+defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
+
+# Prefer tabs: always
+defaults write NSGlobalDomain AppleWindowTabbingMode -string "always"
+
+# Don't close windows when quitting apps (restore on reopen)
+defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool true
+
+# Expand save/print panels by default
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
+
+# Save to disk (not iCloud) by default
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+# Disable auto-correct, smart quotes/dashes (for coding)
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+
+# Disable "Are you sure you want to open?" dialog
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+###############################################################################
+# Dock
+###############################################################################
+
+# Position: bottom
+defaults write com.apple.dock orientation -string "bottom"
+
+# Size: 50% (~48 pixels)
+defaults write com.apple.dock tilesize -int 48
+
+# Magnification: on, ~70% (~80 pixels)
+defaults write com.apple.dock magnification -bool true
+defaults write com.apple.dock largesize -int 80
+
+# Auto-hide: on
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.3
+
+# Minimize effect: Genie
+defaults write com.apple.dock mineffect -string "genie"
+
+# Minimize to application icon: off
+defaults write com.apple.dock minimize-to-application -bool false
+
+# Animate opening applications: on
+defaults write com.apple.dock launchanim -bool true
+
+# Show indicators for open apps: on
+defaults write com.apple.dock show-process-indicators -bool true
+
+# Show recent apps: off
+defaults write com.apple.dock show-recents -bool false
+
+# Window title bar double-click: Zoom
+defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
+
+###############################################################################
+# Mission Control & Spaces
+###############################################################################
+
+# Auto-rearrange Spaces by most recent use: on
+defaults write com.apple.dock mru-spaces -bool true
+
+# When switching apps, switch to Space with open windows: on
+defaults write NSGlobalDomain AppleSpacesSwitchOnActivate -bool true
+
+# Group windows by application: off
+defaults write com.apple.dock expose-group-by-app -bool false
+
+# Displays have separate Spaces: on
+defaults write com.apple.spaces spans-displays -bool false
+
+# Speed up Mission Control animations
+defaults write com.apple.dock expose-animation-duration -float 0.1
+
+###############################################################################
+# Window Tiling (Sequoia+)
+###############################################################################
+
+# Drag to edges to tile: on
+defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
+
+# Drag to menu bar to fill screen: on
+defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
+
+# Hold Option while dragging to tile: on
+defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
+
+# Tiled windows have margins: off
+defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
+
+###############################################################################
+# Desktop & Stage Manager
+###############################################################################
+
+# Stage Manager: off
+defaults write com.apple.WindowManager GloballyEnabled -bool false
+
+# Click wallpaper to show desktop: always
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
+
+###############################################################################
+# Hot Corners
+###############################################################################
+# Values: 0=none, 2=Mission Control, 3=App Windows, 4=Desktop,
+#         5=Screen Saver, 6=Disable SS, 10=Sleep Display, 11=Launchpad,
+#         12=Notification Center, 13=Lock Screen, 14=Quick Note
+#
+# Modifier values: 0=none, 131072=Shift, 262144=Control, 524288=Option, 1048576=Command
+#
+# Note: These settings may not persist on newer macOS versions.
+# Apple increasingly expects hot corners to be set via System Settings or MDM.
+
+# Top-left: Launchpad (11)
+defaults write com.apple.dock wvous-tl-corner -int 11
+defaults write com.apple.dock wvous-tl-modifier -int 0
+
+# Top-right: Mission Control (2)
+defaults write com.apple.dock wvous-tr-corner -int 2
+defaults write com.apple.dock wvous-tr-modifier -int 0
+
+# Bottom-left: Start Screen Saver (5)
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# Bottom-right: Desktop (4)
+defaults write com.apple.dock wvous-br-corner -int 4
+defaults write com.apple.dock wvous-br-modifier -int 0
+
+###############################################################################
+# Finder
+###############################################################################
+
+# Show all file extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Show hidden files
+defaults write com.apple.finder AppleShowAllFiles -bool true
+
+# Show path bar and status bar
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+
+# Default view: Columns (Nlsv=List, icnv=Icon, clmv=Column, glyv=Gallery)
+defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
+
+# New Finder window: Downloads
+defaults write com.apple.finder NewWindowTarget -string "PfLo"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Downloads/"
+
+# Search scope: entire Mac
+defaults write com.apple.finder FXDefaultSearchScope -string "SCev"
+
+# Keep folders on top: in windows yes, on Desktop no
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
+defaults write com.apple.finder _FXSortFoldersFirstOnDesktop -bool false
+
+# Warnings
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true
+defaults write com.apple.finder WarnOnEmptyTrash -bool true
+
+# Don't auto-remove Trash items after 30 days
+defaults write com.apple.finder FXRemoveOldTrashItems -bool false
+
+# Open folders in tabs (not new windows)
+defaults write com.apple.finder FinderSpawnTab -bool true
+
+# Desktop: hide all icons
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
+
+# Delete all tags
+defaults write com.apple.finder FavoriteTagNames -array
+
+# Avoid .DS_Store on network/USB
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# Show ~/Library
+chflags nohidden ~/Library 2>/dev/null
+
+# Sidebar: Note - Sidebar items require manual setup or mysides tool
+# Favorites should be: moose (home), Downloads, SynologyDrive, iCloud Drive
+# Locations: Trash only
+
+###############################################################################
+# Keyboard & Input
+###############################################################################
+
+# Fast key repeat
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+# Disable press-and-hold for accents (enable key repeat)
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+# Full keyboard access for all controls (Tab through all UI)
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+###############################################################################
+# Screenshots
+###############################################################################
+
+# TODO: Change screenshot location (currently ~/Desktop)
+defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+
+# Format: PNG
+defaults write com.apple.screencapture type -string "png"
+
+# Disable shadow
+defaults write com.apple.screencapture disable-shadow -bool true
+
+###############################################################################
+# Lock Screen & Security
+###############################################################################
+
+# Require password immediately after sleep/screensaver
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+# Login window: show name and password fields (not user list)
+sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME -bool true
+
+# Show Sleep, Restart, Shut Down buttons
+sudo defaults write /Library/Preferences/com.apple.loginwindow PowerOffDisabled -bool false
+
+# Reveal IP/hostname when clicking clock on login window
+sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
+
+###############################################################################
+# Menu Bar Clock
+###############################################################################
+
+# Show date and time
+defaults write com.apple.menuextra.clock ShowDate -int 1
+defaults write com.apple.menuextra.clock ShowDayOfWeek -bool true
+defaults write com.apple.menuextra.clock ShowSeconds -bool false
+
+###############################################################################
+# Activity Monitor
+###############################################################################
+
+defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+defaults write com.apple.ActivityMonitor IconType -int 5
+defaults write com.apple.ActivityMonitor ShowCategory -int 0
+defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
+defaults write com.apple.ActivityMonitor SortDirection -int 0
+
+###############################################################################
+# TextEdit
+###############################################################################
+
+defaults write com.apple.TextEdit RichText -int 0
+defaults write com.apple.TextEdit PlainTextEncoding -int 4
+defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
+
+###############################################################################
+# Software Updates
+###############################################################################
+
+defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
+defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
+defaults write com.apple.commerce AutoUpdate -bool true
+
+###############################################################################
+# Time Machine
+###############################################################################
+
+defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+###############################################################################
+# Custom Keyboard Shortcut: Option+L for Lock Screen
+# Note: Adds to App Shortcuts for All Applications
+###############################################################################
+
+defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
+
+###############################################################################
+# Caps Lock → Command (requires LaunchDaemon for persistence)
+###############################################################################
+
+# Create hidutil LaunchDaemon for Caps Lock → Command remap
+# Caps Lock = 0x700000039, Left Command = 0x7000000E3
+PLIST_PATH="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
+
+sudo tee "$PLIST_PATH" > /dev/null << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.KeyRemapping</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+EOF
+
+sudo chown root:wheel "$PLIST_PATH"
+sudo chmod 644 "$PLIST_PATH"
+sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
+
+# Apply immediately for current session
+sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
+
+###############################################################################
+# Restart affected apps
+###############################################################################
+
+for app in "Dock" "Finder" "SystemUIServer" "ControlCenter"; do
+    killall "${app}" &> /dev/null
+done
+
+echo ""
+echo "✅ .macos complete!"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "⚠️  MANUAL STEPS REQUIRED"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "APPLE ID (if not done during macOS setup):"
+echo "  □ System Settings → Sign in with your Apple ID"
+echo "  □ Open App Store → Verify signed in (needed for 'mas' installs)"
+echo ""
+echo "DISPLAY:"
+echo "  □ System Settings → Displays → Select 'More Space' resolution"
+echo "  □ System Settings → Displays → Night Shift → Schedule: Sunset to Sunrise"
+echo ""
+echo "FINDER SIDEBAR:"
+echo "  □ Finder → Settings → Sidebar → Configure favorites:"
+echo "    - moose (home), Downloads, SynologyDrive, iCloud Drive"
+echo "    - Locations: Trash only"
+echo "  □ Finder → Go → Connect to Server → smb://MooseStation → Add to Favorites (⌘T)"
+echo ""
+echo "KEYBOARD (if not working):"
+echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys"
+echo "    - Set Caps Lock → Command"
+echo "  □ System Settings → Keyboard → Keyboard Shortcuts → App Shortcuts"
+echo "    - Add: All Applications → 'Lock Screen' → ⌥L (Option+L)"
+echo ""
+echo "MESSAGES:"
+echo "  □ Messages → Settings → iMessage → Enable Messages in iCloud"
+echo "  □ iPhone → Settings → Messages → Text Message Forwarding → Enable this Mac"
+echo ""
+echo "APP SIGN-INS (authentication required, can't automate):"
+echo "  □ 1Password → Sign in with account"
+echo "  □ Arc → Sign in with account"
+echo "  □ Synology Drive → Connect to smb://MooseStation, sign in"
+echo "  □ Google Drive → Sign in with Google account"
+echo "  □ Private Internet Access → Sign in with account"
+echo "  □ VS Code/Cursor → Turn on Settings Sync (signs in with GitHub/Microsoft)"
+echo ""
+echo "DEVICES:"
+echo "  □ System Settings → Printers & Scanners → Add printers"
+echo "  □ System Settings → Bluetooth → Pair devices (keyboard, mouse, etc.)"
+echo ""
+echo "SCREENSHOTS:"
+echo "  □ TODO: Change screenshot location if needed (currently ~/Desktop)"
+echo ""
+echo "MACKUP (restore app preferences after signing in):"
+echo "  □ First time setup: mackup backup"
+echo "  □ Restore on new Mac: mackup restore"
+echo "  □ Apps backed up: Raycast, Warp, VLC, qBittorrent, Synology Drive, Google Drive"
+echo ""
+echo "FINAL:"
+echo "  □ Logout/restart to apply all changes"
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
