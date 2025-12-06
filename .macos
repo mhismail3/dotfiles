@@ -197,7 +197,6 @@ if command -v dockutil &>/dev/null; then
     
     # Apps in order (left to right)
     DOCK_APPS=(
-        "/System/Library/CoreServices/Finder.app"
         "/System/Applications/Calendar.app"
         "/Applications/Things3.app"
         "/System/Applications/Messages.app"
