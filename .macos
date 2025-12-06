@@ -12,7 +12,8 @@ osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
 # Ask for the administrator password upfront
-sudo -v
+# Use /dev/tty to ensure password prompt works even when stdin is piped
+sudo -v < /dev/tty
 
 # Keep-alive: update existing `sudo` timestamp until script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
