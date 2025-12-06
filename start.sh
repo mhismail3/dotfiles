@@ -346,6 +346,26 @@ if command -v git-lfs &>/dev/null; then
 fi
 
 ###############################################################################
+# iCloud Photo Library Sync
+###############################################################################
+
+info "iCloud Photo Library..."
+
+echo ""
+echo "If you've signed into your Apple ID and enabled iCloud Photos,"
+echo "opening Photos now will start syncing your library in the background."
+echo ""
+read -q "REPLY?Open Photos app to start iCloud sync? (y/N) "
+echo ""
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Open Photos in background (won't steal focus)
+    open -gja "Photos"
+    success "Photos opened in background — iCloud sync will begin"
+else
+    echo "  Skipped. Open Photos manually later to sync your library."
+fi
+
+###############################################################################
 # Done
 ###############################################################################
 
@@ -355,10 +375,11 @@ echo "🎉 Bootstrap complete!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "Next steps:"
-echo "  1. Review any MANUAL STEPS printed above"
-echo "  2. Generate SSH key: ~/.dotfiles/ssh.sh"
-echo "  3. Open a new terminal (or run: exec zsh)"
-echo "  4. Logout/restart to apply all macOS settings"
+echo "  1. Sign into Apple ID (System Settings → Apple ID) if not done"
+echo "  2. Open Photos app to start iCloud Photo Library sync"
+echo "  3. Generate SSH key: ~/.dotfiles/ssh.sh"
+echo "  4. Open a new terminal (or run: exec zsh)"
+echo "  5. Logout/restart to apply all macOS settings"
 echo ""
 echo "To re-run safely (idempotent):"
 echo "  ~/.dotfiles/start.sh"

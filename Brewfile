@@ -163,6 +163,7 @@ cask "vlc"              # Media player
 cask "keka"             # Archive utility (better than The Unarchiver)
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
 cask "hand-mirror"      # Quick camera check from menu bar
+cask "logi-options+"    # Logitech mouse/keyboard customization
 
 ###############################################################################
 # Applications - Privacy & Security
