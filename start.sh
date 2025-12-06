@@ -277,16 +277,87 @@ mkdir -p "$HOME/.ssh"
 success "Directories created"
 
 ###############################################################################
-# SSH Setup Reminder
+# SSH Key Setup
 ###############################################################################
 
 info "SSH Keys..."
 
-if [[ ! -f "$HOME/.ssh/id_ed25519" ]]; then
-    echo "  No SSH key found. Run ssh.sh to generate one:"
-    echo "  ~/.dotfiles/ssh.sh"
+SSH_KEY="$HOME/.ssh/id_ed25519"
+
+if [[ -f "$SSH_KEY" ]]; then
+    success "SSH key already exists"
 else
-    success "SSH key exists"
+    echo ""
+    echo "No SSH key found. You'll need one for GitHub, servers, etc."
+    echo ""
+    echo -n "Generate SSH key now? (Y/n) "
+    read REPLY </dev/tty || REPLY="y"
+    
+    if [[ ! "$REPLY" =~ ^[Nn]$ ]]; then
+        EMAIL="${GIT_EMAIL:-mhismail3@gmail.com}"
+        
+        echo ""
+        echo "Generating SSH key for $EMAIL..."
+        ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY" </dev/tty
+        
+        # Start ssh-agent and add key
+        eval "$(ssh-agent -s)" > /dev/null
+        ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY"
+        
+        # Create SSH config if needed
+        SSH_CONFIG="$HOME/.ssh/config"
+        if [[ ! -f "$SSH_CONFIG" ]]; then
+            cat > "$SSH_CONFIG" << 'EOF'
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+EOF
+            chmod 600 "$SSH_CONFIG"
+        fi
+        
+        chmod 600 "$SSH_KEY"
+        chmod 644 "$SSH_KEY.pub"
+        
+        # Copy to clipboard
+        pbcopy < "$SSH_KEY.pub"
+        
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "📋 SSH public key copied to clipboard!"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo ""
+        echo "Add it to GitHub now: https://github.com/settings/keys"
+        echo "  1. Click 'New SSH key'"
+        echo "  2. Paste (Cmd+V)"
+        echo "  3. Click 'Add SSH key'"
+        echo ""
+        echo -n "Press Enter after adding the key to GitHub..."
+        read </dev/tty
+        
+        # Test connection and enable SSH for git
+        echo ""
+        echo "Testing GitHub SSH connection..."
+        if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+            git config --global url."git@github.com:".insteadOf "https://github.com/"
+            success "SSH working! Git configured to use SSH for GitHub"
+        else
+            echo "⚠️  Could not verify SSH connection (this is sometimes normal)"
+            echo -n "Enable SSH for git anyway? (y/N) "
+            read REPLY </dev/tty || REPLY="n"
+            if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+                git config --global url."git@github.com:".insteadOf "https://github.com/"
+                success "Git configured to use SSH for GitHub"
+            fi
+        fi
+    else
+        echo "  Skipped. Run ~/.dotfiles/ssh.sh later to set up SSH."
+    fi
 fi
 
 ###############################################################################
