@@ -16,6 +16,19 @@ DOTFILES="$HOME/.dotfiles"
 GITHUB_USER="mhismail3"  # GitHub username, not email
 
 ###############################################################################
+# Fix: Disable SSH URL rewriting until SSH keys are set up
+# This prevents "Permission denied (publickey)" errors with brew/git
+###############################################################################
+
+if git config --global --get url."git@github.com:".insteadOf &>/dev/null; then
+    # Check if SSH to GitHub actually works
+    if ! ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+        echo "⚠️  Disabling SSH URL rewriting (SSH keys not set up yet)"
+        git config --global --unset url."git@github.com:".insteadOf 2>/dev/null || true
+    fi
+fi
+
+###############################################################################
 # Machine-Specific Configuration (prompted on first run)
 ###############################################################################
 
