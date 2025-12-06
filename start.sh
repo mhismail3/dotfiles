@@ -4,7 +4,8 @@
 # Run: curl -sL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | zsh
 # Or:  ~/.dotfiles/start.sh
 
-set -e
+# Note: We don't use `set -e` because we want the script to continue
+# even if some steps fail (e.g., a cask install fails but others succeed)
 
 # Check if running on macOS
 if [[ "$(uname)" != "Darwin" ]]; then

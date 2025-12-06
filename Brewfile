@@ -169,7 +169,7 @@ cask "logi-options+"    # Logitech mouse/keyboard customization
 # Applications - Privacy & Security
 ###############################################################################
 
-cask "private-internet-access"  # VPN
+# cask "private-internet-access"  # VPN - install manually, has installer issues with Homebrew
 
 ###############################################################################
 # Mac App Store Apps
