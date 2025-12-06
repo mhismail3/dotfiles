@@ -97,6 +97,7 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 ### Added
 - Hide desktop widgets setting in `.macos` (StandardHideWidgets)
 - Hide Stage Manager widgets setting in `.macos` (StageManagerHideWidgets)
+- Liquid Glass "Tinted" style for macOS Tahoe (makes dock follow dark mode)
 
 ---
 
