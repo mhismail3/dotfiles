@@ -84,13 +84,6 @@ cat "$SSH_KEY.pub"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "Next steps:"
-echo "  1. The public key has been copied to your clipboard"
-echo "  2. Add to GitHub: https://github.com/settings/keys"
-echo "  3. Add to other services as needed"
-echo ""
-echo "Test GitHub connection with: ssh -T git@github.com"
-echo ""
 
 # Copy to clipboard
 if command -v pbcopy &>/dev/null; then
@@ -101,4 +94,36 @@ fi
 # Set correct permissions on key files
 chmod 600 "$SSH_KEY"
 chmod 644 "$SSH_KEY.pub"
+
+echo ""
+echo "Next steps:"
+echo "  1. Add the key to GitHub: https://github.com/settings/keys"
+echo "     (Key is already in your clipboard - just paste it)"
+echo "  2. Come back here and press Enter to test the connection"
+echo ""
+echo -n "Press Enter after adding the key to GitHub..."
+read </dev/tty
+
+echo ""
+echo "Testing GitHub SSH connection..."
+if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+    echo "✅ SSH connection to GitHub successful!"
+    
+    # Enable SSH URL rewriting for GitHub
+    git config --global url."git@github.com:".insteadOf "https://github.com/"
+    echo "✅ Git configured to use SSH for GitHub (faster, no password prompts)"
+else
+    echo "⚠️  SSH connection test returned unexpected result."
+    echo "   This is often normal - GitHub doesn't allow shell access."
+    echo ""
+    echo -n "Did you add the key to GitHub? Enable SSH for git anyway? (y/N) "
+    read REPLY </dev/tty
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        git config --global url."git@github.com:".insteadOf "https://github.com/"
+        echo "✅ Git configured to use SSH for GitHub"
+    fi
+fi
+
+echo ""
+echo "Done! You can now use git with SSH."
 
