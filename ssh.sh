@@ -22,9 +22,10 @@ echo ""
 if [[ -f "$SSH_KEY" ]]; then
     echo "SSH key already exists at $SSH_KEY"
     echo ""
-    read -p "Generate a new key? This will overwrite the existing one. (y/N) " -n 1 -r
+    echo -n "Generate a new key? This will overwrite the existing one. (y/N) "
+    read REPLY </dev/tty || REPLY="n"
     echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
         echo "Keeping existing key."
         exit 0
     fi
