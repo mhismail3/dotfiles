@@ -29,7 +29,8 @@ if [[ -f "$CONFIG_FILE" ]]; then
     echo "   Computer name: $COMPUTER_NAME"
     echo "   macOS username: $MACOS_USER"
     echo ""
-    read -q "REPLY?Use these settings? (Y/n) " || true
+    echo -n "Use these settings? (Y/n) "
+    read REPLY </dev/tty || REPLY="y"
     echo ""
     if [[ "$REPLY" =~ ^[Nn]$ ]]; then
         rm "$CONFIG_FILE"
@@ -47,17 +48,17 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
     CURRENT_COMPUTER_NAME=$(scutil --get ComputerName 2>/dev/null || echo "My-Mac")
     CURRENT_USER=$(whoami)
     
-    # Prompt for computer name
+    # Prompt for computer name (read from /dev/tty to work with curl pipe)
     echo "Computer name (for network, sharing, Terminal prompt)"
     echo -n "  [$CURRENT_COMPUTER_NAME]: "
-    read INPUT_COMPUTER_NAME
+    read INPUT_COMPUTER_NAME </dev/tty || INPUT_COMPUTER_NAME=""
     COMPUTER_NAME="${INPUT_COMPUTER_NAME:-$CURRENT_COMPUTER_NAME}"
     
     # Prompt for macOS username (for SSH access restriction)
     echo ""
     echo "macOS username (for SSH access restriction)"
     echo -n "  [$CURRENT_USER]: "
-    read INPUT_USER
+    read INPUT_USER </dev/tty || INPUT_USER=""
     MACOS_USER="${INPUT_USER:-$CURRENT_USER}"
     
     # Save config for future runs
@@ -324,7 +325,8 @@ if [[ -f "$DOTFILES/.macos" ]]; then
     echo "  - Set system preferences (requires sudo password)"
     echo "  - Restart Dock, Finder, and other system processes"
     echo ""
-    read -q "REPLY?Apply macOS preferences now? (y/N) "
+    echo -n "Apply macOS preferences now? (y/N) "
+    read REPLY </dev/tty || REPLY="n"
     echo ""
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
         source "$DOTFILES/.macos"
@@ -355,7 +357,8 @@ echo ""
 echo "If you've signed into your Apple ID and enabled iCloud Photos,"
 echo "opening Photos now will start syncing your library in the background."
 echo ""
-read -q "REPLY?Open Photos app to start iCloud sync? (y/N) "
+echo -n "Open Photos app to start iCloud sync? (y/N) "
+read REPLY </dev/tty || REPLY="n"
 echo ""
 if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Open Photos in background (won't steal focus)
