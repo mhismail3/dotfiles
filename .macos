@@ -29,12 +29,17 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 COMPUTER_NAME="${COMPUTER_NAME:-$(scutil --get ComputerName 2>/dev/null || echo 'My-Mac')}"
 MACOS_USER="${MACOS_USER:-$(whoami)}"
 
+# LocalHostName must be a valid DNS name (no spaces, apostrophes, or special chars)
+# Convert "Moose's Mac mini" -> "Mooses-Mac-mini"
+LOCAL_HOST_NAME=$(echo "$COMPUTER_NAME" | sed "s/'//g" | sed 's/ /-/g' | sed 's/[^a-zA-Z0-9-]//g')
+
 echo "Setting computer name to: $COMPUTER_NAME"
+echo "Setting local hostname to: $LOCAL_HOST_NAME"
 
 sudo scutil --set ComputerName "$COMPUTER_NAME"
-sudo scutil --set HostName "$COMPUTER_NAME"
-sudo scutil --set LocalHostName "$COMPUTER_NAME"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$COMPUTER_NAME"
+sudo scutil --set HostName "$LOCAL_HOST_NAME"
+sudo scutil --set LocalHostName "$LOCAL_HOST_NAME"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$LOCAL_HOST_NAME"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing)

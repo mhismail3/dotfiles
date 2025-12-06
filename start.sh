@@ -188,9 +188,8 @@ fi
 info "Installing packages from Brewfile..."
 
 if [[ -f "$DOTFILES/Brewfile" ]]; then
-    # --no-lock: don't create Brewfile.lock.json
     # --no-upgrade: don't upgrade already installed packages (faster, idempotent)
-    brew bundle --file="$DOTFILES/Brewfile" --no-lock --no-upgrade || {
+    brew bundle --file="$DOTFILES/Brewfile" --no-upgrade || {
         echo "  Some packages may have failed to install. Check output above."
     }
     success "Brewfile packages installed"
