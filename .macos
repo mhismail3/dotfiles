@@ -414,14 +414,17 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 if command -v nightlight &>/dev/null; then
     echo "Configuring Night Shift..."
     
-    # Schedule: Sunset to Sunrise
-    nightlight schedule start 2>/dev/null || {
-        echo "⚠️  Could not set Night Shift schedule."
-    }
+    # Turn on Night Shift first (required to set temperature)
+    nightlight on 2>/dev/null
     
-    # Temperature: 70% (0-100 scale)
+    # Temperature: 70% (0-100 scale, must be set while Night Shift is on)
     nightlight temp 70 2>/dev/null || {
         echo "⚠️  Could not set Night Shift temperature."
+    }
+    
+    # Schedule: Sunset to Sunrise (will manage on/off automatically)
+    nightlight schedule start 2>/dev/null || {
+        echo "⚠️  Could not set Night Shift schedule."
     }
     
     echo "✓ Night Shift configured: Sunset to Sunrise, 70% warmth"
