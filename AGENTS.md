@@ -1,0 +1,42 @@
+# AGENTS.md
+
+AI agent log and operations guide for this dotfiles repository. Use it as the single source of truth for what changed, why, and how to work safely.
+
+## How to use this file
+- Read the topmost entries before editing; they describe current expectations and recent decisions.
+- When you make a change that affects behavior, add a dated entry (YYYY-MM-DD) at the top with what changed, why, and the primary files touched.
+- Keep entries concise; link to README for user-facing details when applicable.
+- Maintain idempotency and macOS compatibility; prefer environment-derived paths over hardcoded ones.
+- Avoid destructive commands; ask for confirmation when a step risks losing user data.
+
+## Current expectations for this repo
+- Scripts must stay idempotent and macOS-only; detect Homebrew prefix and use $HOME/$DOTFILES instead of absolute paths.
+- Bootstrapping flows live in `start.sh`; system defaults and Dock/layout automation live in `.macos` (with Finder sidebar helpers in `finder.sh`/`bin/sidebarctl.swift`); package sources live in `Brewfile`.
+- Shell startup performance relies on lazy-loading version managers (pyenv, nvm, rbenv) and streamlined fzf/history settings—preserve that behavior when editing shell files.
+- Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
+
+## Timeline (newest first)
+### 2025-12-06 — Agent log rewrite and rule cleanup
+- Renamed the changelog to `AGENTS.md` and rewrote it as an agent-first, reverse-chronological log that captures rationale.
+- Generalized `.cursorrules` to remove project-specific references while keeping doc/update/commit expectations.
+- Goal: give agents a concise single source for history and intent, reducing confusion when starting work.
+
+### 2024-12-06 — Automated Dock layout
+- Added `dockutil` and `stremio` to `Brewfile`; `.macos` now sets the Dock order via an idempotent loop to avoid duplicates, restarting Dock only once.
+- Goal: provide consistent Dock configuration across reruns without manual cleanup.
+
+### 2024-12-?? — Night Shift + Finder sidebar automation
+- Added `nightlight` CLI and automated Night Shift (Sunset→Sunrise, 70% warmth).
+- Bundled `sidebarctl.swift` and `finder.sh` to configure Finder sidebar favorites (Home, Applications, Downloads, iCloud Drive) with optional `.DS_Store` reset for idempotent reruns.
+- Goal: remove recurring manual steps after bootstrap while keeping reruns safe.
+
+### 2024-12-?? — Comprehensive audit and performance improvements
+- Cleaned Brewfile taps; replaced `unrar` with `unar`; added `git-delta`; commented out `yarn` in favor of corepack.
+- Optimized shell startup (lazy-loading pyenv/nvm/rbenv, `fzf --zsh`, larger history with safety flags).
+- Hardened `start.sh` for idempotency (macOS check, smarter symlinks with backups, improved Homebrew detection, optional `.macos` prompt) and tightened `ssh.sh` permissions/config.
+- Updated Mackup paths, aliases (`fnd`, `rgrep`, `reload`), git settings (delta theme, rerere, branch sort, SSH URL rewrite, GPG placeholders), and macOS defaults messaging.
+- Goal: reduce latency, align tooling, and make repeated runs safe.
+
+### 2024-12-?? — Initial creation
+- Established the dotfiles baseline: bootstrap entrypoint, macOS defaults, Brewfile inventory, Zsh/Oh My Zsh setup with lazy-loaded managers, SSH helper, Mackup configs, and key architecture choices (qBittorrent, Keka, dockutil, lazy-loading strategy).
+- Goal: enable single-command setup for the Mac Mini home server with repeatable results.

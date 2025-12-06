@@ -43,6 +43,7 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 7. Sets up SSH key (optional, asks first)
 8. Applies macOS preferences (optional, asks first)
    - Includes automated Dock layout configuration
+   - Configures Finder defaults and sidebar favorites (Home, Applications, Downloads, iCloud Drive when present) using bundled `sidebarctl`
 
 ## Manual Steps After Setup
 
@@ -69,7 +70,7 @@ The script will print these, but here's a summary:
 ├── .mackup.cfg       # Mackup configuration
 ├── .mackup/          # Custom Mackup app configs
 ├── Brewfile          # Homebrew packages
-├── CHANGELOG.md      # Project history (for AI agents)
+├── AGENTS.md         # Agent-focused change log and rationale
 └── .cursorrules      # AI agent instructions
 ```
 

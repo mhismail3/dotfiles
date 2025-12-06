@@ -3,6 +3,17 @@
 # ~/.macos — macOS preferences for moose-home-server
 # Run LAST by fresh.sh (restarts system processes at the end)
 
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Finder/Sidebar configuration toggles
+: "${FINDER_CONFIGURE_SIDEBAR:=1}"
+: "${RESET_DS_STORE:=1}"
+: "${FINDER_FORCE_RELOAD:=1}"
+
+# sidebarctl install knobs
+: "${SIDEBARCTL_INSTALL_DIR:=}"
+: "${SIDEBARCTL_SOURCE:="$DOTFILES_DIR/bin/sidebarctl.swift"}"
+
 ###############################################################################
 # Preamble
 ###############################################################################
@@ -309,6 +320,100 @@ defaults write com.apple.dock wvous-br-modifier -int 0
 # Finder
 ###############################################################################
 
+log() { printf '%s\n' "$*"; }
+err() { printf '%s\n' "$*" >&2; }
+
+detect_sidebarctl_install_dir() {
+    if [[ -n "$SIDEBARCTL_INSTALL_DIR" ]]; then
+        echo "$SIDEBARCTL_INSTALL_DIR"
+        return 0
+    fi
+
+    if [[ -d "/opt/homebrew/bin" && -w "/opt/homebrew/bin" ]]; then
+        echo "/opt/homebrew/bin"
+        return 0
+    fi
+
+    if [[ -d "/usr/local/bin" && -w "/usr/local/bin" ]]; then
+        echo "/usr/local/bin"
+        return 0
+    fi
+
+    echo "$HOME/.local/bin"
+}
+
+install_sidebarctl() {
+    command -v swift >/dev/null 2>&1 || {
+        err "⚠️  swift not found. Install Xcode Command Line Tools before sidebar setup."
+        return 1
+    }
+
+    if [[ ! -f "$SIDEBARCTL_SOURCE" ]]; then
+        err "⚠️  sidebarctl source missing: $SIDEBARCTL_SOURCE"
+        return 1
+    fi
+
+    local install_dir
+    install_dir="$(detect_sidebarctl_install_dir)"
+    mkdir -p "$install_dir"
+
+    local sidebarctl_path="$install_dir/sidebarctl"
+    if [[ -x "$sidebarctl_path" ]]; then
+        echo "$sidebarctl_path"
+        return 0
+    fi
+
+    cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
+    chmod +x "$sidebarctl_path"
+
+    if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
+        export PATH="$HOME/.local/bin:$PATH"
+    fi
+
+    echo "$sidebarctl_path"
+}
+
+configure_finder_sidebar() {
+    [[ "$FINDER_CONFIGURE_SIDEBAR" == "1" ]] || return 0
+
+    local sidebarctl
+    sidebarctl="$(install_sidebarctl)" || {
+        err "⚠️  Skipping Finder sidebar configuration (sidebarctl unavailable)."
+        return 0
+    }
+
+    local icloud_path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+    local favorites=(
+        "$HOME"
+        "/Applications"
+        "$HOME/Downloads"
+    )
+
+    [[ -d "$icloud_path" ]] && favorites+=("$icloud_path")
+
+    "$sidebarctl" --set "${favorites[@]}" || err "⚠️  sidebarctl failed; Finder sidebar may require Full Disk Access."
+}
+
+reset_home_ds_store() {
+    [[ "$RESET_DS_STORE" == "1" ]] || return 0
+    find "$HOME" -name ".DS_Store" -delete 2>/dev/null || true
+}
+
+reload_finder_ui() {
+    local sidebarctl_path
+    sidebarctl_path="$(command -v sidebarctl || true)"
+
+    if [[ -n "$sidebarctl_path" ]]; then
+        if [[ "$FINDER_FORCE_RELOAD" == "1" ]]; then
+            "$sidebarctl_path" --reload --force
+        else
+            "$sidebarctl_path" --reload
+        fi
+    else
+        killall Finder || true
+    fi
+}
+
 # Show all file extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
@@ -359,9 +464,9 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # Show ~/Library
 chflags nohidden ~/Library 2>/dev/null
 
-# Sidebar: Note - Sidebar items require manual setup or mysides tool
-# Favorites should be: $MACOS_USER (home), Downloads, SynologyDrive, iCloud Drive
-# Locations: Trash only
+configure_finder_sidebar
+reset_home_ds_store
+reload_finder_ui
 
 ###############################################################################
 # Keyboard & Input
