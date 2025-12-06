@@ -189,6 +189,45 @@ defaults write com.apple.dock show-recents -bool false
 defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
 
 ###############################################################################
+# Dock Layout (requires dockutil from Brewfile)
+###############################################################################
+
+if command -v dockutil &>/dev/null; then
+    echo "Configuring Dock layout..."
+    
+    # Apps in order (left to right)
+    DOCK_APPS=(
+        "/System/Library/CoreServices/Finder.app"
+        "/System/Applications/Calendar.app"
+        "/Applications/Things3.app"
+        "/System/Applications/Messages.app"
+        "/Applications/Arc.app"
+        "/Applications/Stremio.app"
+        "/System/Applications/Photos.app"
+        "/Applications/Cursor.app"
+        "/System/Applications/Utilities/Terminal.app"
+        "/Applications/Warp.app"
+        "/System/Applications/Utilities/Screen Sharing.app"
+        "/System/Applications/System Settings.app"
+    )
+    
+    # Clear existing Dock items
+    dockutil --remove all --no-restart 2>/dev/null || true
+    sleep 0.5
+    
+    # Add apps in order
+    for app in "${DOCK_APPS[@]}"; do
+        if [[ -d "$app" ]]; then
+            app_name=$(basename "$app" .app)
+            dockutil --remove "$app_name" --no-restart 2>/dev/null || true
+            dockutil --add "$app" --no-restart
+        fi
+    done
+else
+    echo "⚠️  dockutil not found. Install via Brewfile to configure Dock layout."
+fi
+
+###############################################################################
 # Mission Control & Spaces
 ###############################################################################
 

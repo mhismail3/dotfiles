@@ -2,13 +2,6 @@
 # Install: brew bundle --file=~/.dotfiles/Brewfile
 
 ###############################################################################
-# Taps
-###############################################################################
-
-# Note: homebrew/bundle is built-in to Homebrew now (no tap needed)
-# Note: homebrew/cask-fonts was deprecated in 2024 - fonts are now in main cask
-
-###############################################################################
 # CLI Tools - Core Utilities
 ###############################################################################
 
@@ -57,6 +50,12 @@ brew "tmux"             # Terminal multiplexer
 brew "neovim"           # Modern vim
 brew "shellcheck"       # Shell script linter
 brew "shfmt"            # Shell script formatter
+
+###############################################################################
+# CLI Tools - Dock Management
+###############################################################################
+
+brew "dockutil"         # CLI to manage Dock items
 
 ###############################################################################
 # CLI Tools - Networking & System
@@ -159,10 +158,10 @@ cask "google-drive"     # Google Drive sync
 # Applications - Media & Utilities
 ###############################################################################
 
+cask "stremio"          # Open-source media center
 cask "vlc"              # Media player
 cask "keka"             # Archive utility (better than The Unarchiver)
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
-# hand-mirror is Mac App Store only (see mas section below)
 cask "logi-options+"    # Logitech mouse/keyboard customization
 
 ###############################################################################
