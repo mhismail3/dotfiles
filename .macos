@@ -408,6 +408,28 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow PowerOffDisabled 
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 ###############################################################################
+# Night Shift (requires nightlight CLI from Brewfile)
+###############################################################################
+
+if command -v nightlight &>/dev/null; then
+    echo "Configuring Night Shift..."
+    
+    # Schedule: Sunset to Sunrise
+    nightlight schedule start 2>/dev/null || {
+        echo "⚠️  Could not set Night Shift schedule."
+    }
+    
+    # Temperature: 70% (0-100 scale)
+    nightlight temp 70 2>/dev/null || {
+        echo "⚠️  Could not set Night Shift temperature."
+    }
+    
+    echo "✓ Night Shift configured: Sunset to Sunrise, 70% warmth"
+else
+    echo "⚠️  nightlight not found. Install via Brewfile to configure Night Shift."
+fi
+
+###############################################################################
 # Menu Bar Clock
 ###############################################################################
 
@@ -512,7 +534,6 @@ echo "  □ Open App Store → Verify signed in (needed for 'mas' installs)"
 echo ""
 echo "DISPLAY:"
 echo "  □ System Settings → Displays → Select 'More Space' resolution"
-echo "  □ System Settings → Displays → Night Shift → Schedule: Sunset to Sunrise"
 echo ""
 echo "FINDER SIDEBAR:"
 echo "  □ Finder → Settings → Sidebar → Configure favorites:"

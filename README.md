@@ -49,7 +49,7 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 The script will print these, but here's a summary:
 
 1. **Apple ID** — Sign in if not done during macOS setup
-2. **Display** — System Settings → Displays → "More Space" + Night Shift
+2. **Display** — System Settings → Displays → "More Space"
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
 4. **SSH Key** — Run `~/.dotfiles/ssh.sh` then add to GitHub
 5. **Mackup** — Run `mackup restore` to restore app preferences

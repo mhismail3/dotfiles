@@ -58,6 +58,7 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 | Modern CLI | bat, eza, fd, ripgrep, fzf, zoxide, htop, btop, tldr, dust, duf, procs |
 | Dev Tools | git, git-lfs, git-delta, gh, jq, yq, httpie, tmux, neovim, shellcheck |
 | Dock Mgmt | dockutil |
+| Display Mgmt | nightlight (Night Shift CLI) |
 | Networking | nmap, mtr, iperf3, rsync, ssh-copy-id, mas |
 | Version Mgrs | pyenv, nvm, rbenv, go, rustup-init |
 | Shell | zsh-syntax-highlighting, zsh-autosuggestions, zsh-completions, starship |
@@ -84,7 +85,6 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 |------|--------|
 | Apple ID sign-in | Security requirement |
 | App Store sign-in | Linked to Apple ID |
-| Night Shift schedule | No reliable defaults key |
 | Display "More Space" | Requires GUI or displayplacer |
 | Finder sidebar | Binary plist format |
 | App sign-ins | OAuth/password required |
@@ -97,6 +97,11 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 ### Added
 - Hide desktop widgets setting in `.macos` (StandardHideWidgets)
 - Hide Stage Manager widgets setting in `.macos` (StageManagerHideWidgets)
+- `nightlight` CLI for Night Shift control (via `smudge/smudge` tap in Brewfile)
+- Automated Night Shift configuration in `.macos`: Sunset to Sunrise schedule, 70% warmth
+
+### Changed
+- Night Shift is now automated (removed from manual steps in `.macos` output)
 
 ---
 
