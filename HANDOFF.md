@@ -25,8 +25,8 @@ Always-on home server with:
 
 ```
 ~/.dotfiles/
-├── .macos                    # macOS system preferences (452 lines)
-├── Brewfile                  # Homebrew packages & apps (169 lines)
+├── .macos                    # macOS system preferences + Dock layout (~550 lines)
+├── Brewfile                  # Homebrew packages & apps (~180 lines)
 ├── start.sh                  # Main bootstrap script (executable)
 ├── ssh.sh                    # SSH key generation (executable)
 ├── .zshrc                    # Zsh config with Oh My Zsh
@@ -38,7 +38,8 @@ Always-on home server with:
 ├── .mackup/
 │   ├── synology-drive.cfg    # Custom Mackup for Synology Drive
 │   └── google-drive.cfg      # Custom Mackup for Google Drive
-└── HANDOFF.md                # This file
+├── README.md                 # Quick start guide
+└── HANDOFF.md                # This file (detailed documentation)
 ```
 
 ---
@@ -52,6 +53,7 @@ Comprehensive defaults write commands for:
 - **Power Management:** Never sleep, wake on LAN, auto-restart after power failure
 - **General UI:** Dark mode, multicolor accent, natural scrolling, sounds on
 - **Dock:** Bottom, 50% size, 70% magnification, auto-hide, no recents
+- **Dock Layout:** Automated via dockutil — Finder, Calendar, Things 3, Messages, Arc, Stremio, Photos, Cursor, Terminal, Warp, Screen Sharing, Settings
 - **Hot Corners:** TL=Launchpad, TR=Mission Control, BL=Screen Saver, BR=Desktop
 - **Mission Control:** Auto-rearrange on, switch to space on, group windows off
 - **Window Tiling:** Edge drag on, margins off (Sequoia+)
@@ -78,11 +80,14 @@ Comprehensive defaults write commands for:
 - rustup-init (Rust)
 
 **Apps (Casks):**
-- Arc, Cursor, VS Code, Warp (terminal)
+- Arc, Chrome, Cursor, VS Code, Warp (terminal)
 - Raycast, 1Password
 - Synology Drive, Google Drive
-- VLC, Keka (archives), qBittorrent
-- Hand Mirror, Private Internet Access
+- Stremio, VLC, Keka (archives), qBittorrent
+- Logi Options+ (Logitech peripherals)
+
+**AI Coding CLIs:**
+- Gemini CLI, Codex, Claude Code
 
 **Mac App Store:**
 - Things 3
@@ -207,8 +212,6 @@ From conversations:
 
 1. **Change screenshot location** — User mentioned wanting to change this later
 2. **App-specific configs** — Could add VS Code/Cursor settings.json, Warp themes, etc.
-3. **Push to GitHub** — Repo not yet pushed
-4. **Remote bootstrap** — Once on GitHub, can use curl to run start.sh directly
 
 ---
 
@@ -220,6 +223,7 @@ From conversations:
 4. **Custom Mackup configs** — Created for Synology Drive and Google Drive
 5. **VS Code/Cursor use built-in sync** — Not in Mackup to avoid conflicts
 6. **hidutil for Caps Lock remap** — Uses LaunchDaemon for persistence
+7. **dockutil for Dock layout** — Automated dock configuration via CLI tool
 
 ---
 
@@ -335,4 +339,31 @@ Comprehensive audit was performed against industry best practices and reference 
 | Some defaults keys | Apple deprecates without notice |
 
 **Recommendation:** After running `.macos`, verify settings took effect in System Settings.
+
+### December 2024 — Automated Dock Layout
+
+Added fully automated Dock configuration using `dockutil`:
+
+#### **Changes Made**
+- ✅ **Added `dockutil` to Brewfile:** CLI tool for managing Dock items
+- ✅ **Added `stremio` to Brewfile:** Open-source media center app
+- ✅ **Dock layout in `.macos`:** Automated configuration of Dock apps in specific order
+- ✅ **Idempotent:** Script can be re-run without creating duplicate icons
+
+#### **Dock Layout (left to right)**
+```
+Finder → Calendar → Things 3 → Messages → Arc → Stremio →
+Photos → Cursor → Terminal → Warp → Screen Sharing → Settings → [Trash]
+```
+
+#### **Configuration**
+- Recent apps section: disabled
+- Folders/stacks: none (only Trash on right, which is default)
+- To customize: edit the `DOCK_APPS` array in `.macos`
+
+#### **How It Works**
+1. `dockutil --remove all` clears existing Dock items
+2. Apps are added in order via `dockutil --add`
+3. Each app is removed before adding to prevent duplicates
+4. Dock restarts once at end of `.macos` script
 

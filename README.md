@@ -19,12 +19,13 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 - Version managers: `pyenv`, `nvm`, `rbenv`, `rustup`
 
 ### Apps
-- **Browsers:** Arc
+- **Browsers:** Arc, Chrome
 - **Editors:** Cursor, VS Code
-- **Terminal:** Warp
+- **Terminals:** Warp, Terminal
 - **Productivity:** Raycast, 1Password, Things 3
 - **Cloud:** Synology Drive, Google Drive
-- **Media:** VLC, Keka, qBittorrent
+- **Media:** Stremio, VLC, Keka, qBittorrent
+- **AI CLIs:** Gemini CLI, Codex, Claude Code
 
 ### Shell
 - Zsh with Oh My Zsh
@@ -39,7 +40,9 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 4. Installs Oh My Zsh
 5. Runs `brew bundle` (installs all packages)
 6. Symlinks dotfiles to home directory
-7. Applies macOS preferences (optional, asks first)
+7. Sets up SSH key (optional, asks first)
+8. Applies macOS preferences (optional, asks first)
+   - Includes automated Dock layout configuration
 
 ## Manual Steps After Setup
 
@@ -91,12 +94,21 @@ mackup backup
 mackup restore
 ```
 
+## Dock Layout
+
+The Dock is automatically configured with these apps (left to right):
+
+> Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos → Cursor → Terminal → Warp → Screen Sharing → Settings → [Trash]
+
+- Recent apps: disabled
+- To customize, edit the `DOCK_APPS` array in `.macos`
+
 ## Customization
 
 Fork this repo and edit:
 
 - `Brewfile` — Add/remove packages and apps
-- `.macos` — Adjust system preferences
+- `.macos` — Adjust system preferences and Dock layout
 - `aliases.zsh` — Add your own aliases
 - `.gitconfig` — Change name/email
 
