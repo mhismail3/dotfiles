@@ -130,6 +130,7 @@ cask "font-fira-code-nerd-font"
 cask "raycast"          # Spotlight replacement
 cask "1password"        # Password manager
 cask "arc"              # Browser
+cask "google-chrome"    # Browser
 
 ###############################################################################
 # Applications - Development
@@ -138,6 +139,14 @@ cask "arc"              # Browser
 cask "cursor"           # AI code editor
 cask "visual-studio-code"
 cask "warp"             # Modern terminal
+
+###############################################################################
+# AI Coding CLIs
+###############################################################################
+
+brew "gemini-cli"       # Google Gemini CLI
+cask "codex"            # OpenAI Codex CLI
+cask "claude-code"      # Anthropic Claude Code CLI
 
 ###############################################################################
 # Applications - Cloud Storage
