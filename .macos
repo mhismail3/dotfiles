@@ -419,6 +419,7 @@ if command -v nightlight &>/dev/null; then
     
     # Temperature: 70% (0-100 scale, must be set while Night Shift is on)
     nightlight temp 70 2>/dev/null || {
+        # I think this might happen for Mac Minis if you're doing Screen Sharing - otherwise works fine
         echo "⚠️  Could not set Night Shift temperature."
     }
     
