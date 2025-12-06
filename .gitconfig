@@ -94,7 +94,7 @@
     # Sort branches by most recent commit
     sort = -committerdate
 
-[url "git@github.com:"]
-    # Use SSH for GitHub instead of HTTPS (faster, no password prompts)
-    insteadOf = https://github.com/
+# Uncomment after setting up SSH keys if you want to force SSH for GitHub:
+# [url "git@github.com:"]
+#     insteadOf = https://github.com/
 
