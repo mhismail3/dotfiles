@@ -1,0 +1,67 @@
+# Dotfiles Project Rules
+
+## Documentation Requirements
+
+**ALWAYS** before modifying any file in this repository:
+1. Read `CHANGELOG.md` to understand the current project state and history
+2. Check `README.md` for user-facing documentation
+
+**ALWAYS** after modifying any file in this repository:
+1. Update `CHANGELOG.md` with your changes under the `[Unreleased]` section
+2. Update `README.md` if you changed any user-facing behavior
+3. Use conventional commit messages: `feat:`, `fix:`, `docs:`, `refactor:`
+
+## Project Structure
+
+This is a macOS dotfiles repository that bootstraps a fresh Mac with a single command.
+
+Key files:
+- `start.sh` — Main bootstrap script (entry point)
+- `.macos` — macOS system preferences AND Dock layout configuration
+- `Brewfile` — All Homebrew packages, casks, and Mac App Store apps
+- `.zshrc` — Zsh shell configuration with Oh My Zsh
+- `aliases.zsh` — Shell command aliases
+- `path.zsh` — PATH modifications
+- `ssh.sh` — SSH key generation helper
+
+## Dock Layout
+
+The Dock layout is configured in `.macos` using `dockutil`. The current order is:
+```
+Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos → Cursor → Terminal → Warp → Screen Sharing → Settings
+```
+
+To modify the dock layout, edit the `DOCK_APPS` array in `.macos`.
+
+## Key Constraints
+
+1. **Idempotent scripts** — All scripts must be safe to run multiple times
+2. **macOS only** — This repo is designed for macOS; start.sh checks for Darwin
+3. **Lazy loading** — Version managers (pyenv, nvm, rbenv) are lazy-loaded for fast shell startup
+4. **No hardcoded paths** — Use `$HOME`, `$DOTFILES`, and detect Homebrew prefix dynamically
+
+## Testing
+
+Before committing changes to shell scripts:
+```bash
+bash -n start.sh && bash -n .macos && bash -n ssh.sh && echo "Syntax OK"
+```
+
+## Common Tasks
+
+### Adding a new app to the Dock
+1. Add the cask to `Brewfile` if not already present
+2. Add the app path to `DOCK_APPS` array in `.macos`
+3. Update `CHANGELOG.md` and `README.md`
+
+### Adding a new Homebrew package
+1. Add to appropriate section in `Brewfile`
+2. Update `CHANGELOG.md`
+3. Update `README.md` if it's a notable app
+
+### Changing macOS preferences
+1. Find the correct `defaults write` command
+2. Add to appropriate section in `.macos`
+3. Test by running `source .macos`
+4. Update `CHANGELOG.md`
+

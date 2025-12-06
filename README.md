@@ -69,7 +69,8 @@ The script will print these, but here's a summary:
 ├── .mackup.cfg       # Mackup configuration
 ├── .mackup/          # Custom Mackup app configs
 ├── Brewfile          # Homebrew packages
-└── HANDOFF.md        # Detailed documentation
+├── CHANGELOG.md      # Project history (for AI agents)
+└── .cursorrules      # AI agent instructions
 ```
 
 ## Commands Reference
