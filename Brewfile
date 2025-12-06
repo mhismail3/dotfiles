@@ -162,7 +162,7 @@ cask "google-drive"     # Google Drive sync
 cask "vlc"              # Media player
 cask "keka"             # Archive utility (better than The Unarchiver)
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
-cask "hand-mirror"      # Quick camera check from menu bar
+# hand-mirror is Mac App Store only (see mas section below)
 cask "logi-options+"    # Logitech mouse/keyboard customization
 
 ###############################################################################
@@ -176,6 +176,7 @@ cask "private-internet-access"  # VPN
 ###############################################################################
 
 mas "Things 3", id: 904280696
+mas "Hand Mirror", id: 1502839586  # Quick camera check from menu bar
 # mas "Xcode", id: 497799835  # Uncomment if needed (large download)
 # mas "Amphetamine", id: 937984704  # Keep Mac awake (optional for server)
 
