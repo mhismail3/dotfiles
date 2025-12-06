@@ -272,6 +272,12 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false
 # Click wallpaper to show desktop: always
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
 
+# Hide widgets on desktop: on (no widgets cluttering desktop)
+defaults write com.apple.WindowManager StandardHideWidgets -bool true
+
+# Hide widgets in Stage Manager: on
+defaults write com.apple.WindowManager StageManagerHideWidgets -bool true
+
 ###############################################################################
 # Hot Corners
 ###############################################################################

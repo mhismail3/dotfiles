@@ -72,6 +72,7 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 - **Remote:** SSH (user-restricted), Screen Sharing, Remote Management
 - **Power:** Never sleep, wake on LAN, auto-restart on power failure
 - **UI:** Dark mode, multicolor accent, natural scrolling
+- **Desktop:** Widgets hidden (both standard and Stage Manager)
 - **Dock:** Bottom, 48px, magnification 80px, auto-hide, no recents
 - **Hot Corners:** TL=Launchpad, TR=Mission Control, BL=Screen Saver, BR=Desktop
 - **Finder:** Column view, Downloads default, no desktop icons
@@ -93,7 +94,9 @@ Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos →
 
 ## [Unreleased]
 
-*No unreleased changes*
+### Added
+- Hide desktop widgets setting in `.macos` (StandardHideWidgets)
+- Hide Stage Manager widgets setting in `.macos` (StageManagerHideWidgets)
 
 ---
 
