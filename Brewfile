@@ -61,8 +61,7 @@ brew "dockutil"         # CLI to manage Dock items
 # CLI Tools - Display Management
 ###############################################################################
 
-tap "smudge/smudge"
-brew "nightlight"       # CLI for Night Shift control
+brew "smudge/smudge/nightlight"  # CLI for Night Shift control
 
 ###############################################################################
 # CLI Tools - Networking & System
