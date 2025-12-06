@@ -127,7 +127,8 @@ fi
 
 if [[ ! -f "$HOMEBREW_PREFIX/bin/brew" ]]; then
     info "Installing Homebrew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Run Homebrew installer interactively (needs sudo password)
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/tty
     success "Homebrew installed"
 else
     success "Homebrew already installed"
