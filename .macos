@@ -110,10 +110,6 @@ sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 # Dark mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 
-# Liquid Glass style: Tinted (follows dark mode, better contrast)
-# macOS Tahoe 26+: "Clear" = transparent, "Tinted" = darker/follows system appearance
-defaults write com.apple.Appearance LiquidGlassStyle -string "Tinted" 2>/dev/null || true
-
 # Accent color: Multicolor (auto)
 defaults delete NSGlobalDomain AppleAccentColor 2>/dev/null
 defaults delete NSGlobalDomain AppleHighlightColor 2>/dev/null
