@@ -226,37 +226,40 @@ if command -v dockutil &>/dev/null; then
     DOCKUTIL_TRACE="${DOCKUTIL_TRACE:-0}"
 
     # run_dockutil wraps each call with a hard timeout guard.
-    # Priority: gtimeout/timeout if present; otherwise a manual watcher that kills the pid.
+    # Priority: gtimeout/timeout if present; otherwise a polling-based timeout.
     run_dockutil() {
         if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
             "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
             return $?
         fi
 
-        local start ts pid killer status
+        # Polling-based timeout (more reliable than background wait on macOS)
+        local start pid status elapsed
         start=$(date +%s)
 
         "$@" &
         pid=$!
 
-        (
-            sleep "$DOCKUTIL_TIMEOUT_SECS"
-            if kill -0 "$pid" 2>/dev/null; then
-                echo "WARN: dockutil timed out after ${DOCKUTIL_TIMEOUT_SECS}s; killing pid $pid ($*)"
+        # Poll for completion with timeout
+        while kill -0 "$pid" 2>/dev/null; do
+            elapsed=$(( $(date +%s) - start ))
+            if (( elapsed >= DOCKUTIL_TIMEOUT_SECS )); then
+                echo "WARN: dockutil timed out after ${elapsed}s; killing pid $pid ($*)" >&2
                 kill -TERM "$pid" 2>/dev/null || true
-                sleep 1
+                sleep 0.5
                 kill -KILL "$pid" 2>/dev/null || true
+                wait "$pid" 2>/dev/null
+                return 124  # timeout exit code
             fi
-        ) &
-        killer=$!
+            sleep 0.2
+        done
 
         wait "$pid"
         status=$?
-        kill "$killer" 2>/dev/null || true
 
-        ts=$(( $(date +%s) - start ))
         if [[ "$DOCKUTIL_TRACE" == "1" ]]; then
-            echo "INFO: dockutil finished in ${ts}s (exit ${status}): $*"
+            elapsed=$(( $(date +%s) - start ))
+            echo "INFO: dockutil finished in ${elapsed}s (exit ${status}): $*"
         fi
         return $status
     }
@@ -273,6 +276,12 @@ if command -v dockutil &>/dev/null; then
             run_dockutil dockutil --add "$app" --no-restart || echo "⚠️  dockutil add may have stalled for $app_name; continuing."
         fi
     done
+    
+    # Restart Dock now to apply all changes and reset state
+    # This prevents hangs in subsequent defaults write commands
+    echo "Restarting Dock to apply layout changes..."
+    killall Dock 2>/dev/null || true
+    sleep 1
 else
     echo "⚠️  dockutil not found. Install via Brewfile to configure Dock layout."
 fi

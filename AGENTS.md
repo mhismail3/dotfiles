@@ -16,6 +16,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Dockutil hang fix: polling timeout + Dock restart
+- Replaced background-subshell timeout with polling-based timeout (more reliable on macOS where `wait` can block indefinitely on signaled processes).
+- Added immediate `killall Dock` after dockutil loop completes to apply all `--no-restart` changes and reset Dock state before subsequent `defaults write` commands.
+- Root cause: the manual timeout's `wait "$pid"` could hang if dockutil entered an uninterruptible state; also, Dock remained in a dirty state after many rapid `--no-restart` operations.
+
 ### 2025-12-08 — Dockutil hang fallback
 - Dock layout now enforces a hard timeout per dockutil call: prefers gtimeout/timeout but falls back to an inline watcher that kills the process after the configured interval. Helps avoid stalls during bootstrap even when no timeout utility is installed.
 
