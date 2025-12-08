@@ -698,11 +698,73 @@ defaults write com.apple.commerce AutoUpdate -bool true
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 ###############################################################################
-# Custom Keyboard Shortcut: Option+L for Lock Screen
-# Note: Adds to App Shortcuts for All Applications
+# Custom Keyboard Shortcuts
+###############################################################################
+echo "Configuring custom keyboard shortcuts..."
+
+# Option+L for Lock Screen (App Shortcuts → All Applications)
+# Modifier key symbols: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
+defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
+
+###############################################################################
+# Disable Spotlight Keyboard Shortcuts (Cmd+Space)
+# Note: Frees up Cmd+Space for Raycast or other launchers
 ###############################################################################
 
-defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
+# Spotlight shortcuts are in com.apple.symbolichotkeys:
+#   Key 64 = "Show Spotlight search" (Cmd+Space)
+#   Key 65 = "Show Finder search window" (Cmd+Option+Space)
+#
+# On fresh macOS installs, these entries may not exist until the user interacts
+# with System Settings, so we use PlistBuddy to create/set them idempotently.
+
+SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+disable_spotlight_shortcuts() {
+    # Disable "Show Spotlight search" (Cmd+Space) - key 64
+    # Structure: enabled=false, value.parameters=[65535, 49, 1048576], type=standard
+    /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
+        -c "Delete :AppleSymbolicHotKeys:64" \
+        -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
+        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
+        -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || {
+        # Entry might not exist yet on fresh install; try Add without Delete
+        /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
+            -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
+            -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
+            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
+            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
+            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
+            -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || true
+    }
+
+    # Disable "Show Finder search window" (Cmd+Option+Space) - key 65
+    /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
+        -c "Delete :AppleSymbolicHotKeys:65" \
+        -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
+        -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
+        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
+        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
+        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 1572864" \
+        -c "Add :AppleSymbolicHotKeys:65:value:type string standard" 2>/dev/null || {
+        /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
+            -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
+            -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
+            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
+            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
+            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 1572864" \
+            -c "Add :AppleSymbolicHotKeys:65:value:type string standard" 2>/dev/null || true
+    }
+}
+
+if disable_spotlight_shortcuts; then
+    echo "✓ Spotlight shortcuts disabled (Cmd+Space freed for Raycast)"
+else
+    echo "⚠️  Could not disable Spotlight shortcuts. May require logout/restart."
+fi
 
 ###############################################################################
 # Caps Lock → Command (requires LaunchDaemon for persistence)
@@ -769,8 +831,10 @@ echo ""
 echo "KEYBOARD (if not working):"
 echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys"
 echo "    - Set Caps Lock → Command"
+echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Spotlight"
+echo "    - Verify: 'Show Spotlight search' is unchecked (disabled by script)"
 echo "  □ System Settings → Keyboard → Keyboard Shortcuts → App Shortcuts"
-echo "    - Add: All Applications → 'Lock Screen' → ⌥L (Option+L)"
+echo "    - Verify: 'Lock Screen' → ⌥L (Option+L) is set"
 echo ""
 echo "MESSAGES:"
 echo "  □ Messages → Settings → iMessage → Enable Messages in iCloud"

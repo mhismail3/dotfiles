@@ -63,6 +63,7 @@ The script will print these, but here's a summary:
 ~/.dotfiles/
 ├── start.sh          # Bootstrap script (run this first)
 ├── ssh.sh            # SSH key generation
+├── screenshots.sh    # Screenshot save location config
 ├── .macos            # macOS system preferences
 ├── .zshrc            # Zsh configuration
 ├── aliases.zsh       # Shell aliases
@@ -84,6 +85,11 @@ The script will print these, but here's a summary:
 
 # Generate SSH key
 ~/.dotfiles/ssh.sh
+
+# Set screenshot save location (after configuring sync services)
+~/.dotfiles/screenshots.sh ~/SynologyDrive/Screenshots
+~/.dotfiles/screenshots.sh --show   # View current setting
+~/.dotfiles/screenshots.sh --reset  # Reset to Desktop
 
 # Apply macOS preferences only
 source ~/.dotfiles/.macos

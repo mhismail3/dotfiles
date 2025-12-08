@@ -16,6 +16,20 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Add screenshots.sh for screenshot location configuration
+- Added standalone `screenshots.sh` script to configure macOS default screenshot save location.
+- Uses `defaults write com.apple.screencapture location` and restarts SystemUIServer to apply immediately.
+- Designed to be run independently after SynologyDrive or other sync services are configured.
+- Supports CLI arguments, environment variable override, --show, --reset, and --help options.
+- Default location: `~/Pictures/Screenshots`.
+
+### 2025-12-08 — Disable Spotlight shortcuts + document Option+L for Lock Screen
+- Added automation to disable Spotlight keyboard shortcuts (Cmd+Space and Cmd+Option+Space) via PlistBuddy.
+- This frees Cmd+Space for Raycast or other launchers without manual System Settings interaction.
+- Uses `com.apple.symbolichotkeys.plist` keys 64 (Spotlight search) and 65 (Finder search window).
+- The Option+L for "Lock Screen" shortcut was already implemented; updated manual steps to reflect both are automated.
+- Note: Spotlight changes require logout/restart to take effect.
+
 ### 2025-12-08 — Add home folder control in Locations section
 - Added `--hide-home-in-locations` / `--show-home-in-locations` to control home folder visibility in Locations.
 - Home folder in Locations uses `SpecialItemIdentifier: com.apple.LSSharedFileList.IsHome`.
