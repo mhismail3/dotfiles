@@ -5,14 +5,10 @@
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Finder/Sidebar configuration toggles
-: "${FINDER_CONFIGURE_SIDEBAR:=1}"
-: "${RESET_DS_STORE:=1}"
-: "${FINDER_FORCE_RELOAD:=1}"
-
-# sidebarctl install knobs
-: "${SIDEBARCTL_INSTALL_DIR:=}"
-: "${SIDEBARCTL_SOURCE:="$DOTFILES_DIR/bin/sidebarctl.swift"}"
+# Source modular scripts
+source "$DOTFILES_DIR/finder.sh"
+source "$DOTFILES_DIR/dock.sh"
+source "$DOTFILES_DIR/keyboard.sh"
 
 ###############################################################################
 # Preamble
@@ -203,88 +199,7 @@ defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
 # Dock Layout (requires dockutil from Brewfile)
 ###############################################################################
 
-if command -v dockutil &>/dev/null; then
-    echo "Configuring Dock layout..."
-    
-    # Apps in order (left to right)
-    DOCK_APPS=(
-        "/System/Applications/Calendar.app"
-        "/Applications/Things3.app"
-        "/System/Applications/Messages.app"
-        "/Applications/Arc.app"
-        "/Applications/Stremio.app"
-        "/System/Applications/Photos.app"
-        "/Applications/Cursor.app"
-        "/System/Applications/Utilities/Terminal.app"
-        "/Applications/Warp.app"
-        "/System/Applications/Utilities/Screen Sharing.app"
-        "/System/Applications/System Settings.app"
-    )
-    
-    DOCKUTIL_TIMEOUT_CMD="$(command -v gtimeout || command -v timeout || true)"
-    DOCKUTIL_TIMEOUT_SECS="${DOCKUTIL_TIMEOUT_SECS:-10}"
-    DOCKUTIL_TRACE="${DOCKUTIL_TRACE:-0}"
-
-    # run_dockutil wraps each call with a hard timeout guard.
-    # Priority: gtimeout/timeout if present; otherwise a polling-based timeout.
-    run_dockutil() {
-        if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
-            "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
-            return $?
-        fi
-
-        # Polling-based timeout (more reliable than background wait on macOS)
-        local start pid status elapsed
-        start=$(date +%s)
-
-        "$@" &
-        pid=$!
-
-        # Poll for completion with timeout
-        while kill -0 "$pid" 2>/dev/null; do
-            elapsed=$(( $(date +%s) - start ))
-            if (( elapsed >= DOCKUTIL_TIMEOUT_SECS )); then
-                echo "WARN: dockutil timed out after ${elapsed}s; killing pid $pid ($*)" >&2
-                kill -TERM "$pid" 2>/dev/null || true
-                sleep 0.5
-                kill -KILL "$pid" 2>/dev/null || true
-                wait "$pid" 2>/dev/null
-                return 124  # timeout exit code
-            fi
-            sleep 0.2
-        done
-
-        wait "$pid"
-        status=$?
-
-        if [[ "$DOCKUTIL_TRACE" == "1" ]]; then
-            elapsed=$(( $(date +%s) - start ))
-            echo "INFO: dockutil finished in ${elapsed}s (exit ${status}): $*"
-        fi
-        return $status
-    }
-
-    # Clear existing Dock items (with timeout guard to avoid hangs)
-    run_dockutil dockutil --remove all --no-restart 2>/dev/null || true
-    sleep 0.5
-    
-    # Add apps in order (with timeout guard to prevent hangs on stuck dockutil)
-    for app in "${DOCK_APPS[@]}"; do
-        if [[ -d "$app" ]]; then
-            app_name=$(basename "$app" .app)
-            run_dockutil dockutil --remove "$app_name" --no-restart 2>/dev/null || true
-            run_dockutil dockutil --add "$app" --no-restart || echo "⚠️  dockutil add may have stalled for $app_name; continuing."
-        fi
-    done
-    
-    # Restart Dock now to apply all changes and reset state
-    # This prevents hangs in subsequent defaults write commands
-    echo "Restarting Dock to apply layout changes..."
-    killall Dock 2>/dev/null || true
-    sleep 1
-else
-    echo "⚠️  dockutil not found. Install via Brewfile to configure Dock layout."
-fi
+configure_dock_layout
 
 ###############################################################################
 # Mission Control & Spaces
@@ -371,163 +286,6 @@ defaults write com.apple.dock wvous-br-modifier -int 0
 ###############################################################################
 echo "Configuring Finder..."
 
-log() { printf '%s\n' "$*"; }
-err() { printf '%s\n' "$*" >&2; }
-
-detect_sidebarctl_install_dir() {
-    if [[ -n "$SIDEBARCTL_INSTALL_DIR" ]]; then
-        echo "$SIDEBARCTL_INSTALL_DIR"
-        return 0
-    fi
-
-    if [[ -d "/opt/homebrew/bin" && -w "/opt/homebrew/bin" ]]; then
-        echo "/opt/homebrew/bin"
-        return 0
-    fi
-
-    if [[ -d "/usr/local/bin" && -w "/usr/local/bin" ]]; then
-        echo "/usr/local/bin"
-        return 0
-    fi
-
-    echo "$HOME/.local/bin"
-}
-
-install_sidebarctl() {
-    command -v swift >/dev/null 2>&1 || {
-        err "⚠️  swift not found. Install Xcode Command Line Tools before sidebar setup."
-        return 1
-    }
-
-    if [[ ! -f "$SIDEBARCTL_SOURCE" ]]; then
-        err "⚠️  sidebarctl source missing: $SIDEBARCTL_SOURCE"
-        return 1
-    fi
-
-    local install_dir
-    install_dir="$(detect_sidebarctl_install_dir)"
-    mkdir -p "$install_dir"
-
-    local sidebarctl_path="$install_dir/sidebarctl"
-    
-    # Always update the script if source is newer or script doesn't exist
-    if [[ ! -x "$sidebarctl_path" ]] || [[ "$SIDEBARCTL_SOURCE" -nt "$sidebarctl_path" ]]; then
-        cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
-        chmod +x "$sidebarctl_path"
-    fi
-
-    if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-
-    echo "$sidebarctl_path"
-}
-
-install_sidebarsections() {
-    command -v swift >/dev/null 2>&1 || {
-        err "⚠️  swift not found. Install Xcode Command Line Tools before sidebar setup."
-        return 1
-    }
-
-    local source_path="$DOTFILES_DIR/bin/sidebarsections.swift"
-    if [[ ! -f "$source_path" ]]; then
-        err "⚠️  sidebarsections source missing: $source_path"
-        return 1
-    fi
-
-    local install_dir
-    install_dir="$(detect_sidebarctl_install_dir)"
-    mkdir -p "$install_dir"
-
-    local script_path="$install_dir/sidebarsections"
-    
-    # Always update the script if source is newer or script doesn't exist
-    if [[ ! -x "$script_path" ]] || [[ "$source_path" -nt "$script_path" ]]; then
-        cp "$source_path" "$script_path"
-        chmod +x "$script_path"
-    fi
-
-    if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
-
-    echo "$script_path"
-}
-
-configure_finder_sidebar() {
-    [[ "$FINDER_CONFIGURE_SIDEBAR" == "1" ]] || return 0
-
-    local sidebarctl
-    sidebarctl="$(install_sidebarctl)" || {
-        err "⚠️  Skipping Finder sidebar configuration (sidebarctl unavailable)."
-        return 0
-    }
-
-    local icloud_path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
-    local favorites=(
-        "$HOME"
-        "/Applications"
-        "$HOME/Downloads"
-    )
-
-    [[ -d "$icloud_path" ]] && favorites+=("$icloud_path")
-
-    if ! "$sidebarctl" --set "${favorites[@]}"; then
-        local sfl_path
-        sfl_path="$("$sidebarctl" --path 2>/dev/null || true)"
-        err "⚠️  sidebarctl could not update Finder sidebar (macOS likely blocked access to the favorites list)."
-        [[ -n "$sfl_path" ]] && err "    SFL path: $sfl_path"
-        err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/finder.sh"
-        open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" >/dev/null 2>&1 || true
-    fi
-}
-
-configure_sidebar_sections() {
-    [[ "$FINDER_CONFIGURE_SIDEBAR" == "1" ]] || return 0
-
-    local sidebarsections
-    sidebarsections="$(install_sidebarsections)" || {
-        err "⚠️  Skipping sidebar sections configuration (sidebarsections unavailable)."
-        return 0
-    }
-
-    # Hide Recents and Shared sections, disable Bonjour computers
-    if ! "$sidebarsections" --all-hidden; then
-        err "⚠️  sidebarsections could not hide Recents/Shared (Full Disk Access may be required)."
-    fi
-}
-
-reset_home_ds_store() {
-    [[ "$RESET_DS_STORE" == "1" ]] || return 0
-    
-    # Only delete .DS_Store from specific directories, not the entire home.
-    # A recursive find on $HOME can take minutes on large Libraries.
-    local dirs_to_clean=(
-        "$HOME/Desktop"
-        "$HOME/Documents"
-        "$HOME/Downloads"
-    )
-    
-    for dir in "${dirs_to_clean[@]}"; do
-        [[ -d "$dir" ]] && find "$dir" -name ".DS_Store" -delete 2>/dev/null || true
-    done
-}
-
-reload_finder_ui() {
-    local sidebarctl_path
-    sidebarctl_path="$(command -v sidebarctl || true)"
-
-    if [[ -n "$sidebarctl_path" ]]; then
-        if [[ "$FINDER_FORCE_RELOAD" == "1" ]]; then
-            "$sidebarctl_path" --reload --force
-        else
-            "$sidebarctl_path" --reload
-        fi
-    else
-        killall Finder || true
-    fi
-}
-
 # Show all file extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
@@ -578,10 +336,8 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # Show ~/Library
 chflags nohidden ~/Library 2>/dev/null
 
-configure_finder_sidebar
-configure_sidebar_sections
-reset_home_ds_store
-reload_finder_ui
+# Apply Finder customizations (sidebar favorites, sections, DS_Store cleanup)
+apply_finder_customizations
 
 ###############################################################################
 # Keyboard & Input
@@ -698,47 +454,10 @@ defaults write com.apple.commerce AutoUpdate -bool true
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
 ###############################################################################
-# Custom Keyboard Shortcut: Option+L for Lock Screen
-# Note: Adds to App Shortcuts for All Applications
+# Keyboard Remapping (Option+L for Lock Screen, Caps Lock → Command)
 ###############################################################################
 
-defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
-
-###############################################################################
-# Caps Lock → Command (requires LaunchDaemon for persistence)
-###############################################################################
-echo "Configuring Caps Lock → Command remap..."
-
-# Create hidutil LaunchDaemon for Caps Lock → Command remap
-# Caps Lock = 0x700000039, Left Command = 0x7000000E3
-PLIST_PATH="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
-
-sudo tee "$PLIST_PATH" > /dev/null << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.local.KeyRemapping</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/hidutil</string>
-        <string>property</string>
-        <string>--set</string>
-        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-EOF
-
-sudo chown root:wheel "$PLIST_PATH"
-sudo chmod 644 "$PLIST_PATH"
-sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
-
-# Apply immediately for current session
-sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
+configure_keyboard_remapping
 
 ###############################################################################
 # Restart affected apps
