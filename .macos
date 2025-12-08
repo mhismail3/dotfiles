@@ -289,6 +289,7 @@ fi
 ###############################################################################
 # Mission Control & Spaces
 ###############################################################################
+echo "Configuring Mission Control & Spaces..."
 
 # Auto-rearrange Spaces by most recent use: on
 defaults write com.apple.dock mru-spaces -bool true
@@ -368,6 +369,7 @@ defaults write com.apple.dock wvous-br-modifier -int 0
 ###############################################################################
 # Finder
 ###############################################################################
+echo "Configuring Finder..."
 
 log() { printf '%s\n' "$*"; }
 err() { printf '%s\n' "$*" >&2; }
@@ -452,7 +454,18 @@ configure_finder_sidebar() {
 
 reset_home_ds_store() {
     [[ "$RESET_DS_STORE" == "1" ]] || return 0
-    find "$HOME" -name ".DS_Store" -delete 2>/dev/null || true
+    
+    # Only delete .DS_Store from specific directories, not the entire home.
+    # A recursive find on $HOME can take minutes on large Libraries.
+    local dirs_to_clean=(
+        "$HOME/Desktop"
+        "$HOME/Documents"
+        "$HOME/Downloads"
+    )
+    
+    for dir in "${dirs_to_clean[@]}"; do
+        [[ -d "$dir" ]] && find "$dir" -name ".DS_Store" -delete 2>/dev/null || true
+    done
 }
 
 reload_finder_ui() {
@@ -527,6 +540,7 @@ reload_finder_ui
 ###############################################################################
 # Keyboard & Input
 ###############################################################################
+echo "Configuring Keyboard & Input..."
 
 # Fast key repeat
 defaults write NSGlobalDomain KeyRepeat -int 2
@@ -554,6 +568,7 @@ defaults write com.apple.screencapture disable-shadow -bool true
 ###############################################################################
 # Lock Screen & Security
 ###############################################################################
+echo "Configuring Lock Screen & Security..."
 
 # Require password immediately after sleep/screensaver
 defaults write com.apple.screensaver askForPassword -int 1
@@ -646,6 +661,7 @@ defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
 ###############################################################################
 # Caps Lock → Command (requires LaunchDaemon for persistence)
 ###############################################################################
+echo "Configuring Caps Lock → Command remap..."
 
 # Create hidutil LaunchDaemon for Caps Lock → Command remap
 # Caps Lock = 0x700000039, Left Command = 0x7000000E3
@@ -681,6 +697,7 @@ sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc"
 ###############################################################################
 # Restart affected apps
 ###############################################################################
+echo "Restarting affected apps..."
 
 for app in "Dock" "Finder" "SystemUIServer" "ControlCenter"; do
     killall "${app}" &> /dev/null

@@ -16,6 +16,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Fix .DS_Store cleanup hang + add progress messages
+- Changed `reset_home_ds_store` to only clean Desktop/Documents/Downloads instead of recursively searching the entire home directory (which could take minutes on large ~/Library).
+- Added echo statements throughout `.macos` so each major section announces itself, making it easier to identify where hangs occur.
+- Root cause: `find "$HOME" -name ".DS_Store" -delete` was traversing 50GB+ of ~/Library with thousands of directories.
+
 ### 2025-12-08 — Dockutil hang fix: polling timeout + Dock restart
 - Replaced background-subshell timeout with polling-based timeout (more reliable on macOS where `wait` can block indefinitely on signaled processes).
 - Added immediate `killall Dock` after dockutil loop completes to apply all `--no-restart` changes and reset Dock state before subsequent `defaults write` commands.
