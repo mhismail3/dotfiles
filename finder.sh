@@ -25,7 +25,12 @@
 
 set -euo pipefail
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Get script directory (works in both bash and zsh)
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+    DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+    DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+fi
 
 # -------- Configuration knobs --------
 # If 1, delete .DS_Store files under $HOME to reduce per-folder overrides.
@@ -218,6 +223,9 @@ apply_finder_customizations() {
 #   1) execute this script directly, or
 #   2) source it and call apply_finder_customizations from another script.
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-  apply_finder_customizations
+# Check if running directly (not sourced) - works in bash and zsh
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+    [[ "${BASH_SOURCE[0]}" == "$0" ]] && apply_finder_customizations
+elif [[ "${ZSH_EVAL_CONTEXT:-}" != *":file:"* && "${ZSH_EVAL_CONTEXT:-}" != *":file" ]]; then
+    apply_finder_customizations
 fi

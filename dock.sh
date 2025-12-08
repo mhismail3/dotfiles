@@ -111,7 +111,10 @@ configure_dock_layout() {
 #   1) execute this script directly, or
 #   2) source it and call configure_dock_layout from another script.
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+# Check if running directly (not sourced) - works in bash and zsh
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+    [[ "${BASH_SOURCE[0]}" == "$0" ]] && configure_dock_layout
+elif [[ "${ZSH_EVAL_CONTEXT:-}" != *":file:"* && "${ZSH_EVAL_CONTEXT:-}" != *":file" ]]; then
     configure_dock_layout
 fi
 
