@@ -54,6 +54,7 @@ The script will print these, but here's a summary:
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
 4. **SSH Key** — Run `~/.dotfiles/ssh.sh` then add to GitHub
 5. **Mackup** — Run `mackup restore` to restore app preferences
+6. **Finder Sidebar** — If automation warns about Full Disk Access, open System Settings → Privacy & Security → Full Disk Access and enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun `~/.dotfiles/finder.sh`
 
 ## File Structure
 
