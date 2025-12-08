@@ -483,53 +483,54 @@ info "Cursor configuration..."
 
 CURSOR_CONFIG_SRC="$DOTFILES/cursor"
 CURSOR_USER_DIR="$HOME/Library/Application Support/Cursor/User"
+CURSOR_DATA_DIR="$HOME/.cursor"
+CURSOR_EXTENSIONS_DIR="$CURSOR_DATA_DIR/extensions"
 
 if [[ -d "/Applications/Cursor.app" ]] && [[ -d "$CURSOR_CONFIG_SRC" ]]; then
     echo ""
     echo "Cursor is installed and dotfiles config is available."
-    echo "This will symlink settings.json, keybindings.json, and install extensions."
+    echo "This will symlink:"
+    echo "  - settings.json, keybindings.json → ~/Library/Application Support/Cursor/User/"
+    echo "  - mcp.json → ~/.cursor/"
+    echo "  - extensions.json → ~/.cursor/extensions/"
     echo ""
     echo -n "Apply Cursor settings? (Y/n) "
     read REPLY </dev/tty || REPLY="y"
     echo ""
     
     if [[ ! "$REPLY" =~ ^[Nn]$ ]]; then
-        # Create Cursor User directory if it doesn't exist
+        # Create directories if they don't exist
         mkdir -p "$CURSOR_USER_DIR"
+        mkdir -p "$CURSOR_EXTENSIONS_DIR"
         
-        # Symlink settings.json
-        if [[ -f "$CURSOR_CONFIG_SRC/settings.json" ]]; then
-            if [[ -L "$CURSOR_USER_DIR/settings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/settings.json")" == "$CURSOR_CONFIG_SRC/settings.json" ]]; then
-                echo "  Already linked: settings.json"
-            else
-                [[ -f "$CURSOR_USER_DIR/settings.json" ]] && mv "$CURSOR_USER_DIR/settings.json" "$CURSOR_USER_DIR/settings.json.backup.$(date +%Y%m%d%H%M%S)"
-                ln -sf "$CURSOR_CONFIG_SRC/settings.json" "$CURSOR_USER_DIR/settings.json"
-                echo "  Linked: settings.json"
+        # Helper function for symlinking Cursor config files
+        link_cursor_config() {
+            local src="$1"
+            local dst="$2"
+            local name="$(basename "$src")"
+            
+            if [[ ! -f "$src" ]]; then
+                return
             fi
-        fi
-        
-        # Symlink keybindings.json
-        if [[ -f "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
-            if [[ -L "$CURSOR_USER_DIR/keybindings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/keybindings.json")" == "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
-                echo "  Already linked: keybindings.json"
+            
+            if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+                echo "  Already linked: $name"
             else
-                [[ -f "$CURSOR_USER_DIR/keybindings.json" ]] && mv "$CURSOR_USER_DIR/keybindings.json" "$CURSOR_USER_DIR/keybindings.json.backup.$(date +%Y%m%d%H%M%S)"
-                ln -sf "$CURSOR_CONFIG_SRC/keybindings.json" "$CURSOR_USER_DIR/keybindings.json"
-                echo "  Linked: keybindings.json"
+                [[ -f "$dst" ]] && mv "$dst" "$dst.backup.$(date +%Y%m%d%H%M%S)"
+                ln -sf "$src" "$dst"
+                echo "  Linked: $name"
             fi
-        fi
+        }
         
-        # Install extensions if cursor-agent CLI is available and extensions.txt exists
-        if command -v cursor-agent &>/dev/null && [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
-            echo "  Installing extensions..."
-            while IFS= read -r ext || [[ -n "$ext" ]]; do
-                [[ -z "$ext" || "$ext" =~ ^# ]] && continue
-                cursor-agent --install-extension "$ext" 2>/dev/null || echo "    ⚠️  Failed to install: $ext"
-            done < "$CURSOR_CONFIG_SRC/extensions.txt"
-        elif [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
-            echo "  ⚠️  cursor-agent CLI not found. Extensions not installed."
-            echo "     Install via: brew install --cask cursor-cli"
-        fi
+        # Symlink settings.json and keybindings.json to User dir
+        link_cursor_config "$CURSOR_CONFIG_SRC/settings.json" "$CURSOR_USER_DIR/settings.json"
+        link_cursor_config "$CURSOR_CONFIG_SRC/keybindings.json" "$CURSOR_USER_DIR/keybindings.json"
+        
+        # Symlink mcp.json to ~/.cursor/
+        link_cursor_config "$CURSOR_CONFIG_SRC/mcp.json" "$CURSOR_DATA_DIR/mcp.json"
+        
+        # Symlink extensions.json to ~/.cursor/extensions/
+        link_cursor_config "$CURSOR_CONFIG_SRC/extensions.json" "$CURSOR_EXTENSIONS_DIR/extensions.json"
         
         success "Cursor configuration applied"
     else

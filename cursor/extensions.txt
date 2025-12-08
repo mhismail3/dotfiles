@@ -1,5 +1,0 @@
-mhutchie.git-graph
-coderabbit.coderabbit-vscode
-anthropic.claude-code
-openai.chatgpt
-
