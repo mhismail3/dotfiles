@@ -702,9 +702,17 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 ###############################################################################
 echo "Configuring custom keyboard shortcuts..."
 
-# Option+L for Lock Screen (App Shortcuts → All Applications)
+# NOTE: Lock Screen (Option+L) shortcut CANNOT be automated!
+# The "Lock Screen" menu item lives in the Apple Menu (️), which does NOT
+# respect NSUserKeyEquivalents. This is a known macOS limitation.
+# You must set this manually: System Settings → Keyboard → Keyboard Shortcuts
+# → App Shortcuts → All Applications → Add "Lock Screen" with ⌥L (Option+L)
+#
+# Alternatively, use Raycast or another launcher to trigger Lock Screen.
+
+# Add any other custom app shortcuts here using:
+# defaults write -g NSUserKeyEquivalents -dict-add "Menu Item Name" "shortcut"
 # Modifier key symbols: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
-defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
 
 ###############################################################################
 # Disable Spotlight Keyboard Shortcuts (Cmd+Space)
@@ -828,13 +836,17 @@ echo ""
 echo "NETWORK SHARES (manual connection required):"
 echo "  □ Finder → Go → Connect to Server → smb://MooseStation → Add to Favorites (⌘T)"
 echo ""
-echo "KEYBOARD (if not working):"
+echo "KEYBOARD:"
 echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys"
 echo "    - Set Caps Lock → Command"
 echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Spotlight"
 echo "    - Verify: 'Show Spotlight search' is unchecked (disabled by script)"
 echo "  □ System Settings → Keyboard → Keyboard Shortcuts → App Shortcuts"
-echo "    - Verify: 'Lock Screen' → ⌥L (Option+L) is set"
+echo "    - Add 'Lock Screen' shortcut (Apple Menu items can't be automated!):"
+echo "      1. Click '+' to add new shortcut"
+echo "      2. Application: All Applications"
+echo "      3. Menu Title: Lock Screen"
+echo "      4. Keyboard Shortcut: ⌥L (Option+L)"
 echo ""
 echo "MESSAGES:"
 echo "  □ Messages → Settings → iMessage → Enable Messages in iCloud"

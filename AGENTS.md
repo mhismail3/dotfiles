@@ -23,12 +23,13 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Supports CLI arguments, environment variable override, --show, --reset, and --help options.
 - Default location: `~/Pictures/Screenshots`.
 
-### 2025-12-08 — Disable Spotlight shortcuts + document Option+L for Lock Screen
+### 2025-12-08 — Disable Spotlight shortcuts; document Lock Screen limitation
 - Added automation to disable Spotlight keyboard shortcuts (Cmd+Space and Cmd+Option+Space) via PlistBuddy.
 - This frees Cmd+Space for Raycast or other launchers without manual System Settings interaction.
 - Uses `com.apple.symbolichotkeys.plist` keys 64 (Spotlight search) and 65 (Finder search window).
-- The Option+L for "Lock Screen" shortcut was already implemented; updated manual steps to reflect both are automated.
 - Note: Spotlight changes require logout/restart to take effect.
+- **Lock Screen shortcut (Option+L) CANNOT be automated**: "Lock Screen" is in the Apple Menu (️), which does not respect NSUserKeyEquivalents. Removed non-functional code and added clear manual setup instructions.
+- Reference: This is a known macOS limitation for all Apple Menu items.
 
 ### 2025-12-08 — Add home folder control in Locations section
 - Added `--hide-home-in-locations` / `--show-home-in-locations` to control home folder visibility in Locations.

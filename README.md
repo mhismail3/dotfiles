@@ -54,6 +54,7 @@ The script will print these, but here's a summary:
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
 4. **SSH Key** — Run `~/.dotfiles/ssh.sh` then add to GitHub
 5. **Mackup** — Run `mackup restore` to restore app preferences
+6. **Screenshots** — After Synology Drive syncs, run `~/.dotfiles/screenshots.sh`
 
 > **Note:** If the script warns about Full Disk Access for Finder sidebar automation, open System Settings → Privacy & Security → Full Disk Access, enable your terminal (e.g., Terminal, iTerm2, Cursor), then rerun `source ~/.dotfiles/.macos`
 
