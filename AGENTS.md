@@ -16,6 +16,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Add tmux configuration with mouse support
+- Added `.tmux.conf` with `set -g mouse on` to enable mouse scrolling, pane resizing, and window navigation.
+- Added symlink in `start.sh` to link `~/.tmux.conf` to dotfiles.
+- tmux was already in Brewfile; this adds the missing configuration file.
+
 ### 2025-12-08 — Add Cursor IDE configuration to bootstrap sequence
 - Added `cursor/` directory with `settings.json`, `keybindings.json`, and `extensions.txt`.
 - Added `cursor-cli` cask to Brewfile (provides `cursor-agent` command).

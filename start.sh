@@ -250,6 +250,7 @@ symlink "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
 symlink "$DOTFILES/.gitignore_global" "$HOME/.gitignore_global"
 symlink "$DOTFILES/.mackup.cfg" "$HOME/.mackup.cfg"
 symlink "$DOTFILES/.mackup" "$HOME/.mackup"
+symlink "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
 
 success "Symlinks created"
 
