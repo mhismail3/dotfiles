@@ -485,44 +485,56 @@ CURSOR_CONFIG_SRC="$DOTFILES/cursor"
 CURSOR_USER_DIR="$HOME/Library/Application Support/Cursor/User"
 
 if [[ -d "/Applications/Cursor.app" ]] && [[ -d "$CURSOR_CONFIG_SRC" ]]; then
-    # Create Cursor User directory if it doesn't exist
-    mkdir -p "$CURSOR_USER_DIR"
+    echo ""
+    echo "Cursor is installed and dotfiles config is available."
+    echo "This will symlink settings.json, keybindings.json, and install extensions."
+    echo ""
+    echo -n "Apply Cursor settings? (Y/n) "
+    read REPLY </dev/tty || REPLY="y"
+    echo ""
     
-    # Symlink settings.json
-    if [[ -f "$CURSOR_CONFIG_SRC/settings.json" ]]; then
-        if [[ -L "$CURSOR_USER_DIR/settings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/settings.json")" == "$CURSOR_CONFIG_SRC/settings.json" ]]; then
-            echo "  Already linked: settings.json"
-        else
-            [[ -f "$CURSOR_USER_DIR/settings.json" ]] && mv "$CURSOR_USER_DIR/settings.json" "$CURSOR_USER_DIR/settings.json.backup.$(date +%Y%m%d%H%M%S)"
-            ln -sf "$CURSOR_CONFIG_SRC/settings.json" "$CURSOR_USER_DIR/settings.json"
-            echo "  Linked: settings.json"
+    if [[ ! "$REPLY" =~ ^[Nn]$ ]]; then
+        # Create Cursor User directory if it doesn't exist
+        mkdir -p "$CURSOR_USER_DIR"
+        
+        # Symlink settings.json
+        if [[ -f "$CURSOR_CONFIG_SRC/settings.json" ]]; then
+            if [[ -L "$CURSOR_USER_DIR/settings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/settings.json")" == "$CURSOR_CONFIG_SRC/settings.json" ]]; then
+                echo "  Already linked: settings.json"
+            else
+                [[ -f "$CURSOR_USER_DIR/settings.json" ]] && mv "$CURSOR_USER_DIR/settings.json" "$CURSOR_USER_DIR/settings.json.backup.$(date +%Y%m%d%H%M%S)"
+                ln -sf "$CURSOR_CONFIG_SRC/settings.json" "$CURSOR_USER_DIR/settings.json"
+                echo "  Linked: settings.json"
+            fi
         fi
-    fi
-    
-    # Symlink keybindings.json
-    if [[ -f "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
-        if [[ -L "$CURSOR_USER_DIR/keybindings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/keybindings.json")" == "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
-            echo "  Already linked: keybindings.json"
-        else
-            [[ -f "$CURSOR_USER_DIR/keybindings.json" ]] && mv "$CURSOR_USER_DIR/keybindings.json" "$CURSOR_USER_DIR/keybindings.json.backup.$(date +%Y%m%d%H%M%S)"
-            ln -sf "$CURSOR_CONFIG_SRC/keybindings.json" "$CURSOR_USER_DIR/keybindings.json"
-            echo "  Linked: keybindings.json"
+        
+        # Symlink keybindings.json
+        if [[ -f "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
+            if [[ -L "$CURSOR_USER_DIR/keybindings.json" ]] && [[ "$(readlink "$CURSOR_USER_DIR/keybindings.json")" == "$CURSOR_CONFIG_SRC/keybindings.json" ]]; then
+                echo "  Already linked: keybindings.json"
+            else
+                [[ -f "$CURSOR_USER_DIR/keybindings.json" ]] && mv "$CURSOR_USER_DIR/keybindings.json" "$CURSOR_USER_DIR/keybindings.json.backup.$(date +%Y%m%d%H%M%S)"
+                ln -sf "$CURSOR_CONFIG_SRC/keybindings.json" "$CURSOR_USER_DIR/keybindings.json"
+                echo "  Linked: keybindings.json"
+            fi
         fi
+        
+        # Install extensions if cursor-agent CLI is available and extensions.txt exists
+        if command -v cursor-agent &>/dev/null && [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
+            echo "  Installing extensions..."
+            while IFS= read -r ext || [[ -n "$ext" ]]; do
+                [[ -z "$ext" || "$ext" =~ ^# ]] && continue
+                cursor-agent --install-extension "$ext" 2>/dev/null || echo "    ⚠️  Failed to install: $ext"
+            done < "$CURSOR_CONFIG_SRC/extensions.txt"
+        elif [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
+            echo "  ⚠️  cursor-agent CLI not found. Extensions not installed."
+            echo "     Install via: brew install --cask cursor-cli"
+        fi
+        
+        success "Cursor configuration applied"
+    else
+        echo "  Skipped. Apply manually later by re-running this script."
     fi
-    
-    # Install extensions if cursor-agent CLI is available and extensions.txt exists
-    if command -v cursor-agent &>/dev/null && [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
-        echo "  Installing extensions..."
-        while IFS= read -r ext || [[ -n "$ext" ]]; do
-            [[ -z "$ext" || "$ext" =~ ^# ]] && continue
-            cursor-agent --install-extension "$ext" 2>/dev/null || echo "    ⚠️  Failed to install: $ext"
-        done < "$CURSOR_CONFIG_SRC/extensions.txt"
-    elif [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
-        echo "  ⚠️  cursor-agent CLI not found. Extensions not installed."
-        echo "     Install via: brew install --cask cursor-cli"
-    fi
-    
-    success "Cursor configuration applied"
 elif [[ ! -d "/Applications/Cursor.app" ]]; then
     echo "  Cursor not installed. Skipping config."
 elif [[ ! -d "$CURSOR_CONFIG_SRC" ]]; then
