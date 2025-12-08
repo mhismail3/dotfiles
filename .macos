@@ -223,10 +223,21 @@ if command -v dockutil &>/dev/null; then
     
     DOCKUTIL_TIMEOUT_CMD="$(command -v gtimeout || command -v timeout || true)"
     DOCKUTIL_TIMEOUT_SECS="${DOCKUTIL_TIMEOUT_SECS:-10}"
+    DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=0
     run_dockutil() {
         if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
             "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
+        elif command -v perl >/dev/null 2>&1; then
+            if [[ "$DOCKUTIL_TIMEOUT_FALLBACK_LOGGED" == "0" ]]; then
+                echo "INFO: Using perl alarm as dockutil timeout guard (${DOCKUTIL_TIMEOUT_SECS}s). Install coreutils for gtimeout/timeout."
+                DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=1
+            fi
+            perl -e 'alarm shift; exec @ARGV' "$DOCKUTIL_TIMEOUT_SECS" "$@"
         else
+            if [[ "$DOCKUTIL_TIMEOUT_FALLBACK_LOGGED" == "0" ]]; then
+                echo "WARN: No timeout utility available; dockutil may hang. Install coreutils for gtimeout."
+                DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=1
+            fi
             "$@"
         fi
     }

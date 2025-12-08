@@ -16,6 +16,9 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Dockutil hang fallback
+- Dock layout now enforces a timeout even when gtimeout/timeout is missing by falling back to a perl alarm guard (warns if no timeout tool). Prevents dockutil from stalling bootstrap.
+
 ### 2025-12-08 — Finder sidebar FDA hint
 - Added explicit Full Disk Access guidance when `sidebarctl` cannot read/write Finder favorites (opens Privacy & Security → Full Disk Access deep link and surfaces SFL path).
 - Goal: give operators a clear remediation path when macOS blocks sidebar automation.
