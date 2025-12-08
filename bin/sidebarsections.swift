@@ -100,6 +100,42 @@ func createEmptyNetworkBrowserIfMissing(_ url: URL) throws {
     try saveSFL(url, dict: root)
 }
 
+func createEmptyFavoriteVolumesIfMissing(_ url: URL) throws {
+    let fm = FileManager.default
+    if fm.fileExists(atPath: url.path) { return }
+    
+    // Create parent directory if needed
+    try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    
+    // Create with default structure
+    let root = NSMutableDictionary()
+    root["items"] = NSArray()
+    let props = NSMutableDictionary()
+    props["com.apple.LSSharedFileList.ForceTemplateIcons"] = NSNumber(value: 1)
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ComputerIsVisible"] = NSNumber(value: 1)
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ShowHardDrives"] = NSNumber(value: 1)
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ShowNetworkVolumes"] = NSNumber(value: 1)
+    props["com.apple.finder.showcloudservices"] = NSNumber(value: 1)
+    root["properties"] = props
+    
+    try saveSFL(url, dict: root)
+}
+
+func createEmptyiCloudItemsIfMissing(_ url: URL) throws {
+    let fm = FileManager.default
+    if fm.fileExists(atPath: url.path) { return }
+    
+    // Create parent directory if needed
+    try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    
+    // Create with default structure (iCloud Drive item visible by default)
+    let root = NSMutableDictionary()
+    root["items"] = NSArray()
+    root["properties"] = NSDictionary()
+    
+    try saveSFL(url, dict: root)
+}
+
 func reload() {
     let killShared = Process()
     killShared.executableURL = URL(fileURLWithPath: "/usr/bin/killall")
@@ -243,22 +279,128 @@ func setConnectedServersEnabled(_ enabled: Bool) throws {
     print("✓ Connected servers \(enabled ? "enabled" : "disabled") in NetworkBrowser")
 }
 
+// ============ FavoriteVolumes (Locations section: Computer, Cloud Services) ============
+
+func favoriteVolumesURL() throws -> URL {
+    let dir = try sharedFileListDir()
+    return dir.appendingPathComponent("com.apple.LSSharedFileList.FavoriteVolumes.sfl4", isDirectory: false)
+}
+
+func setComputerVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ComputerIsVisible"] = NSNumber(value: visible ? 1 : 0)
+    dict["properties"] = props
+    
+    try saveSFL(url, dict: dict)
+    print("✓ Computer \(visible ? "shown" : "hidden") in Locations")
+}
+
+func setCloudServicesVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
+    props["com.apple.finder.showcloudservices"] = NSNumber(value: visible ? 1 : 0)
+    dict["properties"] = props
+    
+    try saveSFL(url, dict: dict)
+    print("✓ Cloud services \(visible ? "shown" : "hidden") in Locations")
+}
+
+func setHardDrivesVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ShowHardDrives"] = NSNumber(value: visible ? 1 : 0)
+    dict["properties"] = props
+    
+    try saveSFL(url, dict: dict)
+    print("✓ Hard drives \(visible ? "shown" : "hidden") in Locations")
+}
+
+func setNetworkVolumesVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
+    props["com.apple.LSSharedFileList.FavoriteVolumes.ShowNetworkVolumes"] = NSNumber(value: visible ? 1 : 0)
+    dict["properties"] = props
+    
+    try saveSFL(url, dict: dict)
+    print("✓ Network volumes \(visible ? "shown" : "hidden") in Locations")
+}
+
+// ============ iCloudItems (iCloud Drive in sidebar) ============
+
+func iCloudItemsURL() throws -> URL {
+    let dir = try sharedFileListDir()
+    return dir.appendingPathComponent("com.apple.LSSharedFileList.iCloudItems.sfl4", isDirectory: false)
+}
+
+func setiCloudDriveVisible(_ visible: Bool) throws {
+    let url = try iCloudItemsURL()
+    try createEmptyiCloudItemsIfMissing(url)
+    let dict = try openSFL(url)
+    
+    // iCloud Drive visibility is controlled per-item
+    if let items = dict["items"] as? NSArray {
+        let newItems = NSMutableArray()
+        for item in items {
+            guard let itemDict = item as? NSDictionary else { continue }
+            let newItem = NSMutableDictionary(dictionary: itemDict)
+            newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
+            newItems.add(newItem)
+        }
+        dict["items"] = newItems
+    }
+    
+    try saveSFL(url, dict: dict)
+    print("✓ iCloud Drive \(visible ? "shown" : "hidden") in sidebar")
+}
+
 // ============ Main ============
 
 func usage() {
     print("""
-sidebarsections: Control Finder sidebar sections (Recents, Shared, Bonjour)
+sidebarsections: Control Finder sidebar sections
 
-Usage:
-  --hide-recents-shared     Hide Recents and Shared sections (sets visibility=1)
-  --show-recents-shared     Show Recents and Shared sections (sets visibility=0)
+Recents & Shared (top of sidebar):
+  --hide-recents-shared     Hide Recents and Shared sections
+  --show-recents-shared     Show Recents and Shared sections
   --remove-recents-shared   Remove Recents and Shared items entirely
-  --disable-bonjour         Disable Bonjour computers in Shared section
-  --enable-bonjour          Enable Bonjour computers in Shared section
+
+Network:
+  --disable-bonjour         Disable Bonjour computers in sidebar
+  --enable-bonjour          Enable Bonjour computers in sidebar
   --disable-connected       Disable connected servers in Locations
   --enable-connected        Enable connected servers in Locations
+
+Locations section:
+  --hide-computer           Hide this Mac in Locations
+  --show-computer           Show this Mac in Locations
+  --hide-cloud-services     Hide cloud services (iCloud in Locations)
+  --show-cloud-services     Show cloud services
+  --hide-hard-drives        Hide hard drives in Locations
+  --show-hard-drives        Show hard drives in Locations
+  --hide-network-volumes    Hide network volumes in Locations
+  --show-network-volumes    Show network volumes in Locations
+
+iCloud:
+  --hide-icloud-drive       Hide iCloud Drive from sidebar
+  --show-icloud-drive       Show iCloud Drive in sidebar
+
+General:
   --reload                  Restart sharedfilelistd and Finder to apply changes
-  --all-hidden              Hide everything (Recents, Shared, disable Bonjour)
+  --all-hidden              Hide Recents, Shared, Computer, iCloud Drive, cloud services
+  --locations-minimal       Hide Computer, cloud services, network volumes (keep hard drives)
 """)
 }
 
@@ -273,6 +415,7 @@ var needsReload = false
 do {
     for arg in args {
         switch arg {
+        // Recents & Shared
         case "--hide-recents-shared":
             try hideRecentsAndShared()
             needsReload = true
@@ -282,6 +425,8 @@ do {
         case "--remove-recents-shared":
             try removeRecentsAndShared()
             needsReload = true
+        
+        // Network
         case "--disable-bonjour":
             try setBonjourEnabled(false)
             needsReload = true
@@ -294,13 +439,58 @@ do {
         case "--enable-connected":
             try setConnectedServersEnabled(true)
             needsReload = true
+        
+        // Locations section
+        case "--hide-computer":
+            try setComputerVisible(false)
+            needsReload = true
+        case "--show-computer":
+            try setComputerVisible(true)
+            needsReload = true
+        case "--hide-cloud-services":
+            try setCloudServicesVisible(false)
+            needsReload = true
+        case "--show-cloud-services":
+            try setCloudServicesVisible(true)
+            needsReload = true
+        case "--hide-hard-drives":
+            try setHardDrivesVisible(false)
+            needsReload = true
+        case "--show-hard-drives":
+            try setHardDrivesVisible(true)
+            needsReload = true
+        case "--hide-network-volumes":
+            try setNetworkVolumesVisible(false)
+            needsReload = true
+        case "--show-network-volumes":
+            try setNetworkVolumesVisible(true)
+            needsReload = true
+        
+        // iCloud
+        case "--hide-icloud-drive":
+            try setiCloudDriveVisible(false)
+            needsReload = true
+        case "--show-icloud-drive":
+            try setiCloudDriveVisible(true)
+            needsReload = true
+        
+        // General
         case "--reload":
             reload()
             print("✓ Reloaded sharedfilelistd and Finder")
         case "--all-hidden":
             try removeRecentsAndShared()
             try setBonjourEnabled(false)
+            try setComputerVisible(false)
+            try setiCloudDriveVisible(false)
+            try setCloudServicesVisible(false)
             needsReload = true
+        case "--locations-minimal":
+            try setComputerVisible(false)
+            try setCloudServicesVisible(false)
+            try setNetworkVolumesVisible(false)
+            needsReload = true
+        
         default:
             logerr("Unknown option: \(arg)")
             usage()

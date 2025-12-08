@@ -16,6 +16,12 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Extended sidebarsections to control Locations items
+- Added support for hiding/showing: Computer, iCloud Drive, cloud services, hard drives, network volumes.
+- New options: `--hide-computer`, `--hide-icloud-drive`, `--hide-cloud-services`, `--hide-hard-drives`, `--hide-network-volumes` (and corresponding `--show-*` variants).
+- Added `--locations-minimal` preset and expanded `--all-hidden` to include Locations items.
+- Controls `FavoriteVolumes.sfl4` for Locations section and `iCloudItems.sfl4` for iCloud Drive.
+
 ### 2025-12-08 — Consistency fixes across finder.sh and sidebarctl.swift
 - Fixed `finder.sh` to also update scripts when source is newer (same issue as `.macos`).
 - Fixed `finder.sh` DS_Store cleanup to only clean Desktop/Documents/Downloads (was recursively searching entire `$HOME`).
