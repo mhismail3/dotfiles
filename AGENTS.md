@@ -16,6 +16,12 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Add home folder control in Locations section
+- Added `--hide-home-in-locations` / `--show-home-in-locations` to control home folder visibility in Locations.
+- Home folder in Locations uses `SpecialItemIdentifier: com.apple.LSSharedFileList.IsHome`.
+- This is separate from Favorites where home folder is controlled by `sidebarctl`.
+- Added to `--all-hidden` preset.
+
 ### 2025-12-08 — Fix Locations items visibility by setting item-level properties
 - Fixed Computer and iCloud Drive not hiding: must set `visibility` on items by `SpecialItemIdentifier`, not just file-level properties.
 - Items in FavoriteVolumes.sfl4 have their own `visibility` property that takes precedence over file-level settings.

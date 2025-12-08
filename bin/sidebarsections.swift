@@ -358,6 +358,33 @@ func setiCloudDriveInLocationsVisible(_ visible: Bool) throws {
     print("✓ iCloud Drive \(visible ? "shown" : "hidden") in Locations")
 }
 
+func setHomeFolderInLocationsVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    // Set visibility on Home folder item in FavoriteVolumes (Locations section)
+    if let items = dict["items"] as? NSArray {
+        let newItems = NSMutableArray()
+        for item in items {
+            guard let itemDict = item as? NSDictionary else { continue }
+            let newItem = NSMutableDictionary(dictionary: itemDict)
+            
+            if let customProps = itemDict["CustomItemProperties"] as? NSDictionary,
+               let specialId = customProps["com.apple.LSSharedFileList.SpecialItemIdentifier"] as? String,
+               specialId == "com.apple.LSSharedFileList.IsHome" {
+                newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
+            }
+            
+            newItems.add(newItem)
+        }
+        dict["items"] = newItems
+    }
+    
+    try saveSFL(url, dict: dict)
+    print("✓ Home folder \(visible ? "shown" : "hidden") in Locations")
+}
+
 func setCloudServicesVisible(_ visible: Bool) throws {
     let url = try favoriteVolumesURL()
     try createEmptyFavoriteVolumesIfMissing(url)
@@ -417,6 +444,8 @@ Network:
 Locations section:
   --hide-computer           Hide this Mac in Locations
   --show-computer           Show this Mac in Locations
+  --hide-home-in-locations  Hide home folder in Locations (keep in Favorites)
+  --show-home-in-locations  Show home folder in Locations
   --hide-icloud-drive       Hide iCloud Drive in Locations
   --show-icloud-drive       Show iCloud Drive in Locations
   --hide-cloud-services     Hide cloud services in Locations
@@ -476,6 +505,12 @@ do {
         case "--show-computer":
             try setComputerVisible(true)
             needsReload = true
+        case "--hide-home-in-locations":
+            try setHomeFolderInLocationsVisible(false)
+            needsReload = true
+        case "--show-home-in-locations":
+            try setHomeFolderInLocationsVisible(true)
+            needsReload = true
         case "--hide-cloud-services":
             try setCloudServicesVisible(false)
             needsReload = true
@@ -511,6 +546,7 @@ do {
             try removeRecentsAndShared()
             try setBonjourEnabled(false)
             try setComputerVisible(false)
+            try setHomeFolderInLocationsVisible(false)
             try setiCloudDriveInLocationsVisible(false)
             try setCloudServicesVisible(false)
             needsReload = true
