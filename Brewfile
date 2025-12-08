@@ -142,6 +142,7 @@ cask "google-chrome"    # Browser
 ###############################################################################
 
 cask "cursor"           # AI code editor
+cask "cursor-cli"       # Cursor Agent CLI (cursor-agent command)
 cask "visual-studio-code"
 cask "warp"             # Modern terminal
 
@@ -174,6 +175,7 @@ cask "logi-options+"    # Logitech mouse/keyboard customization
 # Applications - Privacy & Security
 ###############################################################################
 
+cask "tailscale"                 # Mesh VPN for secure networking
 # cask "private-internet-access"  # VPN - install manually, has installer issues with Homebrew
 
 ###############################################################################
