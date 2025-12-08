@@ -11,17 +11,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 
 ## Current expectations for this repo
 - Scripts must stay idempotent and macOS-only; detect Homebrew prefix and use $HOME/$DOTFILES instead of absolute paths.
-- Bootstrapping flows live in `start.sh`; system defaults live in `.macos` which sources modular scripts: `finder.sh` (sidebar), `dock.sh` (layout), `keyboard.sh` (remapping); package sources live in `Brewfile`.
+- Bootstrapping flows live in `start.sh`; system defaults and Dock/layout automation live in `.macos` (with Finder sidebar helpers in `finder.sh`/`bin/sidebarctl.swift`); package sources live in `Brewfile`.
 - Shell startup performance relies on lazy-loading version managers (pyenv, nvm, rbenv) and streamlined fzf/history settings—preserve that behavior when editing shell files.
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
-### 2025-12-08 — Modularized .macos into separate scripts
-- Extracted functions from `.macos` into standalone sourceable scripts: `dock.sh` (Dock layout with dockutil), `keyboard.sh` (Caps Lock remap, Option+L shortcut).
-- Merged sidebar sections functions into `finder.sh` (added `install_sidebarsections()`, `configure_sidebar_sections()`).
-- `.macos` now sources these modules and calls their entry points, reducing from 803 to 522 lines.
-- Each module is both standalone-runnable and sourceable by `.macos`.
-
 ### 2025-12-08 — Extended sidebarsections to control Locations items
 - Added support for hiding/showing: Computer, iCloud Drive, cloud services, hard drives, network volumes.
 - New options: `--hide-computer`, `--hide-icloud-drive`, `--hide-cloud-services`, `--hide-hard-drives`, `--hide-network-volumes` (and corresponding `--show-*` variants).

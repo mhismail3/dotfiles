@@ -25,12 +25,7 @@
 
 set -euo pipefail
 
-# Get script directory (works in both bash and zsh)
-if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
-    DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-else
-    DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-fi
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # -------- Configuration knobs --------
 # If 1, delete .DS_Store files under $HOME to reduce per-folder overrides.
@@ -104,39 +99,6 @@ install_sidebarctl() {
   echo "$sidebarctl_path"
 }
 
-# -------- Sidebar Sections Installation --------
-install_sidebarsections() {
-  command -v swift >/dev/null 2>&1 || {
-    err "swift not found. Install Xcode Command Line Tools before running this.\n"
-    return 2
-  }
-
-  local source_path="$DOTFILES_DIR/bin/sidebarsections.swift"
-  if [[ ! -f "$source_path" ]]; then
-    err "sidebarsections source not found at $source_path"
-    return 2
-  fi
-
-  local install_dir
-  install_dir="$(detect_install_dir)"
-  mkdir -p "$install_dir"
-
-  local script_path="$install_dir/sidebarsections"
-
-  # Update the script if source is newer or script doesn't exist
-  if [[ ! -x "$script_path" ]] || [[ "$source_path" -nt "$script_path" ]]; then
-    cp "$source_path" "$script_path"
-    chmod +x "$script_path"
-  fi
-
-  # Ensure local bin is in PATH for current process if we used ~/.local/bin
-  if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
-    export PATH="$HOME/.local/bin:$PATH"
-  fi
-
-  echo "$script_path"
-}
-
 # -------- User-facing functions --------
 configure_finder_favorites() {
   local sidebarctl
@@ -160,19 +122,6 @@ configure_finder_favorites() {
     [[ -n "$sfl_path" ]] && err "    SFL path: $sfl_path"
     err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/finder.sh"
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" >/dev/null 2>&1 || true
-  fi
-}
-
-configure_sidebar_sections() {
-  local sidebarsections
-  sidebarsections="$(install_sidebarsections)" || {
-    err "⚠️  Skipping sidebar sections configuration (sidebarsections unavailable)."
-    return 0
-  }
-
-  # Hide Recents and Shared sections, disable Bonjour computers
-  if ! "$sidebarsections" --all-hidden; then
-    err "⚠️  sidebarsections could not hide Recents/Shared (Full Disk Access may be required)."
   fi
 }
 
@@ -212,7 +161,6 @@ reload_finder_ui() {
 
 apply_finder_customizations() {
   configure_finder_favorites
-  configure_sidebar_sections
   configure_finder_column_defaults
   reset_home_ds_store
   reload_finder_ui
@@ -223,9 +171,6 @@ apply_finder_customizations() {
 #   1) execute this script directly, or
 #   2) source it and call apply_finder_customizations from another script.
 
-# Check if running directly (not sourced) - works in bash and zsh
-if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
-    [[ "${BASH_SOURCE[0]}" == "$0" ]] && apply_finder_customizations
-elif [[ "${ZSH_EVAL_CONTEXT:-}" != *":file:"* && "${ZSH_EVAL_CONTEXT:-}" != *":file" ]]; then
-    apply_finder_customizations
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  apply_finder_customizations
 fi
