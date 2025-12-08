@@ -223,23 +223,42 @@ if command -v dockutil &>/dev/null; then
     
     DOCKUTIL_TIMEOUT_CMD="$(command -v gtimeout || command -v timeout || true)"
     DOCKUTIL_TIMEOUT_SECS="${DOCKUTIL_TIMEOUT_SECS:-10}"
-    DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=0
+    DOCKUTIL_TRACE="${DOCKUTIL_TRACE:-0}"
+
+    # run_dockutil wraps each call with a hard timeout guard.
+    # Priority: gtimeout/timeout if present; otherwise a manual watcher that kills the pid.
     run_dockutil() {
         if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
             "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
-        elif command -v perl >/dev/null 2>&1; then
-            if [[ "$DOCKUTIL_TIMEOUT_FALLBACK_LOGGED" == "0" ]]; then
-                echo "INFO: Using perl alarm as dockutil timeout guard (${DOCKUTIL_TIMEOUT_SECS}s). Install coreutils for gtimeout/timeout."
-                DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=1
-            fi
-            perl -e 'alarm shift; exec @ARGV' "$DOCKUTIL_TIMEOUT_SECS" "$@"
-        else
-            if [[ "$DOCKUTIL_TIMEOUT_FALLBACK_LOGGED" == "0" ]]; then
-                echo "WARN: No timeout utility available; dockutil may hang. Install coreutils for gtimeout."
-                DOCKUTIL_TIMEOUT_FALLBACK_LOGGED=1
-            fi
-            "$@"
+            return $?
         fi
+
+        local start ts pid killer status
+        start=$(date +%s)
+
+        "$@" &
+        pid=$!
+
+        (
+            sleep "$DOCKUTIL_TIMEOUT_SECS"
+            if kill -0 "$pid" 2>/dev/null; then
+                echo "WARN: dockutil timed out after ${DOCKUTIL_TIMEOUT_SECS}s; killing pid $pid ($*)"
+                kill -TERM "$pid" 2>/dev/null || true
+                sleep 1
+                kill -KILL "$pid" 2>/dev/null || true
+            fi
+        ) &
+        killer=$!
+
+        wait "$pid"
+        status=$?
+        kill "$killer" 2>/dev/null || true
+
+        ts=$(( $(date +%s) - start ))
+        if [[ "$DOCKUTIL_TRACE" == "1" ]]; then
+            echo "INFO: dockutil finished in ${ts}s (exit ${status}): $*"
+        fi
+        return $status
     }
 
     # Clear existing Dock items (with timeout guard to avoid hangs)

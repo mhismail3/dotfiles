@@ -17,7 +17,7 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 
 ## Timeline (newest first)
 ### 2025-12-08 — Dockutil hang fallback
-- Dock layout now enforces a timeout even when gtimeout/timeout is missing by falling back to a perl alarm guard (warns if no timeout tool). Prevents dockutil from stalling bootstrap.
+- Dock layout now enforces a hard timeout per dockutil call: prefers gtimeout/timeout but falls back to an inline watcher that kills the process after the configured interval. Helps avoid stalls during bootstrap even when no timeout utility is installed.
 
 ### 2025-12-08 — Finder sidebar FDA hint
 - Added explicit Full Disk Access guidance when `sidebarctl` cannot read/write Finder favorites (opens Privacy & Security → Full Disk Access deep link and surfaces SFL path).
