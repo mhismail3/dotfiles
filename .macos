@@ -409,13 +409,12 @@ install_sidebarctl() {
     mkdir -p "$install_dir"
 
     local sidebarctl_path="$install_dir/sidebarctl"
-    if [[ -x "$sidebarctl_path" ]]; then
-        echo "$sidebarctl_path"
-        return 0
+    
+    # Always update the script if source is newer or script doesn't exist
+    if [[ ! -x "$sidebarctl_path" ]] || [[ "$SIDEBARCTL_SOURCE" -nt "$sidebarctl_path" ]]; then
+        cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
+        chmod +x "$sidebarctl_path"
     fi
-
-    cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
-    chmod +x "$sidebarctl_path"
 
     if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
         export PATH="$HOME/.local/bin:$PATH"
@@ -441,13 +440,12 @@ install_sidebarsections() {
     mkdir -p "$install_dir"
 
     local script_path="$install_dir/sidebarsections"
-    if [[ -x "$script_path" ]]; then
-        echo "$script_path"
-        return 0
+    
+    # Always update the script if source is newer or script doesn't exist
+    if [[ ! -x "$script_path" ]] || [[ "$source_path" -nt "$script_path" ]]; then
+        cp "$source_path" "$script_path"
+        chmod +x "$script_path"
     fi
-
-    cp "$source_path" "$script_path"
-    chmod +x "$script_path"
 
     if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
         export PATH="$HOME/.local/bin:$PATH"

@@ -16,6 +16,10 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Fix sidebar script install to update when source changes
+- Changed `install_sidebarctl()` and `install_sidebarsections()` in `.macos` to update installed scripts when source is newer.
+- Root cause: The install functions returned early if the script already existed, leaving stale versions in place after pulling fixes.
+
 ### 2025-12-08 — Fix sidebarsections missing file handling
 - Updated `bin/sidebarsections.swift` to create SFL files if they don't exist, matching the pattern from `sidebarctl.swift`.
 - Added `createEmptyTopSidebarSectionIfMissing()` and `createEmptyNetworkBrowserIfMissing()` helper functions.
