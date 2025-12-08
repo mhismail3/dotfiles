@@ -6,8 +6,8 @@
 #   Intended to be run standalone after SynologyDrive or other sync services are configured.
 #
 # Usage:
-#   ./screenshots.sh                           # Use default: ~/Pictures/Screenshots
-#   ./screenshots.sh /path/to/folder           # Use custom path
+#   ./screenshots.sh                           # Interactive prompt for path
+#   ./screenshots.sh /path/to/folder           # Use custom path directly
 #   SCREENSHOT_DIR="~/Dropbox/Screenshots" ./screenshots.sh
 #
 # Notes:
@@ -82,6 +82,28 @@ show_current_location() {
   echo ""
 }
 
+prompt_for_path() {
+  local current
+  current="$(read_screenshot_location)"
+  
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "📸 Screenshot Location Setup"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo ""
+  echo "Current location: $current"
+  echo ""
+  echo -n "Enter new screenshot location (or press Enter for ~/Pictures/Screenshots): "
+  read -r user_path </dev/tty || user_path=""
+  echo ""
+  
+  if [[ -z "$user_path" ]]; then
+    configure_screenshot_location "$SCREENSHOT_DIR"
+  else
+    configure_screenshot_location "$user_path"
+  fi
+}
+
 show_help() {
   cat << 'EOF'
 screenshots.sh — Configure macOS screenshot save location
@@ -91,7 +113,7 @@ USAGE:
 
 ARGUMENTS:
   PATH                    Custom screenshot save location (optional)
-                          Default: ~/Pictures/Screenshots
+                          If omitted, prompts interactively
 
 OPTIONS:
   --show, -s              Show current screenshot location
@@ -99,13 +121,13 @@ OPTIONS:
   --help, -h              Show this help message
 
 EXAMPLES:
-  ./screenshots.sh                              # Set to ~/Pictures/Screenshots
-  ./screenshots.sh ~/Dropbox/Screenshots        # Set to custom path
+  ./screenshots.sh                              # Interactive prompt
+  ./screenshots.sh ~/Dropbox/Screenshots        # Set to custom path directly
   ./screenshots.sh --show                       # Show current setting
   ./screenshots.sh --reset                      # Reset to Desktop
 
 ENVIRONMENT VARIABLES:
-  SCREENSHOT_DIR          Override default path (used if no CLI arg provided)
+  SCREENSHOT_DIR          Default path suggestion (default: ~/Pictures/Screenshots)
 
 EOF
 }
@@ -128,8 +150,8 @@ main() {
       exit 1
       ;;
     "")
-      # No argument: use default or SCREENSHOT_DIR env var
-      configure_screenshot_location
+      # No argument: prompt interactively
+      prompt_for_path
       ;;
     *)
       # Path provided as argument
