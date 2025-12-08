@@ -27,10 +27,25 @@ func sharedFileListDir() throws -> URL {
 }
 
 func openSFL(_ url: URL) throws -> NSMutableDictionary {
+    let fm = FileManager.default
+    
+    // Check if file exists first to provide better error messages
+    if !fm.fileExists(atPath: url.path) {
+        throw SidebarError.io("SFL file does not exist at \(url.path). It will be created.")
+    }
+    
+    // Check if file is readable
+    if !fm.isReadableFile(atPath: url.path) {
+        throw SidebarError.io("Unable to read SFL file at \(url.path). Full Disk Access may be required for your terminal.")
+    }
+    
     let data: Data
     do { data = try Data(contentsOf: url) }
-    catch {
-        throw SidebarError.io("Unable to read SFL file at \(url.path). Full Disk Access may be required.")
+    catch let error as NSError {
+        if error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoPermissionError {
+            throw SidebarError.io("Permission denied reading \(url.path). Full Disk Access may be required.")
+        }
+        throw SidebarError.io("Unable to read SFL file at \(url.path): \(error.localizedDescription)")
     }
     
     let allowed: [AnyClass] = [
@@ -50,6 +65,39 @@ func openSFL(_ url: URL) throws -> NSMutableDictionary {
 func saveSFL(_ url: URL, dict: NSMutableDictionary) throws {
     let archived = try NSKeyedArchiver.archivedData(withRootObject: dict, requiringSecureCoding: false)
     try archived.write(to: url, options: [])
+}
+
+func createEmptyTopSidebarSectionIfMissing(_ url: URL) throws {
+    let fm = FileManager.default
+    if fm.fileExists(atPath: url.path) { return }
+    
+    // Create parent directory if needed
+    try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    
+    // Create with default structure: empty items, ForceTemplateIcons enabled
+    let root = NSMutableDictionary()
+    root["items"] = NSArray()
+    root["properties"] = NSDictionary(object: 1, forKey: "com.apple.LSSharedFileList.ForceTemplateIcons" as NSString)
+    
+    try saveSFL(url, dict: root)
+}
+
+func createEmptyNetworkBrowserIfMissing(_ url: URL) throws {
+    let fm = FileManager.default
+    if fm.fileExists(atPath: url.path) { return }
+    
+    // Create parent directory if needed
+    try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+    
+    // Create with default structure: empty items, bonjour disabled, connected servers enabled
+    let root = NSMutableDictionary()
+    root["items"] = NSArray()
+    let props = NSMutableDictionary()
+    props["com.apple.NetworkBrowser.bonjourEnabled"] = NSNumber(value: 0)
+    props["com.apple.NetworkBrowser.connectedEnabled"] = NSNumber(value: 1)
+    root["properties"] = props
+    
+    try saveSFL(url, dict: root)
 }
 
 func reload() {
@@ -76,6 +124,7 @@ func topSidebarSectionURL() throws -> URL {
 
 func hideRecentsAndShared() throws {
     let url = try topSidebarSectionURL()
+    try createEmptyTopSidebarSectionIfMissing(url)
     let dict = try openSFL(url)
     
     guard let items = dict["items"] as? NSArray else {
@@ -123,6 +172,7 @@ func hideRecentsAndShared() throws {
 
 func showRecentsAndShared() throws {
     let url = try topSidebarSectionURL()
+    try createEmptyTopSidebarSectionIfMissing(url)
     let dict = try openSFL(url)
     
     guard let items = dict["items"] as? NSArray else {
@@ -151,6 +201,7 @@ func showRecentsAndShared() throws {
 
 func removeRecentsAndShared() throws {
     let url = try topSidebarSectionURL()
+    try createEmptyTopSidebarSectionIfMissing(url)
     let dict = try openSFL(url)
     
     // Simply clear all items - this removes Recents and Shared
@@ -168,6 +219,7 @@ func networkBrowserURL() throws -> URL {
 
 func setBonjourEnabled(_ enabled: Bool) throws {
     let url = try networkBrowserURL()
+    try createEmptyNetworkBrowserIfMissing(url)
     let dict = try openSFL(url)
     
     let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
@@ -180,6 +232,7 @@ func setBonjourEnabled(_ enabled: Bool) throws {
 
 func setConnectedServersEnabled(_ enabled: Bool) throws {
     let url = try networkBrowserURL()
+    try createEmptyNetworkBrowserIfMissing(url)
     let dict = try openSFL(url)
     
     let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])

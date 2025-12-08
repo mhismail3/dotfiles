@@ -16,6 +16,12 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Fix sidebarsections missing file handling
+- Updated `bin/sidebarsections.swift` to create SFL files if they don't exist, matching the pattern from `sidebarctl.swift`.
+- Added `createEmptyTopSidebarSectionIfMissing()` and `createEmptyNetworkBrowserIfMissing()` helper functions.
+- Improved `openSFL()` error handling to distinguish between missing files vs permission errors.
+- Root cause: On fresh macOS installs, `TopSidebarSection.sfl4` and `NetworkBrowser.sfl4` may not exist yet; the script was incorrectly reporting "Full Disk Access required" for missing files.
+
 ### 2025-12-08 — Automate hiding Recents/Shared sidebar sections
 - Added `bin/sidebarsections.swift` to programmatically hide Recents and Shared sections from Finder sidebar by editing `com.apple.LSSharedFileList.TopSidebarSection.sfl4` and `com.apple.LSSharedFileList.NetworkBrowser.sfl4`.
 - Integrated into `.macos` via `configure_sidebar_sections()` function.
