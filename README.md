@@ -42,8 +42,8 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 6. Symlinks dotfiles to home directory
 7. Sets up SSH key (optional, asks first)
 8. Applies macOS preferences (optional, asks first)
-   - Includes automated Dock layout configuration
-   - Configures Finder defaults and sidebar favorites (Home, Applications, Downloads, iCloud Drive when present) using bundled `sidebarctl`
+   - Automated Dock layout configuration
+   - Finder sidebar: sets favorites (Home, Applications, Downloads, iCloud Drive), hides Recents/Shared/Computer/iCloud Drive from Locations
 
 ## Manual Steps After Setup
 
@@ -54,7 +54,8 @@ The script will print these, but here's a summary:
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
 4. **SSH Key** — Run `~/.dotfiles/ssh.sh` then add to GitHub
 5. **Mackup** — Run `mackup restore` to restore app preferences
-6. **Finder Sidebar** — If automation warns about Full Disk Access, open System Settings → Privacy & Security → Full Disk Access and enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun `~/.dotfiles/finder.sh`
+
+> **Note:** If the script warns about Full Disk Access for Finder sidebar automation, open System Settings → Privacy & Security → Full Disk Access, enable your terminal (e.g., Terminal, iTerm2, Cursor), then rerun `source ~/.dotfiles/.macos`
 
 ## File Structure
 
