@@ -20,6 +20,10 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Added explicit Full Disk Access guidance when `sidebarctl` cannot read/write Finder favorites (opens Privacy & Security → Full Disk Access deep link and surfaces SFL path).
 - Goal: give operators a clear remediation path when macOS blocks sidebar automation.
 
+### 2025-12-08 — Dockutil hang guard
+- Added timeout wrapper (`gtimeout`/`timeout` if available) around dockutil remove/add to prevent hangs during Dock configuration.
+- Goal: ensure bootstrap continues even if dockutil stalls on Sequoia.
+
 ### 2025-12-06 — Agent log rewrite and rule cleanup
 - Renamed the changelog to `AGENTS.md` and rewrote it as an agent-first, reverse-chronological log that captures rationale.
 - Generalized `.cursorrules` to remove project-specific references while keeping doc/update/commit expectations.

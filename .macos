@@ -221,16 +221,26 @@ if command -v dockutil &>/dev/null; then
         "/System/Applications/System Settings.app"
     )
     
-    # Clear existing Dock items
-    dockutil --remove all --no-restart 2>/dev/null || true
+    DOCKUTIL_TIMEOUT_CMD="$(command -v gtimeout || command -v timeout || true)"
+    DOCKUTIL_TIMEOUT_SECS="${DOCKUTIL_TIMEOUT_SECS:-10}"
+    run_dockutil() {
+        if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
+            "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
+        else
+            "$@"
+        fi
+    }
+
+    # Clear existing Dock items (with timeout guard to avoid hangs)
+    run_dockutil dockutil --remove all --no-restart 2>/dev/null || true
     sleep 0.5
     
-    # Add apps in order
+    # Add apps in order (with timeout guard to prevent hangs on stuck dockutil)
     for app in "${DOCK_APPS[@]}"; do
         if [[ -d "$app" ]]; then
             app_name=$(basename "$app" .app)
-            dockutil --remove "$app_name" --no-restart 2>/dev/null || true
-            dockutil --add "$app" --no-restart
+            run_dockutil dockutil --remove "$app_name" --no-restart 2>/dev/null || true
+            run_dockutil dockutil --add "$app" --no-restart || echo "⚠️  dockutil add may have stalled for $app_name; continuing."
         fi
     done
 else
