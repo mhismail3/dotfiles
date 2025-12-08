@@ -16,6 +16,13 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Add Raycast config import to bootstrap sequence
+- Added Raycast configuration import section to `start.sh` after Git LFS setup.
+- Opens Raycast import dialog via deeplink (`raycast://extensions/raycast/raycast/import-settings-data`) and reveals the `.rayconfig` file in Finder.
+- User just needs to select the revealed file to complete import.
+- Graceful fallback if Raycast isn't installed or config file is missing.
+- Follows existing idempotent/skip-friendly pattern used throughout bootstrap.
+
 ### 2025-12-08 — Add screenshots.sh for screenshot location configuration
 - Added standalone `screenshots.sh` script to configure macOS default screenshot save location.
 - Uses `defaults write com.apple.screencapture location` and restarts SystemUIServer to apply immediately.

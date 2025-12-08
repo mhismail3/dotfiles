@@ -433,6 +433,49 @@ if command -v git-lfs &>/dev/null; then
 fi
 
 ###############################################################################
+# Raycast Configuration
+###############################################################################
+
+info "Raycast configuration..."
+
+RAYCONFIG="$DOTFILES/Raycast.rayconfig"
+
+if [[ -d "/Applications/Raycast.app" ]] && [[ -f "$RAYCONFIG" ]]; then
+    echo ""
+    echo "Raycast is installed and a config file is available."
+    echo "Opening Raycast import dialog and revealing the config file..."
+    echo ""
+    
+    # Open the import settings command via deeplink (background, won't steal focus initially)
+    open "raycast://extensions/raycast/raycast/import-settings-data"
+    
+    # Brief pause to let Raycast launch, then reveal the config file
+    sleep 1
+    open -R "$RAYCONFIG"
+    
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📦 Raycast Import"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "  1. The Raycast import dialog should now be open"
+    echo "  2. The config file is highlighted in Finder"
+    echo "  3. Drag the file into Raycast OR click 'Select File' and choose it"
+    echo ""
+    echo -n "Press Enter after importing (or skip with 's'): "
+    read REPLY </dev/tty || REPLY=""
+    
+    if [[ "$REPLY" =~ ^[Ss]$ ]]; then
+        echo "  Skipped. Import manually later: open raycast://extensions/raycast/raycast/import-settings-data"
+    else
+        success "Raycast import initiated"
+    fi
+elif [[ ! -d "/Applications/Raycast.app" ]]; then
+    echo "  Raycast not installed. Skipping config import."
+elif [[ ! -f "$RAYCONFIG" ]]; then
+    echo "  No Raycast config file found at $RAYCONFIG"
+fi
+
+###############################################################################
 # iCloud Photo Library Sync
 ###############################################################################
 
