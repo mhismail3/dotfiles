@@ -16,6 +16,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Automate hiding Recents/Shared sidebar sections
+- Added `bin/sidebarsections.swift` to programmatically hide Recents and Shared sections from Finder sidebar by editing `com.apple.LSSharedFileList.TopSidebarSection.sfl4` and `com.apple.LSSharedFileList.NetworkBrowser.sfl4`.
+- Integrated into `.macos` via `configure_sidebar_sections()` function.
+- Key insight: The SFL files use NSKeyedArchiver format; TopSidebarSection contains cannedSearch references for Recents/Shared; NetworkBrowser has `bonjourEnabled` property.
+
 ### 2025-12-08 — Fix .DS_Store cleanup hang + add progress messages
 - Changed `reset_home_ds_store` to only clean Desktop/Documents/Downloads instead of recursively searching the entire home directory (which could take minutes on large ~/Library).
 - Added echo statements throughout `.macos` so each major section announces itself, making it easier to identify where hangs occur.
