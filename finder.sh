@@ -80,19 +80,16 @@ install_sidebarctl() {
 
   local sidebarctl_path="$install_dir/sidebarctl"
 
-  # If already present, keep it.
-  if [[ -x "$sidebarctl_path" ]]; then
-    echo "$sidebarctl_path"
-    return 0
-  fi
-
   if [[ ! -f "$SIDEBARCTL_SOURCE" ]]; then
     err "sidebarctl source not found at $SIDEBARCTL_SOURCE"
     return 2
   fi
 
-  cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
-  chmod +x "$sidebarctl_path"
+  # Update the script if source is newer or script doesn't exist
+  if [[ ! -x "$sidebarctl_path" ]] || [[ "$SIDEBARCTL_SOURCE" -nt "$sidebarctl_path" ]]; then
+    cp "$SIDEBARCTL_SOURCE" "$sidebarctl_path"
+    chmod +x "$sidebarctl_path"
+  fi
 
   # Ensure local bin is in PATH for current process if we used ~/.local/bin
   if [[ "$install_dir" == "$HOME/.local/bin" ]]; then
@@ -134,7 +131,17 @@ configure_finder_column_defaults() {
 
 reset_home_ds_store() {
   [[ "$RESET_DS_STORE" == "1" ]] || return 0
-  find "$HOME" -name ".DS_Store" -delete 2>/dev/null || true
+  
+  # Only clean specific directories to avoid slow recursive search of ~/Library
+  local dirs_to_clean=(
+    "$HOME/Desktop"
+    "$HOME/Documents"
+    "$HOME/Downloads"
+  )
+  
+  for dir in "${dirs_to_clean[@]}"; do
+    [[ -d "$dir" ]] && find "$dir" -name ".DS_Store" -delete 2>/dev/null || true
+  done
 }
 
 reload_finder_ui() {

@@ -53,10 +53,25 @@ func createEmptySFLIfMissing(_ url: URL) throws {
 }
 
 func openSFL(_ url: URL) throws -> NSMutableDictionary {
+    let fm = FileManager.default
+    
+    // Check if file exists first to provide better error messages
+    if !fm.fileExists(atPath: url.path) {
+        throw SidebarError.io("SFL file does not exist at \(url.path). It should have been created.")
+    }
+    
+    // Check if file is readable
+    if !fm.isReadableFile(atPath: url.path) {
+        throw SidebarError.io("Unable to read SFL file at \(url.path). Full Disk Access may be required for your terminal.")
+    }
+    
     let data: Data
     do { data = try Data(contentsOf: url) }
-    catch {
-        throw SidebarError.io("Unable to read SFL file at \(url.path). Full Disk Access may be required.")
+    catch let error as NSError {
+        if error.domain == NSCocoaErrorDomain && error.code == NSFileReadNoPermissionError {
+            throw SidebarError.io("Permission denied reading \(url.path). Full Disk Access may be required.")
+        }
+        throw SidebarError.io("Unable to read SFL file at \(url.path): \(error.localizedDescription)")
     }
 
     let allowed: [AnyClass] = [

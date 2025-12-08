@@ -16,6 +16,11 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-08 — Consistency fixes across finder.sh and sidebarctl.swift
+- Fixed `finder.sh` to also update scripts when source is newer (same issue as `.macos`).
+- Fixed `finder.sh` DS_Store cleanup to only clean Desktop/Documents/Downloads (was recursively searching entire `$HOME`).
+- Improved `sidebarctl.swift` error handling to match `sidebarsections.swift` (better file existence checks and error messages).
+
 ### 2025-12-08 — Fix sidebar script install to update when source changes
 - Changed `install_sidebarctl()` and `install_sidebarsections()` in `.macos` to update installed scripts when source is newer.
 - Root cause: The install functions returned early if the script already existed, leaving stale versions in place after pulling fixes.
