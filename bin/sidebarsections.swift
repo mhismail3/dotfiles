@@ -121,21 +121,6 @@ func createEmptyFavoriteVolumesIfMissing(_ url: URL) throws {
     try saveSFL(url, dict: root)
 }
 
-func createEmptyiCloudItemsIfMissing(_ url: URL) throws {
-    let fm = FileManager.default
-    if fm.fileExists(atPath: url.path) { return }
-    
-    // Create parent directory if needed
-    try fm.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-    
-    // Create with default structure (iCloud Drive item visible by default)
-    let root = NSMutableDictionary()
-    root["items"] = NSArray()
-    root["properties"] = NSDictionary()
-    
-    try saveSFL(url, dict: root)
-}
-
 func reload() {
     let killShared = Process()
     killShared.executableURL = URL(fileURLWithPath: "/usr/bin/killall")
@@ -286,17 +271,91 @@ func favoriteVolumesURL() throws -> URL {
     return dir.appendingPathComponent("com.apple.LSSharedFileList.FavoriteVolumes.sfl4", isDirectory: false)
 }
 
+// Helper to set visibility on items by their SpecialItemIdentifier
+func setFavoriteVolumesItemVisibility(specialId: String, visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    if let items = dict["items"] as? NSArray {
+        let newItems = NSMutableArray()
+        for item in items {
+            guard let itemDict = item as? NSDictionary else { continue }
+            let newItem = NSMutableDictionary(dictionary: itemDict)
+            
+            // Check if this item matches the special identifier
+            if let customProps = itemDict["CustomItemProperties"] as? NSDictionary,
+               let itemSpecialId = customProps["com.apple.LSSharedFileList.SpecialItemIdentifier"] as? String,
+               itemSpecialId == specialId {
+                // Set visibility on the item itself
+                newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
+            }
+            
+            newItems.add(newItem)
+        }
+        dict["items"] = newItems
+    }
+    
+    try saveSFL(url, dict: dict)
+}
+
 func setComputerVisible(_ visible: Bool) throws {
     let url = try favoriteVolumesURL()
     try createEmptyFavoriteVolumesIfMissing(url)
     let dict = try openSFL(url)
     
+    // Set file-level property
     let props = NSMutableDictionary(dictionary: (dict["properties"] as? NSDictionary) ?? [:])
     props["com.apple.LSSharedFileList.FavoriteVolumes.ComputerIsVisible"] = NSNumber(value: visible ? 1 : 0)
     dict["properties"] = props
     
+    // Also set visibility on the Computer item itself
+    if let items = dict["items"] as? NSArray {
+        let newItems = NSMutableArray()
+        for item in items {
+            guard let itemDict = item as? NSDictionary else { continue }
+            let newItem = NSMutableDictionary(dictionary: itemDict)
+            
+            if let customProps = itemDict["CustomItemProperties"] as? NSDictionary,
+               let specialId = customProps["com.apple.LSSharedFileList.SpecialItemIdentifier"] as? String,
+               specialId == "com.apple.LSSharedFileList.IsComputer" {
+                newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
+            }
+            
+            newItems.add(newItem)
+        }
+        dict["items"] = newItems
+    }
+    
     try saveSFL(url, dict: dict)
     print("✓ Computer \(visible ? "shown" : "hidden") in Locations")
+}
+
+func setiCloudDriveInLocationsVisible(_ visible: Bool) throws {
+    let url = try favoriteVolumesURL()
+    try createEmptyFavoriteVolumesIfMissing(url)
+    let dict = try openSFL(url)
+    
+    // Set visibility on iCloud Drive items in FavoriteVolumes (Locations section)
+    if let items = dict["items"] as? NSArray {
+        let newItems = NSMutableArray()
+        for item in items {
+            guard let itemDict = item as? NSDictionary else { continue }
+            let newItem = NSMutableDictionary(dictionary: itemDict)
+            
+            if let customProps = itemDict["CustomItemProperties"] as? NSDictionary,
+               let specialId = customProps["com.apple.LSSharedFileList.SpecialItemIdentifier"] as? String,
+               specialId == "com.apple.LSSharedFileList.IsICloudDrive" {
+                newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
+            }
+            
+            newItems.add(newItem)
+        }
+        dict["items"] = newItems
+    }
+    
+    try saveSFL(url, dict: dict)
+    print("✓ iCloud Drive \(visible ? "shown" : "hidden") in Locations")
 }
 
 func setCloudServicesVisible(_ visible: Bool) throws {
@@ -338,34 +397,6 @@ func setNetworkVolumesVisible(_ visible: Bool) throws {
     print("✓ Network volumes \(visible ? "shown" : "hidden") in Locations")
 }
 
-// ============ iCloudItems (iCloud Drive in sidebar) ============
-
-func iCloudItemsURL() throws -> URL {
-    let dir = try sharedFileListDir()
-    return dir.appendingPathComponent("com.apple.LSSharedFileList.iCloudItems.sfl4", isDirectory: false)
-}
-
-func setiCloudDriveVisible(_ visible: Bool) throws {
-    let url = try iCloudItemsURL()
-    try createEmptyiCloudItemsIfMissing(url)
-    let dict = try openSFL(url)
-    
-    // iCloud Drive visibility is controlled per-item
-    if let items = dict["items"] as? NSArray {
-        let newItems = NSMutableArray()
-        for item in items {
-            guard let itemDict = item as? NSDictionary else { continue }
-            let newItem = NSMutableDictionary(dictionary: itemDict)
-            newItem["visibility"] = NSNumber(value: visible ? 0 : 1)
-            newItems.add(newItem)
-        }
-        dict["items"] = newItems
-    }
-    
-    try saveSFL(url, dict: dict)
-    print("✓ iCloud Drive \(visible ? "shown" : "hidden") in sidebar")
-}
-
 // ============ Main ============
 
 func usage() {
@@ -386,16 +417,14 @@ Network:
 Locations section:
   --hide-computer           Hide this Mac in Locations
   --show-computer           Show this Mac in Locations
-  --hide-cloud-services     Hide cloud services (iCloud in Locations)
-  --show-cloud-services     Show cloud services
+  --hide-icloud-drive       Hide iCloud Drive in Locations
+  --show-icloud-drive       Show iCloud Drive in Locations
+  --hide-cloud-services     Hide cloud services in Locations
+  --show-cloud-services     Show cloud services in Locations
   --hide-hard-drives        Hide hard drives in Locations
   --show-hard-drives        Show hard drives in Locations
   --hide-network-volumes    Hide network volumes in Locations
   --show-network-volumes    Show network volumes in Locations
-
-iCloud:
-  --hide-icloud-drive       Hide iCloud Drive from sidebar
-  --show-icloud-drive       Show iCloud Drive in sidebar
 
 General:
   --reload                  Restart sharedfilelistd and Finder to apply changes
@@ -466,12 +495,12 @@ do {
             try setNetworkVolumesVisible(true)
             needsReload = true
         
-        // iCloud
+        // iCloud Drive in Locations
         case "--hide-icloud-drive":
-            try setiCloudDriveVisible(false)
+            try setiCloudDriveInLocationsVisible(false)
             needsReload = true
         case "--show-icloud-drive":
-            try setiCloudDriveVisible(true)
+            try setiCloudDriveInLocationsVisible(true)
             needsReload = true
         
         // General
@@ -482,7 +511,7 @@ do {
             try removeRecentsAndShared()
             try setBonjourEnabled(false)
             try setComputerVisible(false)
-            try setiCloudDriveVisible(false)
+            try setiCloudDriveInLocationsVisible(false)
             try setCloudServicesVisible(false)
             needsReload = true
         case "--locations-minimal":
