@@ -96,7 +96,8 @@ brew "pyenv-virtualenv" # Virtualenv plugin for pyenv
 brew "pipx"             # Install Python apps in isolated envs
 
 # Node.js
-brew "nvm"              # Node version manager
+brew "nvm"              # Node version manager (start.sh installs latest LTS via nvm)
+# Node runtime is installed by start.sh using: nvm install --lts --latest-npm
 # Note: yarn is best installed via corepack (comes with Node.js) or npm
 # brew "yarn"             # Package manager - prefer corepack enable && corepack prepare yarn@stable
 
@@ -151,6 +152,7 @@ cask "warp"             # Modern terminal
 ###############################################################################
 
 brew "gemini-cli"       # Google Gemini CLI
+brew "opencode"         # Open-source AI coding agent (TUI)
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
 
@@ -184,6 +186,7 @@ cask "tailscale"                 # Mesh VPN for secure networking
 
 mas "Things 3", id: 904280696
 mas "Hand Mirror", id: 1502839586  # Quick camera check from menu bar
+mas "Folder Peek", id: 1615988943  # Menu bar folder access (Sindre Sorhus)
 # mas "Xcode", id: 497799835  # Uncomment if needed (large download)
 # mas "Amphetamine", id: 937984704  # Keep Mac awake (optional for server)
 

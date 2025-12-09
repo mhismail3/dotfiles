@@ -17,6 +17,7 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 - Modern replacements: `bat`, `eza`, `fd`, `ripgrep`, `fzf`, `zoxide`
 - Dev tools: `git`, `gh`, `neovim`, `tmux`, `jq`, `httpie`
 - Version managers: `pyenv`, `nvm`, `rbenv`, `rustup`
+- Node.js: installs latest LTS via `nvm` (with `corepack enable` for yarn/pnpm)
 
 ### Apps
 - **Browsers:** Arc, Chrome

@@ -2,6 +2,7 @@
 
 ## Preparation
 - Read `AGENTS.md` (history + rationale) and `README.md` before editing.
+- Read `cursor/tmux-rules.md` when working with terminal sessions or long-running processes.
 - Plan edits and identify which files you expect to touch.
 
 ## Working guidelines

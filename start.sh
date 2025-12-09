@@ -382,9 +382,50 @@ fi
 
 info "Setting up version managers..."
 
+setup_nvm_and_node() {
+    # Ensure nvm directories exist
+    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+    mkdir -p "$NVM_DIR"
+
+    local nvm_sh="$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+    local nvm_completion="$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+
+    if [[ ! -s "$nvm_sh" ]]; then
+        echo "  nvm not found at $nvm_sh (install via Brewfile)."
+        return
+    fi
+
+    # shellcheck disable=SC1090
+    source "$nvm_sh"
+    [[ -s "$nvm_completion" ]] && source "$nvm_completion"
+
+    local current_node
+    current_node=$( (command -v node >/dev/null 2>&1 && node -v 2>/dev/null) || echo "" )
+
+    if [[ -z "$current_node" ]]; then
+        info "Installing latest LTS Node via nvm..."
+    else
+        info "Ensuring latest LTS Node via nvm (current: $current_node)..."
+    fi
+
+    if nvm install --lts --latest-npm; then
+        nvm alias default "lts/*" >/dev/null 2>&1 || true
+        success "Node (LTS) installed via nvm"
+    else
+        echo "  ⚠️  nvm install failed (see output above)."
+        return
+    fi
+
+    if command -v corepack &>/dev/null; then
+        corepack enable >/dev/null 2>&1 || true
+    fi
+}
+
 # Create nvm directory (nvm needs this)
 export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
+
+setup_nvm_and_node
 
 # Initialize rustup (if not already done)
 if command -v rustup-init &>/dev/null && [[ ! -d "$HOME/.rustup" ]]; then

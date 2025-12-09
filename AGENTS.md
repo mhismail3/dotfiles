@@ -16,6 +16,25 @@ AI agent log and operations guide for this dotfiles repository. Use it as the si
 - Some tasks remain manual by design (Apple ID/App Store sign-in, display "More Space", device-specific peripherals); do not attempt to automate them without approval.
 
 ## Timeline (newest first)
+### 2025-12-09 — Automate nvm Node install with corepack
+- start.sh now loads Homebrew nvm, installs the latest LTS Node (`nvm install --lts --latest-npm`), aliases it as default, and enables corepack for yarn/pnpm.
+- Brewfile clarifies Node runtime is installed via start.sh; README documents the automatic Node setup.
+- Goal: ensure Node/npm are ready immediately for cloning and testing projects.
+
+### 2025-12-09 — Add OpenCode CLI and Folder Peek to bootstrap
+- Added `brew "opencode"` to Brewfile — open-source AI coding agent for terminal.
+- Added `mas "Folder Peek", id: 1615988943` to Brewfile — menu bar folder access by Sindre Sorhus.
+- Created `.mackup/folder-peek.cfg` for backing up Folder Peek settings.
+- Folder Peek stores prefs in sandboxed Container: `Library/Containers/com.sindresorhus.Folder-Peek/Data/Library/Preferences/com.sindresorhus.Folder-Peek.plist`.
+- Added `folder-peek` to `.mackup.cfg` applications_to_sync list.
+- Goal: add useful productivity tools and enable backup/restore of Folder Peek configuration.
+
+### 2025-12-09 — Add tmux session management rules for AI agents
+- Created `cursor/tmux-rules.md` with comprehensive guidance on tmux session management.
+- Covers: when to use sessions, naming conventions, essential commands, workflow patterns, and cleanup responsibilities.
+- Updated `.cursorrules` to reference the tmux rules when working with terminal sessions.
+- Goal: enable agents to effectively use tmux for long-running processes, parallel workstreams, and reliable session management.
+
 ### 2025-12-08 — Add tmux configuration with mouse support
 - Added `.tmux.conf` with `set -g mouse on` to enable mouse scrolling, pane resizing, and window navigation.
 - Added symlink in `start.sh` to link `~/.tmux.conf` to dotfiles.
