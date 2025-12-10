@@ -22,11 +22,11 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 ### Apps
 - **Browsers:** Arc, Chrome
 - **Editors:** Cursor, VS Code
-- **Terminals:** Warp, Terminal
+- **Terminals:** Ghostty, Warp, Terminal
 - **Productivity:** Raycast, 1Password, Things 3
 - **Cloud:** Synology Drive, Google Drive
 - **Media:** Stremio, VLC, Keka, qBittorrent
-- **AI CLIs:** Gemini CLI, Codex, Claude Code
+- **AI CLIs:** Gemini CLI, Codex, Claude Code, Repoprompt
 
 ### Shell
 - Zsh with Oh My Zsh

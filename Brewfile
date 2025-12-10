@@ -146,6 +146,7 @@ cask "cursor"           # AI code editor
 cask "cursor-cli"       # Cursor Agent CLI (cursor-agent command)
 cask "visual-studio-code"
 cask "warp"             # Modern terminal
+cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
 
 ###############################################################################
 # AI Coding CLIs
@@ -153,6 +154,7 @@ cask "warp"             # Modern terminal
 
 brew "gemini-cli"       # Google Gemini CLI
 brew "opencode"         # Open-source AI coding agent (TUI)
+brew "repoprompt"       # Repo-aware prompting assistant
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
 
