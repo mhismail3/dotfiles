@@ -154,7 +154,6 @@ cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
 
 brew "gemini-cli"       # Google Gemini CLI
 brew "opencode"         # Open-source AI coding agent (TUI)
-brew "repoprompt"       # Repo-aware prompting assistant
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
 
