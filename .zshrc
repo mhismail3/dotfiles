@@ -67,9 +67,7 @@ _pyenv_lazy_load() {
 }
 
 pyenv()   { _pyenv_lazy_load; pyenv "$@"; }
-python()  { _pyenv_lazy_load; python "$@"; }
 python3() { _pyenv_lazy_load; python3 "$@"; }
-pip()     { _pyenv_lazy_load; pip "$@"; }
 pip3()    { _pyenv_lazy_load; pip3 "$@"; }
 
 # nvm (lazy load to avoid ~200ms startup penalty)
@@ -130,10 +128,9 @@ fi
 # Tools
 ###############################################################################
 
-# fzf (use new --zsh integration if available, fall back to legacy)
+# fzf (use new --zsh integration if available)
 if command -v fzf &>/dev/null; then
-    # fzf 0.48+ has built-in shell integration
-    eval "$(fzf --zsh 2>/dev/null)" || [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    eval "$(fzf --zsh)"
 fi
 
 # zoxide (better cd)
