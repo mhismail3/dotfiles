@@ -80,6 +80,7 @@ MODULES:
   cursor            Cursor IDE configuration
   superwhisper      SuperWhisper configuration
   raycast           Raycast configuration
+  agent-ledger      Agent memory ledger setup
   macos             macOS system preferences
 
 EXAMPLES:
@@ -106,6 +107,7 @@ list_modules() {
     echo "  cursor            Cursor IDE configuration"
     echo "  superwhisper      SuperWhisper configuration"
     echo "  raycast           Raycast configuration"
+    echo "  agent-ledger      Agent memory ledger setup"
     echo "  macos             macOS system preferences"
     echo ""
     echo "Run a specific module with: ./start.sh --module <name>"
@@ -775,6 +777,18 @@ run_raycast() {
 }
 
 ###############################################################################
+# Module: Agent Ledger
+###############################################################################
+
+run_agent_ledger() {
+    if [[ -f "$DOTFILES/setup/agent-ledger.sh" ]]; then
+        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/agent-ledger.sh"
+    else
+        warn "Agent ledger setup script not found"
+    fi
+}
+
+###############################################################################
 # Module: macOS Preferences
 ###############################################################################
 
@@ -829,6 +843,7 @@ main() {
             cursor)           run_cursor ;;
             superwhisper)     run_superwhisper ;;
             raycast)          run_raycast ;;
+            agent-ledger)     run_agent_ledger ;;
             macos)            run_macos ;;
             *)
                 die "Unknown module: $TARGET_MODULE (use --list to see available modules)"
@@ -845,6 +860,7 @@ main() {
         should_run_step "cursor" && run_cursor
         should_run_step "superwhisper" && run_superwhisper
         should_run_step "raycast" && run_raycast
+        should_run_step "agent-ledger" && run_agent_ledger
         should_run_step "macos" && run_macos
     fi
 
