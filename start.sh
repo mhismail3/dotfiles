@@ -2,10 +2,36 @@
 
 # start.sh — Bootstrap a fresh macOS installation
 # Run: curl -sL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | zsh
-# Or:  ~/.dotfiles/start.sh
+# Or:  ~/.dotfiles/start.sh [options]
+#
+# Options:
+#   --all          Run everything without prompts (uses safe defaults)
+#   --interactive  Prompt before each step (default)
+#   --module NAME  Run only a specific module
+#   --list         List available modules
+#   --dry-run      Show what would be done without making changes
+#   --force        Skip all confirmation prompts
+#   --help         Show this help message
 
-# Note: We don't use `set -e` because we want the script to continue
-# even if some steps fail (e.g., a cask install fails but others succeed)
+set -o pipefail
+
+###############################################################################
+# Global Configuration
+###############################################################################
+
+DOTFILES="$HOME/.dotfiles"
+GITHUB_USER="mhismail3"
+SCRIPT_NAME="${0:t}"
+
+# Execution modes
+MODE="interactive"  # interactive, all, module
+TARGET_MODULE=""
+DRY_RUN=false
+FORCE=false
+
+###############################################################################
+# Pre-flight: Basic Checks Before Anything Else
+###############################################################################
 
 # Check if running on macOS
 if [[ "$(uname)" != "Darwin" ]]; then
@@ -13,82 +39,119 @@ if [[ "$(uname)" != "Darwin" ]]; then
     exit 1
 fi
 
-DOTFILES="$HOME/.dotfiles"
-GITHUB_USER="mhismail3"  # GitHub username, not email
-
-###############################################################################
-# Fix: Disable SSH URL rewriting until SSH keys are set up
-# This prevents "Permission denied (publickey)" errors with brew/git
-###############################################################################
-
-if git config --global --get url."git@github.com:".insteadOf &>/dev/null; then
-    # Check if SSH to GitHub actually works
-    if ! ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        echo "⚠️  Disabling SSH URL rewriting (SSH keys not set up yet)"
-        git config --global --unset url."git@github.com:".insteadOf 2>/dev/null || true
-    fi
+# Warn if running as root
+if [[ "$EUID" -eq 0 ]]; then
+    echo "⚠️  Warning: Running as root is not recommended for dotfiles."
+    echo "   Dotfiles should be installed as your normal user."
+    echo ""
+    echo -n "Continue anyway? (y/N) "
+    read REPLY </dev/tty 2>/dev/null || REPLY="n"
+    [[ "$REPLY" =~ ^[Yy]$ ]] || exit 1
 fi
 
 ###############################################################################
-# Machine-Specific Configuration (prompted on first run)
+# Parse Command Line Arguments
 ###############################################################################
 
-CONFIG_FILE="$HOME/.dotfiles_config"
+show_help() {
+    cat << 'EOF'
+start.sh — Bootstrap a fresh macOS installation
 
-if [[ -f "$CONFIG_FILE" ]]; then
-    # Load existing config
-    source "$CONFIG_FILE"
-    echo ""
-    echo "📋 Using saved configuration:"
-    echo "   Computer name: $COMPUTER_NAME"
-    echo "   macOS username: $MACOS_USER"
-    echo ""
-    echo -n "Use these settings? (Y/n) "
-    read REPLY </dev/tty || REPLY="y"
-    echo ""
-    if [[ "$REPLY" =~ ^[Nn]$ ]]; then
-        rm "$CONFIG_FILE"
-    fi
-fi
+USAGE:
+  ./start.sh [OPTIONS]
+  curl -sL .../start.sh | zsh
 
-if [[ ! -f "$CONFIG_FILE" ]]; then
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "🖥️  Machine Configuration"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    
-    # Get current values as defaults
-    CURRENT_COMPUTER_NAME=$(scutil --get ComputerName 2>/dev/null || echo "My-Mac")
-    CURRENT_USER=$(whoami)
-    
-    # Prompt for computer name (read from /dev/tty to work with curl pipe)
-    echo "Computer name (for network, sharing, Terminal prompt)"
-    echo -n "  [$CURRENT_COMPUTER_NAME]: "
-    read INPUT_COMPUTER_NAME </dev/tty || INPUT_COMPUTER_NAME=""
-    COMPUTER_NAME="${INPUT_COMPUTER_NAME:-$CURRENT_COMPUTER_NAME}"
-    
-    # Prompt for macOS username (for SSH access restriction)
-    echo ""
-    echo "macOS username (for SSH access restriction)"
-    echo -n "  [$CURRENT_USER]: "
-    read INPUT_USER </dev/tty || INPUT_USER=""
-    MACOS_USER="${INPUT_USER:-$CURRENT_USER}"
-    
-    # Save config for future runs
-    echo "# Dotfiles machine-specific configuration" > "$CONFIG_FILE"
-    echo "# Generated on $(date)" >> "$CONFIG_FILE"
-    echo "export COMPUTER_NAME=\"$COMPUTER_NAME\"" >> "$CONFIG_FILE"
-    echo "export MACOS_USER=\"$MACOS_USER\"" >> "$CONFIG_FILE"
-    
-    echo ""
-    echo "✅ Configuration saved to $CONFIG_FILE"
-    echo ""
-fi
+OPTIONS:
+  --all, -a         Run everything (prompts for required input only)
+  --interactive, -i Prompt before each step (default)
+  --module, -m NAME Run only a specific module
+  --list, -l        List available modules
+  --dry-run, -n     Show what would be done without making changes
+  --force, -f       Skip all confirmation prompts (use with --all)
+  --help, -h        Show this help message
 
-# Export for use in .macos
-export COMPUTER_NAME
-export MACOS_USER
+MODULES:
+  core              Xcode CLI Tools, Homebrew, Oh My Zsh
+  packages          Install Brewfile packages
+  symlinks          Create dotfile symlinks
+  ssh               SSH key setup
+  shell             Set Zsh as default, configure plugins
+  version-managers  Set up nvm, rustup, etc.
+  cursor            Cursor IDE configuration
+  superwhisper      SuperWhisper configuration
+  raycast           Raycast configuration
+  macos             macOS system preferences
+
+EXAMPLES:
+  ./start.sh                      # Interactive mode (default)
+  ./start.sh --all                # Run everything, prompt only when needed
+  ./start.sh --all --force        # Run everything, no prompts (CI mode)
+  ./start.sh --module cursor      # Only set up Cursor
+  ./start.sh --list               # Show available modules
+  ./start.sh --dry-run --all      # Preview what would happen
+
+EOF
+}
+
+list_modules() {
+    echo ""
+    echo "Available modules:"
+    echo ""
+    echo "  core              Xcode CLI Tools, Homebrew, Oh My Zsh"
+    echo "  packages          Install Brewfile packages"
+    echo "  symlinks          Create dotfile symlinks"
+    echo "  ssh               SSH key setup"
+    echo "  shell             Set Zsh as default shell"
+    echo "  version-managers  Set up nvm, Node, Rust, etc."
+    echo "  cursor            Cursor IDE configuration"
+    echo "  superwhisper      SuperWhisper configuration"
+    echo "  raycast           Raycast configuration"
+    echo "  macos             macOS system preferences"
+    echo ""
+    echo "Run a specific module with: ./start.sh --module <name>"
+    echo ""
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --all|-a)
+            MODE="all"
+            shift
+            ;;
+        --interactive|-i)
+            MODE="interactive"
+            shift
+            ;;
+        --module|-m)
+            MODE="module"
+            TARGET_MODULE="$2"
+            shift 2
+            ;;
+        --list|-l)
+            list_modules
+            exit 0
+            ;;
+        --dry-run|-n)
+            DRY_RUN=true
+            export DOTFILES_DRY_RUN=true
+            shift
+            ;;
+        --force|-f)
+            FORCE=true
+            export DOTFILES_FORCE=true
+            shift
+            ;;
+        --help|-h)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Run with --help for usage information."
+            exit 1
+            ;;
+    esac
+done
 
 ###############################################################################
 # Helper Functions
@@ -102,37 +165,262 @@ success() {
     printf "\033[1;32m✓ %s\033[0m\n" "$1"
 }
 
-error() {
-    printf "\033[1;31m✗ %s\033[0m\n" "$1"
+warn() {
+    printf "\033[1;33m⚠ %s\033[0m\n" "$1"
+}
+
+err() {
+    printf "\033[1;31m✗ %s\033[0m\n" "$1" >&2
+}
+
+die() {
+    err "$1"
     exit 1
 }
 
+# Check if we can prompt interactively
+can_prompt() {
+    [[ -t 0 ]] || [[ -c /dev/tty ]]
+}
+
+# Prompt with default value
+confirm() {
+    local prompt="$1"
+    local default="${2:-n}"
+    local reply
+    
+    if [[ "$FORCE" == "true" ]]; then
+        [[ "$default" == "y" ]]
+        return $?
+    fi
+    
+    if ! can_prompt; then
+        warn "Cannot prompt (not a terminal). Using default: $default"
+        [[ "$default" == "y" ]]
+        return $?
+    fi
+    
+    if [[ "$default" == "y" ]]; then
+        echo -n "$prompt (Y/n) "
+    else
+        echo -n "$prompt (y/N) "
+    fi
+    
+    read reply </dev/tty 2>/dev/null || reply="$default"
+    [[ -z "$reply" ]] && reply="$default"
+    
+    if [[ "$default" == "y" ]]; then
+        [[ ! "$reply" =~ ^[Nn]$ ]]
+    else
+        [[ "$reply" =~ ^[Yy]$ ]]
+    fi
+}
+
+# Should we run this step?
+should_run_step() {
+    local step_name="$1"
+    
+    # In module mode, only run the specified module
+    if [[ "$MODE" == "module" ]]; then
+        [[ "$step_name" == "$TARGET_MODULE" ]]
+        return $?
+    fi
+    
+    # In all mode, run everything
+    if [[ "$MODE" == "all" ]]; then
+        return 0
+    fi
+    
+    # In interactive mode, ask
+    confirm "Run $step_name?" "y"
+}
+
+# Safely create a symlink (idempotent)
+symlink() {
+    local src="$1"
+    local dst="$2"
+    
+    if [[ ! -f "$src" ]] && [[ ! -d "$src" ]]; then
+        warn "Source not found: $src"
+        return 1
+    fi
+    
+    # Ensure parent directory exists
+    local parent="$(dirname "$dst")"
+    if [[ ! -d "$parent" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "  [dry-run] Would create: $parent"
+        else
+            mkdir -p "$parent" || { err "Failed to create: $parent"; return 1; }
+        fi
+    fi
+    
+    # Already correctly linked?
+    if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+        echo "  Already linked: $dst"
+        return 0
+    fi
+    
+    # Handle existing file/symlink
+    if [[ -L "$dst" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "  [dry-run] Would remove old symlink: $dst"
+        else
+            rm "$dst"
+        fi
+    elif [[ -e "$dst" ]]; then
+        local backup="$dst.backup.$(date +%Y%m%d%H%M%S)"
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "  [dry-run] Would backup: $dst → $backup"
+        else
+            mv "$dst" "$backup" || { err "Failed to backup: $dst"; return 1; }
+            echo "  Backed up: $dst → $backup"
+        fi
+    fi
+    
+    # Create symlink
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "  [dry-run] Would link: $dst → $src"
+    else
+        ln -s "$src" "$dst" || { err "Failed to link: $dst → $src"; return 1; }
+        echo "  Linked: $dst → $src"
+    fi
+    
+    return 0
+}
+
 ###############################################################################
-# Xcode Command Line Tools
+# Fix: Disable SSH URL rewriting until SSH keys are set up
 ###############################################################################
 
+if git config --global --get url."git@github.com:".insteadOf &>/dev/null; then
+    if ! ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+        warn "Disabling SSH URL rewriting (SSH keys not set up yet)"
+        git config --global --unset url."git@github.com:".insteadOf 2>/dev/null || true
+    fi
+fi
+
+###############################################################################
+# Machine-Specific Configuration
+###############################################################################
+
+CONFIG_FILE="$HOME/.dotfiles_config"
+
+load_or_prompt_config() {
+if [[ -f "$CONFIG_FILE" ]]; then
+    source "$CONFIG_FILE"
+    echo ""
+    echo "📋 Using saved configuration:"
+    echo "   Computer name: $COMPUTER_NAME"
+    echo "   macOS username: $MACOS_USER"
+    echo ""
+        
+        if [[ "$FORCE" != "true" ]] && can_prompt; then
+            if ! confirm "Use these settings?" "y"; then
+        rm "$CONFIG_FILE"
+            fi
+    fi
+fi
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🖥️  Machine Configuration"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    
+        local current_name=$(scutil --get ComputerName 2>/dev/null || echo "My-Mac")
+        local current_user=$(whoami)
+    
+        if [[ "$FORCE" == "true" ]] || ! can_prompt; then
+            COMPUTER_NAME="$current_name"
+            MACOS_USER="$current_user"
+        else
+    echo "Computer name (for network, sharing, Terminal prompt)"
+            echo -n "  [$current_name]: "
+            read INPUT_NAME </dev/tty 2>/dev/null || INPUT_NAME=""
+            COMPUTER_NAME="${INPUT_NAME:-$current_name}"
+            
+    echo ""
+    echo "macOS username (for SSH access restriction)"
+            echo -n "  [$current_user]: "
+            read INPUT_USER </dev/tty 2>/dev/null || INPUT_USER=""
+            MACOS_USER="${INPUT_USER:-$current_user}"
+        fi
+        
+        if [[ "$DRY_RUN" != "true" ]]; then
+            cat > "$CONFIG_FILE" << EOF
+# Dotfiles machine-specific configuration
+# Generated on $(date)
+export COMPUTER_NAME="$COMPUTER_NAME"
+export MACOS_USER="$MACOS_USER"
+EOF
+    echo ""
+            success "Configuration saved to $CONFIG_FILE"
+        else
+            echo "[dry-run] Would save configuration to $CONFIG_FILE"
+        fi
+    fi
+
+export COMPUTER_NAME
+export MACOS_USER
+}
+
+###############################################################################
+# Show Execution Plan
+###############################################################################
+
+show_execution_plan() {
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "🚀 Dotfiles Bootstrap"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Mode: $MODE"
+    [[ "$DRY_RUN" == "true" ]] && echo "      (dry-run: no changes will be made)"
+    [[ "$FORCE" == "true" ]] && echo "      (force: no prompts)"
+    [[ -n "$TARGET_MODULE" ]] && echo "Module: $TARGET_MODULE"
+    echo ""
+    
+    if [[ "$MODE" == "interactive" ]]; then
+        echo "You will be prompted before each step."
+        echo "Press Ctrl+C at any time to abort."
+        echo ""
+        if ! confirm "Start bootstrap?" "y"; then
+            echo "Aborted."
+            exit 0
+        fi
+    fi
+}
+
+###############################################################################
+# Module: Core (Xcode, Homebrew, Dotfiles Clone, Oh My Zsh)
+###############################################################################
+
+run_core() {
+    # Xcode Command Line Tools
 info "Checking Xcode Command Line Tools..."
 
 if ! xcode-select -p &>/dev/null; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would install Xcode Command Line Tools"
+        else
     info "Installing Xcode Command Line Tools..."
     xcode-select --install
     
-    # Wait for installation
+            echo "Waiting for Xcode Command Line Tools installation..."
     until xcode-select -p &>/dev/null; do
         sleep 5
     done
     success "Xcode Command Line Tools installed"
+        fi
 else
     success "Xcode Command Line Tools already installed"
 fi
 
-###############################################################################
 # Homebrew
-###############################################################################
-
 info "Checking Homebrew..."
 
-# Ensure Homebrew is in PATH for this script (Apple Silicon vs Intel)
 if [[ $(uname -m) == "arm64" ]]; then
     HOMEBREW_PREFIX="/opt/homebrew"
 else
@@ -140,174 +428,166 @@ else
 fi
 
 if [[ ! -f "$HOMEBREW_PREFIX/bin/brew" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would install Homebrew"
+        else
     info "Installing Homebrew..."
-    # Run Homebrew installer interactively (needs sudo password)
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" < /dev/tty
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/tty
     success "Homebrew installed"
+        fi
 else
     success "Homebrew already installed"
 fi
 
-# Add Homebrew to PATH for this session
+    # Add Homebrew to PATH
+    if [[ -f "$HOMEBREW_PREFIX/bin/brew" ]]; then
 eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 export HOMEBREW_PREFIX
+    fi
 
 # Update Homebrew
+    if [[ "$DRY_RUN" != "true" ]] && command -v brew &>/dev/null; then
 info "Updating Homebrew..."
-brew update
+        brew update || warn "Homebrew update failed (continuing anyway)"
 success "Homebrew updated"
+    fi
 
-###############################################################################
-# Clone Dotfiles (if not already present)
-###############################################################################
-
+    # Clone Dotfiles
 info "Checking dotfiles..."
 
 if [[ ! -d "$DOTFILES" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would clone dotfiles to $DOTFILES"
+        else
     info "Cloning dotfiles..."
-    # Try SSH first, fall back to HTTPS
     if git clone git@github.com:$GITHUB_USER/dotfiles.git "$DOTFILES" 2>/dev/null; then
         success "Dotfiles cloned via SSH"
+            elif git clone https://github.com/$GITHUB_USER/dotfiles.git "$DOTFILES"; then
+                success "Dotfiles cloned via HTTPS"
     else
-        git clone https://github.com/$GITHUB_USER/dotfiles.git "$DOTFILES"
-        success "Dotfiles cloned via HTTPS"
+                die "Failed to clone dotfiles repository"
+            fi
     fi
 else
     success "Dotfiles already present at $DOTFILES"
-    # Optionally pull latest changes
+        if [[ "$DRY_RUN" != "true" ]]; then
     info "Pulling latest dotfiles..."
-    cd "$DOTFILES" && git pull --rebase 2>/dev/null || true
+            (cd "$DOTFILES" && git pull --rebase 2>/dev/null) || warn "Could not pull latest (continuing with local copy)"
+        fi
 fi
 
-cd "$DOTFILES"
+    cd "$DOTFILES" 2>/dev/null || true
 
-###############################################################################
 # Oh My Zsh
-###############################################################################
-
 info "Checking Oh My Zsh..."
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would install Oh My Zsh"
+        else
     info "Installing Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+            RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     success "Oh My Zsh installed"
+        fi
 else
     success "Oh My Zsh already installed"
 fi
+}
 
 ###############################################################################
-# Homebrew Bundle
+# Module: Packages
 ###############################################################################
 
+run_packages() {
 info "Installing packages from Brewfile..."
 
-if [[ -f "$DOTFILES/Brewfile" ]]; then
-    # --no-upgrade: don't upgrade already installed packages (faster, idempotent)
+    if [[ ! -f "$DOTFILES/Brewfile" ]]; then
+        warn "Brewfile not found at $DOTFILES/Brewfile"
+        return 1
+    fi
+
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[dry-run] Would run: brew bundle --file=$DOTFILES/Brewfile --no-upgrade"
+    else
     brew bundle --file="$DOTFILES/Brewfile" --no-upgrade || {
-        echo "  Some packages may have failed to install. Check output above."
+            warn "Some packages may have failed to install (check output above)"
     }
     success "Brewfile packages installed"
-else
-    error "Brewfile not found at $DOTFILES/Brewfile"
 fi
+}
 
 ###############################################################################
-# Symlink Dotfiles
+# Module: Symlinks
 ###############################################################################
 
+run_symlinks() {
 info "Creating symlinks..."
 
-# Function to safely symlink (idempotent)
-symlink() {
-    local src="$1"
-    local dst="$2"
+    local failed=0
     
-    if [[ -f "$src" ]] || [[ -d "$src" ]]; then
-        # If already correctly linked, skip
-        if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
-            echo "  Already linked: $dst"
-            return 0
-        fi
-        
-        # Remove existing symlink or backup existing file
-        if [[ -L "$dst" ]]; then
-            rm "$dst"
-        elif [[ -e "$dst" ]]; then
-            local backup="$dst.backup.$(date +%Y%m%d%H%M%S)"
-            mv "$dst" "$backup"
-            echo "  Backed up existing $dst → $backup"
-        fi
-        
-        ln -s "$src" "$dst"
-        echo "  Linked: $dst → $src"
+    symlink "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc" || ((failed++))
+    symlink "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig" || ((failed++))
+    symlink "$DOTFILES/git/.gitignore_global" "$HOME/.gitignore_global" || ((failed++))
+    symlink "$DOTFILES/mackup/.mackup.cfg" "$HOME/.mackup.cfg" || ((failed++))
+    symlink "$DOTFILES/mackup/.mackup" "$HOME/.mackup" || ((failed++))
+    symlink "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf" || ((failed++))
+
+    if [[ $failed -gt 0 ]]; then
+        warn "$failed symlink(s) failed"
     else
-        echo "  Warning: Source not found: $src"
+        success "Symlinks created"
     fi
 }
 
-symlink "$DOTFILES/.zshrc" "$HOME/.zshrc"
-symlink "$DOTFILES/.gitconfig" "$HOME/.gitconfig"
-symlink "$DOTFILES/.gitignore_global" "$HOME/.gitignore_global"
-symlink "$DOTFILES/.mackup.cfg" "$HOME/.mackup.cfg"
-symlink "$DOTFILES/.mackup" "$HOME/.mackup"
-symlink "$DOTFILES/.tmux.conf" "$HOME/.tmux.conf"
-
-success "Symlinks created"
-
 ###############################################################################
-# Zsh Plugins (from Homebrew)
+# Module: SSH
 ###############################################################################
 
-info "Configuring Zsh plugins..."
+run_ssh() {
+    info "SSH Keys..."
 
-# Source plugins in .zshrc will handle this, but ensure they're available
-ZSH_PLUGINS_DIR="${HOMEBREW_PREFIX:-/opt/homebrew}/share"
+    local SSH_KEY="$HOME/.ssh/id_ed25519"
 
-if [[ -d "$ZSH_PLUGINS_DIR/zsh-syntax-highlighting" ]]; then
-    success "Zsh plugins available"
-fi
-
-###############################################################################
-# Create Common Directories
-###############################################################################
-
-info "Creating directories..."
-
-mkdir -p "$HOME/Downloads/projects"
-mkdir -p "$HOME/.ssh"
-
-success "Directories created"
-
-###############################################################################
-# SSH Key Setup
-###############################################################################
-
-info "SSH Keys..."
-
-SSH_KEY="$HOME/.ssh/id_ed25519"
+    # Ensure .ssh directory exists with correct permissions
+    if [[ "$DRY_RUN" != "true" ]]; then
+        mkdir -p "$HOME/.ssh"
+        chmod 700 "$HOME/.ssh"
+    fi
 
 if [[ -f "$SSH_KEY" ]]; then
     success "SSH key already exists"
-else
+        return 0
+    fi
+
     echo ""
     echo "No SSH key found. You'll need one for GitHub, servers, etc."
     echo ""
-    echo -n "Generate SSH key now? (Y/n) "
-    read REPLY </dev/tty || REPLY="y"
     
-    if [[ ! "$REPLY" =~ ^[Nn]$ ]]; then
-        EMAIL="${GIT_EMAIL:-mhismail3@gmail.com}"
+    if ! confirm "Generate SSH key now?" "y"; then
+        echo "  Skipped. Run ~/.dotfiles/setup/ssh.sh later."
+        return 0
+    fi
+
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[dry-run] Would generate SSH key"
+        return 0
+    fi
+
+    local EMAIL="${GIT_EMAIL:-mhismail3@gmail.com}"
         
         echo ""
         echo "Generating SSH key for $EMAIL..."
-        ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY" </dev/tty
+    ssh-keygen -t ed25519 -C "$EMAIL" -f "$SSH_KEY" </dev/tty || {
+        err "SSH key generation failed"
+        return 1
+    }
         
         # Start ssh-agent and add key
         eval "$(ssh-agent -s)" > /dev/null
         ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY"
         
         # Create SSH config if needed
-        SSH_CONFIG="$HOME/.ssh/config"
+    local SSH_CONFIG="$HOME/.ssh/config"
         if [[ ! -f "$SSH_CONFIG" ]]; then
             cat > "$SSH_CONFIG" << 'EOF'
 Host *
@@ -335,69 +615,79 @@ EOF
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
         echo "Add it to GitHub now: https://github.com/settings/keys"
-        echo "  1. Click 'New SSH key'"
-        echo "  2. Paste (Cmd+V)"
-        echo "  3. Click 'Add SSH key'"
         echo ""
+    
+    if can_prompt && [[ "$FORCE" != "true" ]]; then
         echo -n "Press Enter after adding the key to GitHub..."
         read </dev/tty
         
-        # Test connection and enable SSH for git
         echo ""
         echo "Testing GitHub SSH connection..."
         if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
             git config --global url."git@github.com:".insteadOf "https://github.com/"
             success "SSH working! Git configured to use SSH for GitHub"
         else
-            echo "⚠️  Could not verify SSH connection (this is sometimes normal)"
-            echo -n "Enable SSH for git anyway? (y/N) "
-            read REPLY </dev/tty || REPLY="n"
-            if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+            warn "Could not verify SSH connection (this is sometimes normal)"
+            if confirm "Enable SSH for git anyway?" "n"; then
                 git config --global url."git@github.com:".insteadOf "https://github.com/"
                 success "Git configured to use SSH for GitHub"
             fi
         fi
-    else
-        echo "  Skipped. Run ~/.dotfiles/ssh.sh later to set up SSH."
     fi
-fi
+}
 
 ###############################################################################
-# Set Default Shell to Zsh
+# Module: Shell
 ###############################################################################
 
+run_shell() {
 info "Checking default shell..."
 
 if [[ "$SHELL" != *"zsh"* ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would set Zsh as default shell"
+        else
     info "Setting Zsh as default shell..."
-    chsh -s "$(which zsh)"
+            chsh -s "$(which zsh)" || warn "Failed to change default shell"
     success "Default shell set to Zsh"
+        fi
 else
     success "Zsh is already the default shell"
 fi
 
+    # Create common directories
+    info "Creating directories..."
+    
+    local dirs=("$HOME/Downloads/projects" "$HOME/.ssh" "$HOME/SynologyDrive")
+    for dir in "${dirs[@]}"; do
+        if [[ "$DRY_RUN" == "true" ]]; then
+            [[ ! -d "$dir" ]] && echo "[dry-run] Would create: $dir"
+        else
+            mkdir -p "$dir"
+        fi
+    done
+    
+    success "Directories created"
+}
+
 ###############################################################################
-# Initialize Version Managers (one-time setup)
+# Module: Version Managers
 ###############################################################################
 
+run_version_managers() {
 info "Setting up version managers..."
 
-setup_nvm_and_node() {
-    # Ensure nvm directories exist
-    export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+    # NVM and Node
+    export NVM_DIR="$HOME/.nvm"
     mkdir -p "$NVM_DIR"
 
     local nvm_sh="$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-    local nvm_completion="$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-
-    if [[ ! -s "$nvm_sh" ]]; then
-        echo "  nvm not found at $nvm_sh (install via Brewfile)."
-        return
-    fi
-
-    # shellcheck disable=SC1090
+    
+    if [[ -s "$nvm_sh" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would install Node LTS via nvm"
+        else
     source "$nvm_sh"
-    [[ -s "$nvm_completion" ]] && source "$nvm_completion"
 
     local current_node
     current_node=$( (command -v node >/dev/null 2>&1 && node -v 2>/dev/null) || echo "" )
@@ -408,220 +698,182 @@ setup_nvm_and_node() {
         info "Ensuring latest LTS Node via nvm (current: $current_node)..."
     fi
 
-    if nvm install --lts --latest-npm; then
+            if nvm install --lts --latest-npm 2>/dev/null; then
         nvm alias default "lts/*" >/dev/null 2>&1 || true
         success "Node (LTS) installed via nvm"
     else
-        echo "  ⚠️  nvm install failed (see output above)."
-        return
+                warn "nvm install failed (Node may need manual installation)"
+            fi
+
+            command -v corepack &>/dev/null && corepack enable >/dev/null 2>&1 || true
+        fi
+    else
+        warn "nvm not found (install via Brewfile first)"
     fi
 
-    if command -v corepack &>/dev/null; then
-        corepack enable >/dev/null 2>&1 || true
-    fi
-}
-
-# Create nvm directory (nvm needs this)
-export NVM_DIR="$HOME/.nvm"
-mkdir -p "$NVM_DIR"
-
-setup_nvm_and_node
-
-# Initialize rustup (if not already done)
+    # Rust
 if command -v rustup-init &>/dev/null && [[ ! -d "$HOME/.rustup" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would install Rust toolchain"
+        else
     info "Installing Rust toolchain..."
-    rustup-init -y --no-modify-path
+            rustup-init -y --no-modify-path || warn "Rust installation failed"
     success "Rust installed"
+        fi
 elif [[ -d "$HOME/.rustup" ]]; then
     success "Rust already installed"
 fi
 
-# Note: pyenv, nvm, rbenv will be lazy-loaded in .zshrc for fast shell startup
-success "Version managers configured (lazy-loaded in shell)"
+    # Git LFS
+    if command -v git-lfs &>/dev/null; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            echo "[dry-run] Would configure Git LFS"
+        else
+            info "Setting up Git LFS..."
+            git lfs install --system 2>/dev/null || git lfs install
+            success "Git LFS configured"
+        fi
+    fi
+
+    success "Version managers configured"
+}
 
 ###############################################################################
-# macOS Preferences (Run Last!)
+# Module: Cursor
 ###############################################################################
 
-info "Applying macOS preferences..."
+run_cursor() {
+    if [[ -f "$DOTFILES/setup/cursor.sh" ]]; then
+        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/cursor.sh"
+    else
+        warn "Cursor setup script not found"
+    fi
+}
 
-if [[ -f "$DOTFILES/.macos" ]]; then
-    # Ask before running .macos (it restarts Dock/Finder and requires sudo)
+###############################################################################
+# Module: SuperWhisper
+###############################################################################
+
+run_superwhisper() {
+    if [[ -f "$DOTFILES/setup/superwhisper.sh" ]]; then
+        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/superwhisper.sh"
+    else
+        warn "SuperWhisper setup script not found"
+    fi
+}
+
+###############################################################################
+# Module: Raycast
+###############################################################################
+
+run_raycast() {
+    if [[ -f "$DOTFILES/setup/raycast.sh" ]]; then
+        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/raycast.sh"
+    else
+        warn "Raycast setup script not found"
+    fi
+}
+
+###############################################################################
+# Module: macOS Preferences
+###############################################################################
+
+run_macos() {
+    info "macOS preferences..."
+
+    local MACOS_SCRIPT="$DOTFILES/macos/.macos"
+
+    if [[ ! -f "$MACOS_SCRIPT" ]]; then
+        warn ".macos not found at $MACOS_SCRIPT"
+        return 1
+    fi
+
     echo ""
     echo "The .macos script will:"
     echo "  - Set system preferences (requires sudo password)"
     echo "  - Restart Dock, Finder, and other system processes"
     echo ""
-    echo -n "Apply macOS preferences now? (y/N) "
-    read REPLY </dev/tty || REPLY="n"
-    echo ""
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-        source "$DOTFILES/.macos"
-    else
-        echo "  Skipped. Run manually later: source ~/.dotfiles/.macos"
+    
+    if ! confirm "Apply macOS preferences?" "n"; then
+        echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
+        return 0
     fi
-else
-    echo "  Warning: .macos not found"
-fi
 
-###############################################################################
-# Git LFS Setup
-###############################################################################
-
-if command -v git-lfs &>/dev/null; then
-    info "Setting up Git LFS..."
-    git lfs install --system 2>/dev/null || git lfs install
-    success "Git LFS configured"
-fi
-
-###############################################################################
-# Raycast Configuration
-###############################################################################
-
-info "Raycast configuration..."
-
-RAYCONFIG="$DOTFILES/Raycast.rayconfig"
-
-if [[ -d "/Applications/Raycast.app" ]] && [[ -f "$RAYCONFIG" ]]; then
-    echo ""
-    echo "Raycast is installed and a config file is available."
-    echo "Opening Raycast import dialog and revealing the config file..."
-    echo ""
-    
-    # Open the import settings command via deeplink (background, won't steal focus initially)
-    open "raycast://extensions/raycast/raycast/import-settings-data"
-    
-    # Brief pause to let Raycast launch, then reveal the config file
-    sleep 1
-    open -R "$RAYCONFIG"
-    
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "📦 Raycast Import"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  1. The Raycast import dialog should now be open"
-    echo "  2. The config file is highlighted in Finder"
-    echo "  3. Drag the file into Raycast OR click 'Select File' and choose it"
-    echo ""
-    echo -n "Press Enter after importing (or skip with 's'): "
-    read REPLY </dev/tty || REPLY=""
-    
-    if [[ "$REPLY" =~ ^[Ss]$ ]]; then
-        echo "  Skipped. Import manually later: open raycast://extensions/raycast/raycast/import-settings-data"
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[dry-run] Would source $MACOS_SCRIPT"
     else
-        success "Raycast import initiated"
+        source "$MACOS_SCRIPT"
     fi
-elif [[ ! -d "/Applications/Raycast.app" ]]; then
-    echo "  Raycast not installed. Skipping config import."
-elif [[ ! -f "$RAYCONFIG" ]]; then
-    echo "  No Raycast config file found at $RAYCONFIG"
-fi
+}
 
 ###############################################################################
-# Cursor Configuration
+# Main Execution
 ###############################################################################
 
-info "Cursor configuration..."
-
-CURSOR_CONFIG_SRC="$DOTFILES/cursor"
-CURSOR_USER_DIR="$HOME/Library/Application Support/Cursor/User"
-CURSOR_DATA_DIR="$HOME/.cursor"
-CURSOR_EXTENSIONS_DIR="$CURSOR_DATA_DIR/extensions"
-
-if [[ -d "/Applications/Cursor.app" ]] && [[ -d "$CURSOR_CONFIG_SRC" ]]; then
-    echo ""
-    echo "Cursor is installed and dotfiles config is available."
-    echo "This will symlink:"
-    echo "  - settings.json, keybindings.json → ~/Library/Application Support/Cursor/User/"
-    echo "  - mcp.json → ~/.cursor/"
-    echo "  - extensions.json → ~/.cursor/extensions/"
-    echo ""
-    echo -n "Apply Cursor settings? (Y/n) "
-    read REPLY </dev/tty || REPLY="y"
-    echo ""
+main() {
+    # Show execution plan
+    show_execution_plan
     
-    if [[ ! "$REPLY" =~ ^[Nn]$ ]]; then
-        # Create directories if they don't exist
-        mkdir -p "$CURSOR_USER_DIR"
-        mkdir -p "$CURSOR_EXTENSIONS_DIR"
-        
-        # Helper function for symlinking Cursor config files
-        link_cursor_config() {
-            local src="$1"
-            local dst="$2"
-            local name="$(basename "$src")"
-            
-            if [[ ! -f "$src" ]]; then
-                return
-            fi
-            
-            if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
-                echo "  Already linked: $name"
-            else
-                [[ -f "$dst" ]] && mv "$dst" "$dst.backup.$(date +%Y%m%d%H%M%S)"
-                ln -sf "$src" "$dst"
-                echo "  Linked: $name"
-            fi
-        }
-        
-        # Symlink settings.json and keybindings.json to User dir
-        link_cursor_config "$CURSOR_CONFIG_SRC/settings.json" "$CURSOR_USER_DIR/settings.json"
-        link_cursor_config "$CURSOR_CONFIG_SRC/keybindings.json" "$CURSOR_USER_DIR/keybindings.json"
-        
-        # Symlink mcp.json to ~/.cursor/
-        link_cursor_config "$CURSOR_CONFIG_SRC/mcp.json" "$CURSOR_DATA_DIR/mcp.json"
-        
-        # Symlink extensions.json to ~/.cursor/extensions/
-        link_cursor_config "$CURSOR_CONFIG_SRC/extensions.json" "$CURSOR_EXTENSIONS_DIR/extensions.json"
-        
-        success "Cursor configuration applied"
+    # Load or prompt for machine config
+    load_or_prompt_config
+    
+    # Execute modules based on mode
+    if [[ "$MODE" == "module" ]]; then
+        case "$TARGET_MODULE" in
+            core)             run_core ;;
+            packages)         run_packages ;;
+            symlinks)         run_symlinks ;;
+            ssh)              run_ssh ;;
+            shell)            run_shell ;;
+            version-managers) run_version_managers ;;
+            cursor)           run_cursor ;;
+            superwhisper)     run_superwhisper ;;
+            raycast)          run_raycast ;;
+            macos)            run_macos ;;
+            *)
+                die "Unknown module: $TARGET_MODULE (use --list to see available modules)"
+                ;;
+        esac
     else
-        echo "  Skipped. Apply manually later by re-running this script."
+        # Run all modules (with prompts in interactive mode)
+        should_run_step "core" && run_core
+        should_run_step "packages" && run_packages
+        should_run_step "symlinks" && run_symlinks
+        should_run_step "ssh" && run_ssh
+        should_run_step "shell" && run_shell
+        should_run_step "version-managers" && run_version_managers
+        should_run_step "cursor" && run_cursor
+        should_run_step "superwhisper" && run_superwhisper
+        should_run_step "raycast" && run_raycast
+        should_run_step "macos" && run_macos
     fi
-elif [[ ! -d "/Applications/Cursor.app" ]]; then
-    echo "  Cursor not installed. Skipping config."
-elif [[ ! -d "$CURSOR_CONFIG_SRC" ]]; then
-    echo "  No Cursor config found at $CURSOR_CONFIG_SRC"
-fi
 
-###############################################################################
-# iCloud Photo Library Sync
-###############################################################################
-
-info "iCloud Photo Library..."
-
-echo ""
-echo "If you've signed into your Apple ID and enabled iCloud Photos,"
-echo "opening Photos now will start syncing your library in the background."
-echo ""
-echo -n "Open Photos app to start iCloud sync? (y/N) "
-read REPLY </dev/tty || REPLY="n"
-echo ""
-if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    # Open Photos in background (won't steal focus)
-    open -gja "Photos"
-    success "Photos opened in background — iCloud sync will begin"
-else
-    echo "  Skipped. Open Photos manually later to sync your library."
-fi
-
-###############################################################################
-# Done
-###############################################################################
-
+    # Done!
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "🔍 Dry run complete! No changes were made."
+    else
 echo "🎉 Bootstrap complete!"
+    fi
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
+    
+    if [[ "$DRY_RUN" != "true" ]]; then
 echo "Next steps:"
-echo "  1. Sign into Apple ID (System Settings → Apple ID) if not done"
-echo "  2. Open a new terminal (or run: exec zsh)"
+        echo "  1. Open a new terminal (or run: exec zsh)"
+        echo "  2. Sign into Apple ID if not done"
 echo "  3. Logout/restart to apply all macOS settings"
-echo "  4. After SynologyDrive is configured, set screenshot location:"
-echo "     ~/.dotfiles/screenshots.sh"
 echo ""
-echo "To re-run safely (idempotent):"
-echo "  ~/.dotfiles/start.sh"
+        echo "Standalone scripts:"
+        echo "  ~/.dotfiles/setup/cursor.sh"
+        echo "  ~/.dotfiles/setup/superwhisper.sh"
+        echo "  ~/.dotfiles/setup/raycast.sh"
+        echo "  ~/.dotfiles/setup/ssh.sh"
+        echo "  ~/.dotfiles/setup/screenshots.sh"
 echo ""
+    fi
+}
 
+# Run main
+main "$@"

@@ -135,6 +135,8 @@ cask "font-fira-code-nerd-font"
 
 cask "raycast"          # Spotlight replacement
 cask "1password"        # Password manager
+cask "superwhisper"     # Voice-to-text with AI
+cask "claude"           # Anthropic Claude desktop app
 cask "arc"              # Browser
 cask "google-chrome"    # Browser
 

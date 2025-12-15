@@ -214,7 +214,7 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Arc.app"
         "/System/Applications/Photos.app"
         "/Applications/Cursor.app"
-        "/Applications/Ghostty.app"
+        "/Applications/Warp.app"
         "/System/Applications/Utilities/Screen Sharing.app"
         "/System/Applications/System Settings.app"
     )
@@ -462,6 +462,7 @@ configure_finder_sidebar() {
     }
 
     local icloud_path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+    local synology_path="$HOME/SynologyDrive"
     local favorites=(
         "$HOME"
         "/Applications"
@@ -469,13 +470,14 @@ configure_finder_sidebar() {
     )
 
     [[ -d "$icloud_path" ]] && favorites+=("$icloud_path")
+    [[ -d "$synology_path" ]] && favorites+=("$synology_path")
 
     if ! "$sidebarctl" --set "${favorites[@]}"; then
         local sfl_path
         sfl_path="$("$sidebarctl" --path 2>/dev/null || true)"
         err "⚠️  sidebarctl could not update Finder sidebar (macOS likely blocked access to the favorites list)."
         [[ -n "$sfl_path" ]] && err "    SFL path: $sfl_path"
-        err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/finder.sh"
+        err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/macos/finder.sh"
         open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" >/dev/null 2>&1 || true
     fi
 }

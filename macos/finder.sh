@@ -105,6 +105,7 @@ configure_finder_favorites() {
   sidebarctl="$(install_sidebarctl)"
 
   local icloud_path="$HOME/Library/Mobile Documents/com~apple~CloudDocs"
+  local synology_path="$HOME/SynologyDrive"
   local paths=(
     "$HOME"            # Home (shows as your username)
     "/Applications"
@@ -115,12 +116,16 @@ configure_finder_favorites() {
     paths+=("$icloud_path")   # iCloud Drive
   fi
 
+  if [[ -d "$synology_path" ]]; then
+    paths+=("$synology_path")   # Synology Drive sync folder
+  fi
+
   if ! "$sidebarctl" --set "${paths[@]}"; then
     local sfl_path
     sfl_path="$("$sidebarctl" --path 2>/dev/null || true)"
     err "⚠️  sidebarctl could not update Finder sidebar (macOS likely blocked access to the favorites list)."
     [[ -n "$sfl_path" ]] && err "    SFL path: $sfl_path"
-    err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/finder.sh"
+    err "    Fix: System Settings → Privacy & Security → Full Disk Access → enable your terminal/SSH daemon (e.g., Terminal, iTerm2, Cursor, /usr/libexec/sshd-keygen-wrapper), then rerun: ~/.dotfiles/macos/finder.sh"
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles" >/dev/null 2>&1 || true
   fi
 }

@@ -34,13 +34,13 @@ fi
 # Path
 ###############################################################################
 
-source "$HOME/.dotfiles/path.zsh"
+source "$HOME/.dotfiles/zsh/path.zsh"
 
 ###############################################################################
 # Aliases
 ###############################################################################
 
-source "$HOME/.dotfiles/aliases.zsh"
+source "$HOME/.dotfiles/zsh/aliases.zsh"
 
 ###############################################################################
 # Version Managers (Lazy Loading for Fast Startup)

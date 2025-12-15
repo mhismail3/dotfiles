@@ -10,6 +10,48 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 
 > **Note:** A popup will appear asking to install Xcode Command Line Tools. Click **Install** and wait for it to complete. The script will continue automatically.
 
+## Execution Modes
+
+The bootstrap script supports multiple execution modes:
+
+```bash
+# Interactive (default) - prompts before each step
+./start.sh
+
+# Run everything - minimal prompts, uses safe defaults
+./start.sh --all
+
+# Run everything with no prompts (CI/automation mode)
+./start.sh --all --force
+
+# Run only a specific module
+./start.sh --module cursor
+
+# Preview what would happen (no changes made)
+./start.sh --dry-run --all
+
+# List available modules
+./start.sh --list
+
+# Show help
+./start.sh --help
+```
+
+### Available Modules
+
+| Module | Description |
+|--------|-------------|
+| `core` | Xcode CLI Tools, Homebrew, Oh My Zsh |
+| `packages` | Install Brewfile packages |
+| `symlinks` | Create dotfile symlinks |
+| `ssh` | SSH key setup |
+| `shell` | Set Zsh as default shell |
+| `version-managers` | Set up nvm, Node, Rust, etc. |
+| `cursor` | Cursor IDE configuration |
+| `superwhisper` | SuperWhisper configuration |
+| `raycast` | Raycast configuration |
+| `macos` | macOS system preferences |
+
 ## What Gets Installed
 
 ### CLI Tools
@@ -17,16 +59,15 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 - Modern replacements: `bat`, `eza`, `fd`, `ripgrep`, `fzf`, `zoxide`
 - Dev tools: `git`, `gh`, `neovim`, `tmux`, `jq`, `httpie`
 - Version managers: `pyenv`, `nvm`, `rbenv`, `rustup`
-- Node.js: installs latest LTS via `nvm` (with `corepack enable` for yarn/pnpm)
 
 ### Apps
 - **Browsers:** Arc, Chrome
 - **Editors:** Cursor, VS Code
-- **Terminals:** Ghostty, Warp, Terminal
+- **Terminals:** Warp, Terminal
 - **Productivity:** Raycast, 1Password, Things 3
 - **Cloud:** Synology Drive, Google Drive
 - **Media:** Stremio, VLC, Keka, qBittorrent
-- **AI CLIs:** Gemini CLI, Codex, Claude Code, Repoprompt
+- **AI CLIs:** Gemini CLI, Codex, Claude Code
 
 ### Shell
 - Zsh with Oh My Zsh
@@ -41,10 +82,11 @@ curl -fsSL https://raw.githubusercontent.com/mhismail3/dotfiles/main/start.sh | 
 4. Installs Oh My Zsh
 5. Runs `brew bundle` (installs all packages)
 6. Symlinks dotfiles to home directory
-7. Sets up SSH key (optional, asks first)
-8. Applies macOS preferences (optional, asks first)
-   - Automated Dock layout configuration
-   - Finder sidebar: sets favorites (Home, Applications, Downloads, iCloud Drive), hides Recents/Shared/Computer/iCloud Drive from Locations
+7. Configures app settings (Cursor, SuperWhisper, Raycast)
+8. Sets up SSH key (optional, asks first)
+9. Applies macOS preferences (optional, asks first)
+   - Includes automated Dock layout configuration
+   - Configures Finder defaults and sidebar favorites
 
 ## Manual Steps After Setup
 
@@ -53,48 +95,83 @@ The script will print these, but here's a summary:
 1. **Apple ID** — Sign in if not done during macOS setup
 2. **Display** — System Settings → Displays → "More Space"
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
-4. **SSH Key** — Run `~/.dotfiles/ssh.sh` then add to GitHub
+4. **SSH Key** — Run `~/.dotfiles/setup/ssh.sh` then add to GitHub
 5. **Mackup** — Run `mackup restore` to restore app preferences
-6. **Screenshots** — After Synology Drive syncs, run `~/.dotfiles/screenshots.sh`
-
-> **Note:** If the script warns about Full Disk Access for Finder sidebar automation, open System Settings → Privacy & Security → Full Disk Access, enable your terminal (e.g., Terminal, iTerm2, Cursor), then rerun `source ~/.dotfiles/.macos`
 
 ## File Structure
 
 ```
 ~/.dotfiles/
-├── start.sh          # Bootstrap script (run this first)
-├── ssh.sh            # SSH key generation
-├── screenshots.sh    # Screenshot save location config
-├── .macos            # macOS system preferences
-├── .zshrc            # Zsh configuration
-├── aliases.zsh       # Shell aliases
-├── path.zsh          # PATH modifications
-├── .gitconfig        # Git configuration
-├── .gitignore_global # Global gitignore
-├── .mackup.cfg       # Mackup configuration
-├── .mackup/          # Custom Mackup app configs
-├── Brewfile          # Homebrew packages
-├── AGENTS.md         # Agent-focused change log and rationale
-└── .cursorrules      # AI agent instructions
+├── start.sh              # Bootstrap script (run this first)
+├── Brewfile              # Homebrew packages
+├── README.md
+│
+├── setup/                # Modular setup scripts (run individually)
+│   ├── _lib.sh           # Shared helper functions
+│   ├── cursor.sh         # Cursor IDE config
+│   ├── superwhisper.sh   # SuperWhisper modes/settings
+│   ├── raycast.sh        # Raycast config import
+│   ├── ssh.sh            # SSH key generation
+│   └── screenshots.sh    # Screenshot location
+│
+├── zsh/                  # Shell configuration
+│   ├── .zshrc
+│   ├── aliases.zsh
+│   └── path.zsh
+│
+├── git/                  # Git configuration
+│   ├── .gitconfig
+│   └── .gitignore_global
+│
+├── cursor/               # Cursor IDE settings
+│   ├── settings.json
+│   ├── keybindings.json
+│   ├── mcp.json
+│   └── extensions.json
+│
+├── superwhisper/         # SuperWhisper config
+│   ├── modes/
+│   └── settings/
+│
+├── raycast/              # Raycast config
+│   └── Raycast.rayconfig
+│
+├── macos/                # macOS preferences
+│   ├── .macos
+│   ├── finder.sh
+│   └── bin/
+│
+├── mackup/               # Mackup backup config
+│   ├── .mackup.cfg
+│   └── .mackup/
+│
+└── tmux/                 # Tmux configuration
+    └── .tmux.conf
 ```
 
 ## Commands Reference
 
 ```bash
-# Re-run bootstrap (safe to run multiple times)
-~/.dotfiles/start.sh
+# Re-run bootstrap
+~/.dotfiles/start.sh                    # Interactive mode
+~/.dotfiles/start.sh --all              # Run everything
+~/.dotfiles/start.sh --all --force      # No prompts (automation)
+~/.dotfiles/start.sh --dry-run --all    # Preview changes
 
-# Generate SSH key
-~/.dotfiles/ssh.sh
+# Individual setup scripts (all support --force and --dry-run)
+~/.dotfiles/setup/cursor.sh             # Re-link Cursor settings
+~/.dotfiles/setup/superwhisper.sh       # Re-link SuperWhisper config
+~/.dotfiles/setup/raycast.sh            # Import Raycast settings
+~/.dotfiles/setup/ssh.sh                # Generate SSH key
+~/.dotfiles/setup/screenshots.sh        # Set screenshot location
 
-# Set screenshot save location (after configuring sync services)
-~/.dotfiles/screenshots.sh ~/SynologyDrive/Screenshots
-~/.dotfiles/screenshots.sh --show   # View current setting
-~/.dotfiles/screenshots.sh --reset  # Reset to Desktop
+# Run a specific module only
+~/.dotfiles/start.sh --module symlinks
+~/.dotfiles/start.sh --module cursor
+~/.dotfiles/start.sh --module macos
 
 # Apply macOS preferences only
-source ~/.dotfiles/.macos
+source ~/.dotfiles/macos/.macos
 
 # Update Brewfile from current installs
 brew bundle dump --file=~/.dotfiles/Brewfile --force
@@ -106,27 +183,35 @@ mackup backup
 mackup restore
 ```
 
+## Idempotent & Safe
+
+All scripts are designed to be:
+
+- **Idempotent** — Run multiple times safely; already-done steps are skipped
+- **Non-destructive** — Existing files are backed up before symlinking
+- **Interruptible** — Ctrl+C at any time; resume by running again
+- **Transparent** — Use `--dry-run` to preview all changes
+
 ## Dock Layout
 
 The Dock is automatically configured with these apps (left to right):
 
-> Finder → Calendar → Things 3 → Messages → Arc → Photos → Cursor → Ghostty → Screen Sharing → Settings → [Trash]
+> Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos → Cursor → Terminal → Warp → Screen Sharing → Settings → [Trash]
 
 - Recent apps: disabled
-- To customize, edit the `DOCK_APPS` array in `.macos`
+- To customize, edit the `DOCK_APPS` array in `macos/.macos`
 
 ## Customization
 
 Fork this repo and edit:
 
 - `Brewfile` — Add/remove packages and apps
-- `.macos` — Adjust system preferences and Dock layout
-- `aliases.zsh` — Add your own aliases
-- `.gitconfig` — Change name/email
+- `macos/.macos` — Adjust system preferences and Dock layout
+- `zsh/aliases.zsh` — Add your own aliases
+- `git/.gitconfig` — Change name/email
 
 ## Credits
 
 Inspired by:
 - [Dries Vints](https://github.com/driesvints/dotfiles)
 - [Mathias Bynens](https://github.com/mathiasbynens/dotfiles)
-
