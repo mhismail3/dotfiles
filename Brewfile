@@ -50,6 +50,7 @@ brew "tmux"             # Terminal multiplexer
 brew "neovim"           # Modern vim
 brew "shellcheck"       # Shell script linter
 brew "shfmt"            # Shell script formatter
+brew "exiftool"         # Read/write image metadata
 
 ###############################################################################
 # CLI Tools - Dock Management
