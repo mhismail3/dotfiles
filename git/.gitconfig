@@ -94,7 +94,5 @@
     # Sort branches by most recent commit
     sort = -committerdate
 
-# Uncomment after setting up SSH keys if you want to force SSH for GitHub:
-# [url "git@github.com:"]
-#     insteadOf = https://github.com/
-
+[url "git@github.com:"]
+	insteadOf = https://github.com/
