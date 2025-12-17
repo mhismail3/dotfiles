@@ -11,7 +11,7 @@ alias ~="cd ~"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 alias dot="cd ~/.dotfiles"
-alias proj="cd ~/projects"
+alias proj="cd ~/Downloads/projects"
 
 ###############################################################################
 # Modern Replacements
