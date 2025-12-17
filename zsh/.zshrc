@@ -114,6 +114,7 @@ fi
 # Autosuggestions
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
     source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    bindkey '\t' autosuggest-accept  # Tab to accept suggestion
 fi
 
 # Completions

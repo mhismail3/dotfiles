@@ -5,6 +5,7 @@
 # Or sourced by start.sh during bootstrap
 #
 # Symlinks these files to ~/.claude/:
+#   - CLAUDE.md (global agent instructions)
 #   - settings.json (permissions, model preferences, settings)
 #   - commands/ (custom slash commands)
 #
@@ -33,6 +34,7 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  --dry-run, -n  Show what would be done"
                 echo ""
                 echo "This script symlinks Claude Code configuration files:"
+                echo "  - CLAUDE.md      (global agent instructions)"
                 echo "  - settings.json  (permissions, model, settings)"
                 echo "  - commands/      (custom slash commands)"
                 exit 0
@@ -104,6 +106,7 @@ setup_claude() {
 
     # Count available config files
     local config_items=0
+    [[ -f "$CLAUDE_CONFIG_SRC/CLAUDE.md" ]] && ((config_items++))
     [[ -f "$CLAUDE_CONFIG_SRC/settings.json" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && ((config_items++))
 
@@ -115,6 +118,7 @@ setup_claude() {
     echo ""
     echo "Claude Code is installed and dotfiles config is available ($config_items items)."
     echo "This will symlink to ~/.claude/:"
+    [[ -f "$CLAUDE_CONFIG_SRC/CLAUDE.md" ]] && echo "  - CLAUDE.md (global agent instructions)"
     [[ -f "$CLAUDE_CONFIG_SRC/settings.json" ]] && echo "  - settings.json (permissions, model preferences)"
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && echo "  - commands/ (custom slash commands)"
     echo ""
@@ -131,6 +135,11 @@ setup_claude() {
     # Create ~/.claude directory if needed
     if [[ "$DOTFILES_DRY_RUN" != "true" ]]; then
         mkdir -p "$CLAUDE_HOME" || { warn "Failed to create $CLAUDE_HOME"; ((failed++)); }
+    fi
+
+    # Symlink CLAUDE.md
+    if [[ -f "$CLAUDE_CONFIG_SRC/CLAUDE.md" ]]; then
+        symlink "$CLAUDE_CONFIG_SRC/CLAUDE.md" "$CLAUDE_HOME/CLAUDE.md" || ((failed++))
     fi
 
     # Symlink settings.json
