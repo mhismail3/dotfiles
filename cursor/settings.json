@@ -6,5 +6,8 @@
     "chatgpt.openOnStartup": true,
     "workbench.colorTheme": "Default Dark Modern",
     "git.confirmSync": false,
-    "workbench.sideBar.location": "right"
+    "claudeCode.preferredLocation": "sidebar",
+    "workbench.sideBar.location": "right",
+    "claudeCode.selectedModel": "claude-opus-4-5-20251101",
+    "claudeCode.useCtrlEnterToSend": true
 }

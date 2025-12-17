@@ -182,6 +182,33 @@ die() {
     exit 1
 }
 
+# Fix known Homebrew cask installation quirks
+# Some casks report failure but actually install successfully (e.g., quarantine removal)
+fix_cask_quirks() {
+    local fixed=0
+
+    # Private Internet Access: Installer succeeds but fails to remove quarantine attribute
+    # The app is installed correctly, just needs quarantine cleared manually
+    if [[ -d "/Applications/Private Internet Access.app" ]]; then
+        if xattr "/Applications/Private Internet Access.app" 2>/dev/null | grep -q "com.apple.quarantine"; then
+            echo "  Fixing PIA quarantine attribute (known cask quirk)..."
+            sudo xattr -rd com.apple.quarantine "/Applications/Private Internet Access.app" 2>/dev/null && {
+                echo "  ✓ PIA quarantine attribute removed"
+                ((fixed++))
+            } || echo "  ⚠ Could not remove PIA quarantine (non-critical, app will still work)"
+        fi
+    fi
+
+    # Add other known cask quirks here as needed
+    # Example pattern:
+    # if [[ -d "/Applications/SomeApp.app" ]]; then
+    #     # Fix specific issue
+    # fi
+
+    [[ $fixed -gt 0 ]] && echo "  Fixed $fixed known cask quirk(s)"
+    return 0
+}
+
 # Check if we can prompt interactively
 can_prompt() {
     [[ -t 0 ]] || [[ -c /dev/tty ]]
@@ -513,11 +540,57 @@ info "Installing packages from Brewfile..."
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "[dry-run] Would run: brew bundle --file=$DOTFILES/Brewfile --no-upgrade"
     else
-    brew bundle --file="$DOTFILES/Brewfile" --no-upgrade || {
-            warn "Some packages may have failed to install (check output above)"
-    }
+        # Request sudo password upfront for cask installations that require it
+        # (e.g., Synology Drive, Google Drive, Logi Options+)
+        info "Some apps require admin privileges to install. Requesting password upfront..."
+        sudo -v < /dev/tty 2>/dev/null || sudo -v
+
+        # Keep sudo alive during the entire brew bundle process
+        (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) &
+        SUDO_KEEPALIVE_PID=$!
+
+        # Run brew bundle with flags to prevent stalling:
+        # --no-upgrade: don't upgrade existing packages
+        # --no-lock: don't create Brewfile.lock.json (avoids lock issues)
+        # Individual package failures won't stop the entire bundle
+        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade --no-lock
+        local brew_exit=$?
+
+        # Stop sudo keepalive
+        kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true
+
+        # Handle brew bundle exit code
+        if [[ $brew_exit -ne 0 ]]; then
+            warn "brew bundle exited with code $brew_exit (some packages may have had issues)"
+            warn "You can retry failed packages with: brew bundle --file=~/.dotfiles/Brewfile"
+        fi
+
+        # Fix known cask installation quirks
+        # Some casks report failure but actually install successfully
+        fix_cask_quirks
+
     success "Brewfile packages installed"
 fi
+
+    # Fix Homebrew directory permissions for zsh compinit security check
+    # Homebrew directories sometimes get group-write permissions which zsh considers insecure
+    info "Fixing Homebrew directory permissions for zsh..."
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[dry-run] Would fix permissions on Homebrew share directories"
+    else
+        local brew_dirs=(
+            "$HOMEBREW_PREFIX/share"
+            "$HOMEBREW_PREFIX/share/zsh"
+            "$HOMEBREW_PREFIX/share/zsh/site-functions"
+            "$HOMEBREW_PREFIX/share/zsh-completions"
+        )
+        for dir in "${brew_dirs[@]}"; do
+            if [[ -d "$dir" ]]; then
+                chmod go-w "$dir" 2>/dev/null || true
+            fi
+        done
+        success "Homebrew directory permissions fixed"
+    fi
 }
 
 ###############################################################################
@@ -595,6 +668,8 @@ if [[ -f "$SSH_KEY" ]]; then
         if [[ ! -f "$SSH_CONFIG" ]]; then
             cat > "$SSH_CONFIG" << 'EOF'
 Host *
+    # IgnoreUnknown makes this config compatible with both Apple's SSH and Homebrew's OpenSSH
+    IgnoreUnknown UseKeychain,AddKeysToAgent
     AddKeysToAgent yes
     UseKeychain yes
     IdentityFile ~/.ssh/id_ed25519
@@ -662,7 +737,7 @@ fi
     # Create common directories
     info "Creating directories..."
     
-    local dirs=("$HOME/Downloads/projects" "$HOME/.ssh" "$HOME/SynologyDrive")
+    local dirs=("$HOME/Downloads/projects" "$HOME/.ssh")
     for dir in "${dirs[@]}"; do
         if [[ "$DRY_RUN" == "true" ]]; then
             [[ ! -d "$dir" ]] && echo "[dry-run] Would create: $dir"

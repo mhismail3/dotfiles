@@ -59,10 +59,17 @@ brew "exiftool"         # Read/write image metadata
 brew "dockutil"         # CLI to manage Dock items
 
 ###############################################################################
+# CLI Tools - Browser Management
+###############################################################################
+
+brew "defaultbrowser"   # CLI to set default browser (used by .macos)
+
+###############################################################################
 # CLI Tools - Display Management
 ###############################################################################
 
-brew "smudge/smudge/nightlight"  # CLI for Night Shift control
+tap "smudge/smudge"
+brew "nightlight"       # CLI for Night Shift control
 
 ###############################################################################
 # CLI Tools - Networking & System
@@ -182,7 +189,7 @@ cask "logi-options+"    # Logitech mouse/keyboard customization
 ###############################################################################
 
 cask "tailscale"                 # Mesh VPN for secure networking
-# cask "private-internet-access"  # VPN - install manually, has installer issues with Homebrew
+cask "private-internet-access"   # PIA VPN (requires sudo, handled by brew bundle)
 
 ###############################################################################
 # Mac App Store Apps

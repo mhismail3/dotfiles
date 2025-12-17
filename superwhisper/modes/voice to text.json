@@ -13,12 +13,12 @@
   "description" : "",
   "diarize" : false,
   "iconName" : "",
-  "key" : "default",
+  "key" : "voice to text",
   "language" : "en",
   "languageModelEnabled" : false,
   "languageModelID" : "sw-gpt-5-mini",
   "literalPunctuation" : false,
-  "name" : "Default",
+  "name" : "Voice to text",
   "pauseMediaPlayback" : false,
   "prompt" : "",
   "promptExamples" : [
@@ -28,7 +28,7 @@
   "script" : "",
   "scriptEnabled" : false,
   "translateToEnglish" : false,
-  "type" : "custom",
+  "type" : "voice",
   "useSystemAudio" : false,
   "version" : 1,
   "voiceModelID" : "sw-ultra-cloud-v1-east"

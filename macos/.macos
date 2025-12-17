@@ -170,11 +170,11 @@ defaults write com.apple.LaunchServices LSQuarantine -bool false
 defaults write com.apple.dock orientation -string "bottom"
 
 # Size: 50% (~48 pixels)
-defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock tilesize -int 80
 
-# Magnification: on, ~70% (~80 pixels)
+# Magnification: on, ~120 pixels
 defaults write com.apple.dock magnification -bool true
-defaults write com.apple.dock largesize -int 80
+defaults write com.apple.dock largesize -int 100
 
 # Auto-hide: on
 defaults write com.apple.dock autohide -bool true
@@ -212,7 +212,9 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Things3.app"
         "/System/Applications/Messages.app"
         "/Applications/Arc.app"
+        "/Applications/Stremio.app"
         "/System/Applications/Photos.app"
+        "/Applications/Claude.app"
         "/Applications/Cursor.app"
         "/Applications/Ghostty.app"
         "/System/Applications/Utilities/Screen Sharing.app"
@@ -665,6 +667,13 @@ defaults write com.apple.menuextra.clock ShowDayOfWeek -bool true
 defaults write com.apple.menuextra.clock ShowSeconds -bool false
 
 ###############################################################################
+# Menu Bar Battery
+###############################################################################
+
+# Show battery percentage in menu bar
+defaults write com.apple.menuextra.battery ShowPercent -string "YES"
+
+###############################################################################
 # Activity Monitor
 ###############################################################################
 
@@ -811,6 +820,28 @@ sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
 sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
 
 ###############################################################################
+# Default Browser (Arc)
+###############################################################################
+
+# Set Arc as default browser (requires defaultbrowser from Brewfile)
+# Note: This will show a system confirmation dialog that must be clicked
+if command -v defaultbrowser &>/dev/null; then
+    if [[ -d "/Applications/Arc.app" ]]; then
+        echo "Setting Arc as default browser..."
+        # defaultbrowser will trigger a macOS confirmation dialog
+        # The user must click "Use Arc" to confirm
+        defaultbrowser arc 2>/dev/null && echo "✓ Arc set as default browser (confirm dialog if shown)" || {
+            echo "⚠️  Could not set default browser automatically."
+            echo "   Set manually: System Settings → Desktop & Dock → Default web browser → Arc"
+        }
+    else
+        echo "⚠️  Arc not installed. Skipping default browser configuration."
+    fi
+else
+    echo "⚠️  defaultbrowser not found. Install via Brewfile to set default browser."
+fi
+
+###############################################################################
 # Restart affected apps
 ###############################################################################
 echo "Restarting affected apps..."
@@ -826,9 +857,10 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "⚠️  MANUAL STEPS REQUIRED"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "APPLE ID (if not done during macOS setup):"
-echo "  □ System Settings → Sign in with your Apple ID"
-echo "  □ Open App Store → Verify signed in (needed for 'mas' installs)"
+echo "iCLOUD:"
+echo "  □ System Settings → [Your Name] → iCloud → iCloud Drive → Options..."
+echo "    - Turn on 'Desktop & Documents Folders'"
+echo "    - This syncs ~/Desktop and ~/Documents to iCloud Drive"
 echo ""
 echo "DISPLAY:"
 echo "  □ System Settings → Displays → Select 'More Space' resolution"
@@ -848,20 +880,22 @@ echo "      2. Application: All Applications"
 echo "      3. Menu Title: Lock Screen"
 echo "      4. Keyboard Shortcut: ⌥L (Option+L)"
 echo ""
-echo "MESSAGES:"
-echo "  □ Messages → Settings → iMessage → Enable Messages in iCloud"
-echo "  □ iPhone → Settings → Messages → Text Message Forwarding → Enable this Mac"
-echo ""
-echo "APP SIGN-INS (authentication required, can't automate):"
+echo "APP SIGN-INS & CONFIGURATION:"
 echo "  □ 1Password → Sign in with account"
 echo "  □ Arc → Sign in with account"
-echo "  □ Synology Drive → Connect to smb://MooseStation, sign in"
+echo "  □ Claude Desktop → Sign in, then configure Quick Entry:"
+echo "      - Claude menu → Settings → Desktop App"
+echo "      - Quick access shortcut: Custom → ⌥⌘Space (Option+Cmd+Space)"
+echo "      - Grant required permissions (Accessibility, Speech Recognition)"
+echo "  □ Synology Drive → Connect to NAS, then:"
+echo "      - Set sync folder location to: /Users/\$(whoami)/"
+echo "      - Set task name to: SynologyDrive"
+echo "      - This creates ~/SynologyDrive automatically"
 echo "  □ Google Drive → Sign in with Google account"
 echo "  □ Private Internet Access → Sign in with account"
 echo "  □ VS Code/Cursor → Turn on Settings Sync (signs in with GitHub/Microsoft)"
 echo ""
 echo "DEVICES:"
-echo "  □ System Settings → Printers & Scanners → Add printers"
 echo "  □ System Settings → Bluetooth → Pair devices (keyboard, mouse, etc.)"
 echo ""
 echo "SCREENSHOTS:"
