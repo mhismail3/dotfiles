@@ -11,6 +11,7 @@ alias ~="cd ~"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 alias dot="cd ~/.dotfiles"
+alias proj="cd ~/projects"
 
 ###############################################################################
 # Modern Replacements
@@ -88,6 +89,33 @@ alias gb="git branch"
 alias gd="git diff"
 alias gl="git log --oneline -20"
 alias glog="git log --graph --oneline --decorate"
+
+# Pull all repos in ~/projects/
+pullall() {
+    local projects_dir="${HOME}/projects"
+    if [[ ! -d "$projects_dir" ]]; then
+        echo "Projects directory not found: $projects_dir"
+        return 1
+    fi
+
+    local count=0
+    local failed=0
+
+    for dir in "$projects_dir"/*/; do
+        [[ -d "${dir}.git" ]] || continue
+        local repo_name=$(basename "$dir")
+        echo "→ Pulling $repo_name..."
+        if git -C "$dir" pull --quiet 2>/dev/null; then
+            ((count++))
+        else
+            echo "  ✗ Failed to pull $repo_name"
+            ((failed++))
+        fi
+    done
+
+    echo ""
+    echo "Pulled $count repo(s)${failed:+, $failed failed}"
+}
 
 ###############################################################################
 # Shortcuts
