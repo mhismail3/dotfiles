@@ -66,7 +66,6 @@ fi
 CURSOR_CONFIG_SRC="$DOTFILES/cursor"
 CURSOR_USER_DIR="$HOME/Library/Application Support/Cursor/User"
 CURSOR_DATA_DIR="$HOME/.cursor"
-CURSOR_EXTENSIONS_DIR="$CURSOR_DATA_DIR/extensions"
 
 # ============================================================================
 # Setup Function
@@ -92,7 +91,7 @@ setup_cursor() {
     [[ -f "$CURSOR_CONFIG_SRC/settings.json" ]] && ((config_files++))
     [[ -f "$CURSOR_CONFIG_SRC/keybindings.json" ]] && ((config_files++))
     [[ -f "$CURSOR_CONFIG_SRC/mcp.json" ]] && ((config_files++))
-    [[ -f "$CURSOR_CONFIG_SRC/extensions.json" ]] && ((config_files++))
+    [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]] && ((config_files++))
     
     if [[ $config_files -eq 0 ]]; then
         warn "No config files found in $CURSOR_CONFIG_SRC"
@@ -118,7 +117,6 @@ setup_cursor() {
     # Create directories if needed
     if [[ "$DOTFILES_DRY_RUN" != "true" ]]; then
         mkdir -p "$CURSOR_USER_DIR" || { warn "Failed to create $CURSOR_USER_DIR"; ((failed++)); }
-        mkdir -p "$CURSOR_EXTENSIONS_DIR" || { warn "Failed to create $CURSOR_EXTENSIONS_DIR"; ((failed++)); }
     fi
 
     # Symlink each config file
@@ -131,8 +129,33 @@ setup_cursor() {
     [[ -f "$CURSOR_CONFIG_SRC/mcp.json" ]] && \
         { symlink "$CURSOR_CONFIG_SRC/mcp.json" "$CURSOR_DATA_DIR/mcp.json" || ((failed++)); }
 
-    [[ -f "$CURSOR_CONFIG_SRC/extensions.json" ]] && \
-        { symlink "$CURSOR_CONFIG_SRC/extensions.json" "$CURSOR_EXTENSIONS_DIR/extensions.json" || ((failed++)); }
+    # Install extensions from extensions.txt
+    if [[ -f "$CURSOR_CONFIG_SRC/extensions.txt" ]]; then
+        echo "  Installing extensions..."
+        local ext_count=0
+        local ext_failed=0
+        while IFS= read -r ext || [[ -n "$ext" ]]; do
+            # Skip comments and empty lines
+            [[ -z "$ext" || "$ext" =~ ^[[:space:]]*# ]] && continue
+            ext="${ext%%#*}"  # Remove inline comments
+            ext="${ext// /}"  # Trim whitespace
+            [[ -z "$ext" ]] && continue
+
+            if [[ "$DOTFILES_DRY_RUN" == "true" ]]; then
+                echo "    Would install: $ext"
+            else
+                if cursor --install-extension "$ext" &>/dev/null; then
+                    echo "    Installed: $ext"
+                    ((ext_count++))
+                else
+                    warn "    Failed to install: $ext"
+                    ((ext_failed++))
+                fi
+            fi
+        done < "$CURSOR_CONFIG_SRC/extensions.txt"
+        [[ $ext_count -gt 0 ]] && echo "  Installed $ext_count extension(s)"
+        [[ $ext_failed -gt 0 ]] && ((failed += ext_failed))
+    fi
 
     if [[ $failed -gt 0 ]]; then
         warn "Cursor configuration completed with $failed error(s)"

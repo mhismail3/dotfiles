@@ -78,6 +78,7 @@ MODULES:
   shell             Set Zsh as default, configure plugins
   version-managers  Set up nvm, rustup, etc.
   cursor            Cursor IDE configuration
+  claude            Claude Code CLI configuration
   superwhisper      SuperWhisper configuration
   raycast           Raycast configuration
   agent-ledger      Agent memory ledger setup
@@ -105,6 +106,7 @@ list_modules() {
     echo "  shell             Set Zsh as default shell"
     echo "  version-managers  Set up nvm, Node, Rust, etc."
     echo "  cursor            Cursor IDE configuration"
+    echo "  claude            Claude Code CLI configuration"
     echo "  superwhisper      SuperWhisper configuration"
     echo "  raycast           Raycast configuration"
     echo "  agent-ledger      Agent memory ledger setup"
@@ -753,6 +755,18 @@ run_cursor() {
 }
 
 ###############################################################################
+# Module: Claude Code
+###############################################################################
+
+run_claude() {
+    if [[ -f "$DOTFILES/setup/claude.sh" ]]; then
+        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/claude.sh"
+    else
+        warn "Claude Code setup script not found"
+    fi
+}
+
+###############################################################################
 # Module: SuperWhisper
 ###############################################################################
 
@@ -841,6 +855,7 @@ main() {
             shell)            run_shell ;;
             version-managers) run_version_managers ;;
             cursor)           run_cursor ;;
+            claude)           run_claude ;;
             superwhisper)     run_superwhisper ;;
             raycast)          run_raycast ;;
             agent-ledger)     run_agent_ledger ;;
@@ -858,6 +873,7 @@ main() {
         should_run_step "shell" && run_shell
         should_run_step "version-managers" && run_version_managers
         should_run_step "cursor" && run_cursor
+        should_run_step "claude" && run_claude
         should_run_step "superwhisper" && run_superwhisper
         should_run_step "raycast" && run_raycast
         should_run_step "agent-ledger" && run_agent_ledger
@@ -883,6 +899,7 @@ echo "  3. Logout/restart to apply all macOS settings"
 echo ""
         echo "Standalone scripts:"
         echo "  ~/.dotfiles/setup/cursor.sh"
+        echo "  ~/.dotfiles/setup/claude.sh"
         echo "  ~/.dotfiles/setup/superwhisper.sh"
         echo "  ~/.dotfiles/setup/raycast.sh"
         echo "  ~/.dotfiles/setup/ssh.sh"

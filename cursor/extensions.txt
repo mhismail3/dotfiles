@@ -1,0 +1,5 @@
+# Cursor extensions to install
+# One extension ID per line (publisher.extension-name)
+# Lines starting with # are comments
+
+mhutchie.git-graph

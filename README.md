@@ -48,6 +48,7 @@ The bootstrap script supports multiple execution modes:
 | `shell` | Set Zsh as default shell |
 | `version-managers` | Set up nvm, Node, Rust, etc. |
 | `cursor` | Cursor IDE configuration |
+| `claude` | Claude Code CLI configuration |
 | `superwhisper` | SuperWhisper configuration |
 | `raycast` | Raycast configuration |
 | `agent-ledger` | Agent memory ledger setup |
@@ -110,6 +111,7 @@ The script will print these, but here's a summary:
 ├── setup/                # Modular setup scripts (run individually)
 │   ├── _lib.sh           # Shared helper functions
 │   ├── cursor.sh         # Cursor IDE config
+│   ├── claude.sh         # Claude Code CLI config
 │   ├── superwhisper.sh   # SuperWhisper modes/settings
 │   ├── raycast.sh        # Raycast config import
 │   ├── ssh.sh            # SSH key generation
@@ -136,6 +138,11 @@ The script will print these, but here's a summary:
 │   ├── keybindings.json
 │   ├── mcp.json
 │   └── extensions.json
+│
+├── claude/               # Claude Code CLI settings
+│   ├── settings.json     # Permissions, model preferences
+│   ├── commands/         # Custom slash commands
+│   └── history.jsonl     # Conversation history
 │
 ├── superwhisper/         # SuperWhisper config
 │   ├── modes/
@@ -168,6 +175,7 @@ The script will print these, but here's a summary:
 
 # Individual setup scripts (all support --force and --dry-run)
 ~/.dotfiles/setup/cursor.sh             # Re-link Cursor settings
+~/.dotfiles/setup/claude.sh             # Re-link Claude Code config
 ~/.dotfiles/setup/superwhisper.sh       # Re-link SuperWhisper config
 ~/.dotfiles/setup/raycast.sh            # Import Raycast settings
 ~/.dotfiles/setup/ssh.sh                # Generate SSH key
