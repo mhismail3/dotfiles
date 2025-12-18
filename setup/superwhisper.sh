@@ -127,6 +127,16 @@ setup_superwhisper() {
     echo "SuperWhisper data folder: $app_folder"
     echo ""
 
+    # Check if using default location (SuperWhisper may not be configured yet)
+    if [[ "$app_folder" == "$HOME/Downloads/superwhisper" ]]; then
+        warn "SuperWhisper is using the default folder location."
+        echo "  If you want a different location (e.g., /Users/$(whoami)/):"
+        echo "    1. Open SuperWhisper → Settings → Advanced → Data Folder"
+        echo "    2. Set your preferred location"
+        echo "    3. Re-run: ~/.dotfiles/setup/superwhisper.sh"
+        echo ""
+    fi
+
     if ! confirm "Apply SuperWhisper settings?" "y"; then
         echo "  Skipped. Run later: ~/.dotfiles/setup/superwhisper.sh"
         return 0

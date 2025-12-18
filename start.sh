@@ -551,11 +551,9 @@ info "Installing packages from Brewfile..."
         (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) &
         SUDO_KEEPALIVE_PID=$!
 
-        # Run brew bundle with flags to prevent stalling:
-        # --no-upgrade: don't upgrade existing packages
-        # --no-lock: don't create Brewfile.lock.json (avoids lock issues)
+        # Run brew bundle with --no-upgrade to prevent upgrading existing packages
         # Individual package failures won't stop the entire bundle
-        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade --no-lock
+        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
         local brew_exit=$?
 
         # Stop sudo keepalive
