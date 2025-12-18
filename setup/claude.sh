@@ -8,6 +8,7 @@
 #   - CLAUDE.md (global agent instructions)
 #   - settings.json (permissions, model preferences, settings)
 #   - commands/ (custom slash commands)
+#   - skills/ (custom skills)
 #
 # Options:
 #   --force, -f    Skip confirmation prompts
@@ -37,6 +38,7 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  - CLAUDE.md      (global agent instructions)"
                 echo "  - settings.json  (permissions, model, settings)"
                 echo "  - commands/      (custom slash commands)"
+                echo "  - skills/        (custom skills)"
                 exit 0
                 ;;
             *) echo "Unknown option: $1"; exit 1 ;;
@@ -109,6 +111,7 @@ setup_claude() {
     [[ -f "$CLAUDE_CONFIG_SRC/CLAUDE.md" ]] && ((config_items++))
     [[ -f "$CLAUDE_CONFIG_SRC/settings.json" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && ((config_items++))
+    [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && ((config_items++))
 
     if [[ $config_items -eq 0 ]]; then
         warn "No config files found in $CLAUDE_CONFIG_SRC"
@@ -121,6 +124,7 @@ setup_claude() {
     [[ -f "$CLAUDE_CONFIG_SRC/CLAUDE.md" ]] && echo "  - CLAUDE.md (global agent instructions)"
     [[ -f "$CLAUDE_CONFIG_SRC/settings.json" ]] && echo "  - settings.json (permissions, model preferences)"
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && echo "  - commands/ (custom slash commands)"
+    [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && echo "  - skills/ (custom skills)"
     echo ""
 
     if ! confirm "Apply Claude Code settings?" "y"; then
@@ -150,6 +154,11 @@ setup_claude() {
     # Symlink commands/ directory
     if [[ -d "$CLAUDE_CONFIG_SRC/commands" ]]; then
         symlink_dir "$CLAUDE_CONFIG_SRC/commands" "$CLAUDE_HOME/commands" || ((failed++))
+    fi
+
+    # Symlink skills/ directory
+    if [[ -d "$CLAUDE_CONFIG_SRC/skills" ]]; then
+        symlink_dir "$CLAUDE_CONFIG_SRC/skills" "$CLAUDE_HOME/skills" || ((failed++))
     fi
 
     if [[ $failed -gt 0 ]]; then
