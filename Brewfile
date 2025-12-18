@@ -83,6 +83,13 @@ brew "ssh-copy-id"      # Copy SSH keys to servers
 brew "mas"              # Mac App Store CLI
 
 ###############################################################################
+# CLI Tools - Port Management
+###############################################################################
+
+tap "productdevbook/tap"
+cask "portkiller"       # Kill processes by port number
+
+###############################################################################
 # CLI Tools - Compression & Archives
 ###############################################################################
 
