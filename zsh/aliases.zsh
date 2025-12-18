@@ -89,6 +89,7 @@ alias gb="git branch"
 alias gd="git diff"
 alias gl="git log --oneline -20"
 alias glog="git log --graph --oneline --decorate"
+alias uncommit="git reset --soft HEAD~1"
 
 # Clone repo from my GitHub (usage: ghc repo-name)
 ghc() {
