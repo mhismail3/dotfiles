@@ -96,7 +96,7 @@ ghc() {
         echo "Usage: ghc <repo-name>"
         return 1
     fi
-    git clone "git@github.com:moose/$1.git"
+    git clone "git@github.com:mhismail3/$1.git"
 }
 
 # Pull all repos in ~/projects/
