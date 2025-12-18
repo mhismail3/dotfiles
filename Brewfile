@@ -145,6 +145,7 @@ cask "raycast"          # Spotlight replacement
 cask "1password"        # Password manager
 cask "superwhisper"     # Voice-to-text with AI
 cask "claude"           # Anthropic Claude desktop app
+cask "chatgpt"          # OpenAI ChatGPT desktop app
 cask "arc"              # Browser
 cask "google-chrome"    # Browser
 
