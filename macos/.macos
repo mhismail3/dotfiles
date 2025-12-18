@@ -500,8 +500,8 @@ defaults write com.apple.menuextra.clock ShowSeconds -bool false
 # Menu Bar Battery
 ###############################################################################
 
-# Show battery percentage in menu bar
-defaults write com.apple.menuextra.battery ShowPercent -string "YES"
+# Show battery percentage in menu bar (modern macOS uses controlcenter domain)
+defaults -currentHost write com.apple.controlcenter.plist BatteryShowPercentage -bool true
 
 ###############################################################################
 # Activity Monitor
