@@ -323,13 +323,17 @@ symlink() {
 }
 
 ###############################################################################
-# Fix: Disable SSH URL rewriting until SSH keys are set up
+# SSH Check: Warn if SSH URL rewriting is enabled but SSH isn't working yet
 ###############################################################################
 
+# Note: We don't modify .gitconfig here because it's symlinked to dotfiles.
+# If SSH isn't working, git operations using GitHub URLs will fail until
+# the SSH module runs. This is expected on fresh installs.
 if git config --global --get url."git@github.com:".insteadOf &>/dev/null; then
     if ! ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        warn "Disabling SSH URL rewriting (SSH keys not set up yet)"
-        git config --global --unset url."git@github.com:".insteadOf 2>/dev/null || true
+        warn "SSH URL rewriting is enabled but SSH keys aren't set up yet."
+        echo "  Git operations to GitHub will fail until SSH module runs."
+        echo "  This is normal on fresh installs - SSH will be configured later."
     fi
 fi
 
@@ -703,14 +707,10 @@ EOF
         echo ""
         echo "Testing GitHub SSH connection..."
         if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-            git config --global url."git@github.com:".insteadOf "https://github.com/"
-            success "SSH working! Git configured to use SSH for GitHub"
+            success "SSH working! GitHub authentication verified."
         else
             warn "Could not verify SSH connection (this is sometimes normal)"
-            if confirm "Enable SSH for git anyway?" "n"; then
-                git config --global url."git@github.com:".insteadOf "https://github.com/"
-                success "Git configured to use SSH for GitHub"
-            fi
+            echo "  You may need to wait a moment and try: ssh -T git@github.com"
         fi
     fi
 }

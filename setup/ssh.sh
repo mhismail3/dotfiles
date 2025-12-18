@@ -259,14 +259,10 @@ EOF
         echo ""
         info "Testing GitHub SSH connection..."
         if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-            git config --global url."git@github.com:".insteadOf "https://github.com/"
-            success "SSH working! Git configured to use SSH for GitHub"
+            success "SSH working! GitHub authentication verified."
         else
             warn "Could not verify SSH connection (this is sometimes normal)"
-            if confirm "Enable SSH for git anyway?" "n"; then
-                git config --global url."git@github.com:".insteadOf "https://github.com/"
-                success "Git configured to use SSH for GitHub"
-            fi
+            echo "  You may need to wait a moment and try: ssh -T git@github.com"
         fi
     fi
 

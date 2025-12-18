@@ -95,4 +95,5 @@
     sort = -committerdate
 
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+    # Always use SSH instead of HTTPS for GitHub
+    insteadOf = https://github.com/
