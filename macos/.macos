@@ -203,6 +203,7 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Arc.app"
         "/Applications/Stremio.app"
         "/System/Applications/Photos.app"
+        "/Applications/ChatGPT.app"
         "/Applications/Claude.app"
         "/Applications/Cursor.app"
         "/Applications/Ghostty.app"
