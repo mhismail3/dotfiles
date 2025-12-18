@@ -783,6 +783,11 @@ disable_spotlight_shortcuts() {
 
 if disable_spotlight_shortcuts; then
     echo "✓ Spotlight shortcuts disabled (Cmd+Space freed for Raycast)"
+    # Apply changes immediately without requiring logout/restart
+    # This private utility reads com.apple.symbolichotkeys and binds all shortcuts
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null && \
+        echo "✓ Keyboard shortcut changes applied immediately" || \
+        echo "⚠️  Could not apply immediately. Changes will take effect after logout."
 else
     echo "⚠️  Could not disable Spotlight shortcuts. May require logout/restart."
 fi
