@@ -715,17 +715,21 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 ###############################################################################
 echo "Configuring custom keyboard shortcuts..."
 
-# NOTE: Lock Screen (Option+L) shortcut CANNOT be automated!
-# The "Lock Screen" menu item lives in the Apple Menu (️), which does NOT
-# respect NSUserKeyEquivalents. This is a known macOS limitation.
-# You must set this manually: System Settings → Keyboard → Keyboard Shortcuts
-# → App Shortcuts → All Applications → Add "Lock Screen" with ⌥L (Option+L)
-#
-# Alternatively, use Raycast or another launcher to trigger Lock Screen.
+# NSUserKeyEquivalents allows setting custom keyboard shortcuts for menu items.
+# Modifier key symbols: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
+# Note: Case matters for the letter (lowercase = just modifier, uppercase = Shift+modifier)
+
+# Lock Screen shortcut: Option+L
+# This adds a keyboard shortcut for the "Lock Screen" menu item in the Apple menu.
+# Works on macOS Tahoe 26.x (tested).
+# Note: May require logout/login or app restart to take effect in some apps.
+defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
+# Force cfprefsd to re-read the preferences
+killall cfprefsd 2>/dev/null || true
+echo "✓ Lock Screen shortcut set to Option+L"
 
 # Add any other custom app shortcuts here using:
 # defaults write -g NSUserKeyEquivalents -dict-add "Menu Item Name" "shortcut"
-# Modifier key symbols: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
 
 ###############################################################################
 # Disable Spotlight Keyboard Shortcuts (Cmd+Space)
