@@ -114,7 +114,6 @@ fi
 # Autosuggestions
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
     source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-    bindkey '\t' autosuggest-accept  # Tab to accept suggestion
 fi
 
 # Completions
@@ -158,6 +157,21 @@ setopt HIST_VERIFY          # Show command before executing from history
 HISTSIZE=50000
 SAVEHIST=50000
 HISTFILE=~/.zsh_history
+
+###############################################################################
+# Key Bindings (must be after compinit and plugins)
+###############################################################################
+
+# Tab: accept autosuggestion if present, otherwise normal completion
+autosuggest-accept-or-complete() {
+    if [[ -n "$POSTDISPLAY" ]]; then
+        zle autosuggest-accept
+    else
+        zle expand-or-complete
+    fi
+}
+zle -N autosuggest-accept-or-complete
+bindkey '^I' autosuggest-accept-or-complete
 
 ###############################################################################
 # Performance Note
