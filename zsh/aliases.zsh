@@ -90,6 +90,15 @@ alias gd="git diff"
 alias gl="git log --oneline -20"
 alias glog="git log --graph --oneline --decorate"
 
+# Clone repo from my GitHub (usage: ghc repo-name)
+ghc() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: ghc <repo-name>"
+        return 1
+    fi
+    git clone "git@github.com:moose/$1.git"
+}
+
 # Pull all repos in ~/projects/
 pullall() {
     local projects_dir="${HOME}/projects"
