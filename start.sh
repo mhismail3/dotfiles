@@ -82,6 +82,7 @@ MODULES:
   superwhisper      SuperWhisper configuration
   raycast           Raycast configuration
   agent-ledger      Agent memory ledger setup
+  arc-extensions    Arc browser extensions (1Password, Raindrop.io)
   macos             macOS system preferences
 
 EXAMPLES:
@@ -110,6 +111,7 @@ list_modules() {
     echo "  superwhisper      SuperWhisper configuration"
     echo "  raycast           Raycast configuration"
     echo "  agent-ledger      Agent memory ledger setup"
+    echo "  arc-extensions    Arc browser extensions (1Password, Raindrop.io)"
     echo "  macos             macOS system preferences"
     echo ""
     echo "Run a specific module with: ./start.sh --module <name>"
@@ -878,6 +880,34 @@ run_agent_ledger() {
 }
 
 ###############################################################################
+# Module: Arc Browser Extensions
+###############################################################################
+
+run_arc_extensions() {
+    info "Arc browser extensions..."
+
+    if [[ ! -d "/Applications/Arc.app" ]]; then
+        echo "  Arc not installed, skipping extensions"
+        return 0
+    fi
+
+    if [[ ! -d "$HOME/Library/Application Support/Arc/User Data" ]]; then
+        warn "Arc hasn't been launched yet. Launch Arc first to set up extensions."
+        return 0
+    fi
+
+    if [[ -f "$DOTFILES/setup/arc-extensions.sh" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
+            "$DOTFILES/setup/arc-extensions.sh" --dry-run
+        else
+            "$DOTFILES/setup/arc-extensions.sh"
+        fi
+    else
+        warn "Arc extensions script not found"
+    fi
+}
+
+###############################################################################
 # Module: macOS Preferences
 ###############################################################################
 
@@ -934,6 +964,7 @@ main() {
             superwhisper)     run_superwhisper ;;
             raycast)          run_raycast ;;
             agent-ledger)     run_agent_ledger ;;
+            arc-extensions)   run_arc_extensions ;;
             macos)            run_macos ;;
             *)
                 die "Unknown module: $TARGET_MODULE (use --list to see available modules)"
@@ -952,6 +983,7 @@ main() {
         should_run_step "superwhisper" && run_superwhisper
         should_run_step "raycast" && run_raycast
         should_run_step "agent-ledger" && run_agent_ledger
+        should_run_step "arc-extensions" && run_arc_extensions
         should_run_step "macos" && run_macos
     fi
 
