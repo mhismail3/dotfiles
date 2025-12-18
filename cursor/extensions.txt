@@ -2,4 +2,24 @@
 # One extension ID per line (publisher.extension-name)
 # Lines starting with # are comments
 
+# Git
 mhutchie.git-graph
+
+# Python
+ms-python.python
+ms-python.vscode-pylance
+ms-python.debugpy
+
+# JavaScript / TypeScript
+dbaeumer.vscode-eslint
+
+# Formatting
+esbenp.prettier-vscode
+editorconfig.editorconfig
+
+# Linting / Code Quality
+streetsidesoftware.code-spell-checker
+
+# Utilities
+christian-kohler.path-intellisense
+formulahendry.auto-rename-tag
