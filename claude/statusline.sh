@@ -38,9 +38,9 @@ format_tokens() {
 
 # Format cost
 if [ "$(echo "$COST > 0" | bc -l)" -eq 1 ]; then
-    COST_FMT=$(printf "$%.2f" "$COST")
+    COST_FMT=$(printf "\$%.2f" "$COST")
 else
-    COST_FMT="$0.00"
+    COST_FMT="\$0.00"
 fi
 
 # Format token counts
