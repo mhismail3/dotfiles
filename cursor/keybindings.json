@@ -15,5 +15,9 @@
     {
         "key": "shift+cmd+g shift+cmd+g",
         "command": "git-graph.view"
+    },
+    {
+        "key": "shift+cmd+c shift+cmd+c",
+        "command": "claude-vscode.sidebar.open"
     }
 ]

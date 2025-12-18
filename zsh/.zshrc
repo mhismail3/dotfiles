@@ -12,7 +12,7 @@ plugins=(
     git
     macos
     docker
-    npm
+    # npm plugin removed - conflicts with nvm lazy loading
     python
     brew
     zoxide
@@ -74,17 +74,17 @@ pip3()    { _pyenv_lazy_load; pip3 "$@"; }
 export NVM_DIR="$HOME/.nvm"
 
 _nvm_lazy_load() {
-    unset -f node npm npx nvm yarn pnpm
+    unset -f node npm npx nvm yarn pnpm _nvm_lazy_load
     [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
     [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 }
 
-node()  { _nvm_lazy_load; node "$@"; }
-npm()   { _nvm_lazy_load; npm "$@"; }
-npx()   { _nvm_lazy_load; npx "$@"; }
-nvm()   { _nvm_lazy_load; nvm "$@"; }
-yarn()  { _nvm_lazy_load; yarn "$@"; }
-pnpm()  { _nvm_lazy_load; pnpm "$@"; }
+node()  { _nvm_lazy_load && node "$@"; }
+npm()   { _nvm_lazy_load && npm "$@"; }
+npx()   { _nvm_lazy_load && npx "$@"; }
+nvm()   { _nvm_lazy_load && nvm "$@"; }
+yarn()  { _nvm_lazy_load && yarn "$@"; }
+pnpm()  { _nvm_lazy_load && pnpm "$@"; }
 
 # rbenv (lazy load)
 export RBENV_ROOT="$HOME/.rbenv"
