@@ -680,6 +680,57 @@ else
 fi
 
 ###############################################################################
+# Synology Drive Client
+###############################################################################
+
+SYNOLOGY_DB="$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
+
+if [[ -f "$SYNOLOGY_DB" ]]; then
+    echo "Configuring Synology Drive Client..."
+
+    # Verify the database has the expected structure before modifying
+    TABLES=$(sqlite3 "$SYNOLOGY_DB" ".tables" 2>/dev/null)
+    if [[ "$TABLES" != *"system_table"* ]]; then
+        echo "⚠️  Synology Drive database structure unexpected (no system_table). Skipping."
+    else
+        # Verify the keys we want to modify actually exist
+        NOTIF_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'enable_desktop_notification';" 2>/dev/null)
+        ICON_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'use_black_white_icon';" 2>/dev/null)
+
+        if [[ "$NOTIF_EXISTS" != "1" ]]; then
+            echo "⚠️  Synology Drive: 'enable_desktop_notification' key not found. Skipping."
+        elif [[ "$ICON_EXISTS" != "1" ]]; then
+            echo "⚠️  Synology Drive: 'use_black_white_icon' key not found. Skipping."
+        else
+            # Read current values
+            NOTIF_CURRENT=$(sqlite3 "$SYNOLOGY_DB" "SELECT value FROM system_table WHERE key = 'enable_desktop_notification';")
+            ICON_CURRENT=$(sqlite3 "$SYNOLOGY_DB" "SELECT value FROM system_table WHERE key = 'use_black_white_icon';")
+
+            # Disable desktop notifications for file events (0 = OFF)
+            if [[ "$NOTIF_CURRENT" == "0" ]]; then
+                echo "  - Desktop notifications: already OFF"
+            else
+                sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '0' WHERE key = 'enable_desktop_notification';"
+                echo "  - Desktop notifications: OFF (was: $NOTIF_CURRENT)"
+            fi
+
+            # Enable minimalist (black & white) system tray icon (1 = ON)
+            if [[ "$ICON_CURRENT" == "1" ]]; then
+                echo "  - Minimalist tray icon: already ON"
+            else
+                sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '1' WHERE key = 'use_black_white_icon';"
+                echo "  - Minimalist tray icon: ON (was: $ICON_CURRENT)"
+            fi
+
+            echo "✓ Synology Drive Client configured"
+            echo "  Note: Restart Synology Drive Client if it's running for changes to take effect"
+        fi
+    fi
+else
+    echo "⚠️  Synology Drive Client not installed or not configured yet. Skipping."
+fi
+
+###############################################################################
 # Restart affected apps
 ###############################################################################
 echo "Restarting affected apps..."
