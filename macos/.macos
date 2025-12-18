@@ -200,6 +200,7 @@ if command -v dockutil &>/dev/null; then
         "/System/Applications/Calendar.app"
         "/Applications/Things3.app"
         "/System/Applications/Messages.app"
+        "/Applications/Google Chrome.app"
         "/Applications/Arc.app"
         "/Applications/Stremio.app"
         "/System/Applications/Photos.app"
