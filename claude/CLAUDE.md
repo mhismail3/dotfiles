@@ -3,12 +3,13 @@ This file is loaded into every agent session. Keep rules here **short** and **un
 
 ## Non-Negotiables
 - **Do it right (early-stage):** no users yet ⇒ prioritize clean architecture, organization, and **zero intentional tech debt**.
-- **No compatibility shims:** never add “temporary” compatibility layers.
+- **No compatibility shims:** never add "temporary" compatibility layers.
 - **No workarounds / half-measures:** prefer full, durable implementations suitable for >1,000 users.
 - **Do not remove / hide / rename** any existing features or UI options (even temporarily) unless explicitly instructed. If not fully wired, **keep the UX surface** and stub/annotate rather than delete.
 - **Solve the real problem:** understand requirements and implement the correct algorithm; tests verify correctness—they do not define the solution.
 - If the task is infeasible/unreasonable or tests/spec are incorrect, **say so** and propose the smallest principled fix.
 - If you create temporary files/scripts to iterate, **remove them before finishing**.
+- **Dotfiles symlinks:** `~/.claude/` contains symlinks to `~/.dotfiles/claude/`. When adding/updating skills, rules, or configuration, modify files in `~/.dotfiles/claude/` directly, never in `~/.claude/`.
 
 ## Start Every Session (“Get bearings”)
 1. `git status`
