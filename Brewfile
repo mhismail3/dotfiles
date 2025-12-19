@@ -171,6 +171,7 @@ cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
 ###############################################################################
 
 brew "gemini-cli"       # Google Gemini CLI
+brew "llm"              # CLI for LLMs (Simon Willison)
 brew "opencode"         # Open-source AI coding agent (TUI)
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
