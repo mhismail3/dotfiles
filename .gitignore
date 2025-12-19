@@ -10,3 +10,6 @@
 
 # Local config (machine-specific)
 .dotfiles_config
+
+# API keys (never commit secrets!)
+.env.api-keys
