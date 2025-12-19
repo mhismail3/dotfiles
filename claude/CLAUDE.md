@@ -1,17 +1,12 @@
-## Purpose
-This file is loaded into every agent session. Keep rules here **short** and **universally applicable**.
+## Non-Negotiables - ALWAYS FOLLOW THESE WITHOUT EXCEPTION
+- Do everything right from the beginning. Prioritize clean architecture, organization, and zero intentional tech debt. Prefer full, durable implementations suitable for >1,000 users
+- Never add "temporary" compatibility layers.
+- Do not remove/hide/rename any existing features or UI options (even temporarily) unless explicitly instructed. If not fully wired, keep the UX surface and stub/annotate rather than delete.
+- Always solve the real problem. Understand requirements and implement the correct algorithm; tests verify correctness - they do not define the solution.
+- If the task is infeasible/unreasonable or tests/spec are incorrect, say so and propose the smallest principled fix.
+- If you create temporary files/scripts to iterate, *emove them before finishing.
 
-## Non-Negotiables
-- **Do it right (early-stage):** no users yet ⇒ prioritize clean architecture, organization, and **zero intentional tech debt**.
-- **No compatibility shims:** never add "temporary" compatibility layers.
-- **No workarounds / half-measures:** prefer full, durable implementations suitable for >1,000 users.
-- **Do not remove / hide / rename** any existing features or UI options (even temporarily) unless explicitly instructed. If not fully wired, **keep the UX surface** and stub/annotate rather than delete.
-- **Solve the real problem:** understand requirements and implement the correct algorithm; tests verify correctness—they do not define the solution.
-- If the task is infeasible/unreasonable or tests/spec are incorrect, **say so** and propose the smallest principled fix.
-- If you create temporary files/scripts to iterate, **remove them before finishing**.
-- **Dotfiles symlinks:** `~/.claude/` contains symlinks to `~/.dotfiles/claude/`. When adding/updating skills, rules, or configuration, modify files in `~/.dotfiles/claude/` directly, never in `~/.claude/`.
-
-## Start Every Session (“Get bearings”)
+## Start Every Session by Getting Your Bearings
 1. `git status`
 2. Read `README.md` and `docs/architecture.md` (if present).
 3. Discover the canonical build/test/lint entrypoints (see “Commands” below). If discovered, use them consistently.
@@ -46,21 +41,6 @@ Before finishing, scan the diff and remove AI-generated slop introduced in this 
 - abnormal defensive checks (extra try/catch, redundant validation) in trusted codepaths
 - `any` casts (or similar type escapes) to bypass type issues
 - inconsistent style vs surrounding code
-
-## Documentation Standards
-- Prefer putting deep/project-specific rules in `docs/` (or `agent_docs/`) rather than bloating this file.
-
-### `docs/` conventions (create `docs/` if missing)
-**Immutability**
-- Files in `docs/` are **write-once**: never edit an existing doc.
-- To change/revert guidance, create a new doc that references the old one.
-
-**Naming**
-- `YYYY-MM-DD HH-MM-SS - Topic.md` (use strict Year-Month-Day order)
-
-**Content**
-- Write for future agents reading chronologically.
-- When updating/reverting, include what changed (diff-level explanation) and why.
 
 ## Long Tasks & Memory
 For work spanning multiple sessions, maintain a lightweight scratchpad (choose one):
