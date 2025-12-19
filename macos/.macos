@@ -200,6 +200,7 @@ if command -v dockutil &>/dev/null; then
         "/System/Applications/Calendar.app"
         "/Applications/Things3.app"
         "/System/Applications/Messages.app"
+        "/System/Applications/Safari.app"
         "/Applications/Google Chrome.app"
         "/Applications/Arc.app"
         "/Applications/Stremio.app"
@@ -208,7 +209,9 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Claude.app"
         "/Applications/Cursor.app"
         "/Applications/Ghostty.app"
+        "/Applications/Telegram.app"
         "/System/Applications/Utilities/Screen Sharing.app"
+        "/System/Applications/iPhone Mirroring.app"
         "/System/Applications/System Settings.app"
     )
     
