@@ -191,6 +191,7 @@ cask "stremio"          # Open-source media center
 cask "telegram"         # Messaging app
 cask "vlc"              # Media player
 cask "keka"             # Archive utility (better than The Unarchiver)
+cask "shottr"           # Screenshot tool
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
 cask "logi-options+"    # Logitech mouse/keyboard customization
 
