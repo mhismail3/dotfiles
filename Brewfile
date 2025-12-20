@@ -155,6 +155,7 @@ cask "claude"           # Anthropic Claude desktop app
 cask "chatgpt"          # OpenAI ChatGPT desktop app
 cask "arc"              # Browser
 cask "google-chrome"    # Browser
+cask "obsidian"         # Note-taking and knowledge management
 
 ###############################################################################
 # Applications - Development
