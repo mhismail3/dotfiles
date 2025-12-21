@@ -210,7 +210,6 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Claude.app"
         "/Applications/Cursor.app"
         "/Applications/Ghostty.app"
-        "/Applications/Telegram.app"
         "/System/Applications/Utilities/Screen Sharing.app"
         "/System/Applications/iPhone Mirroring.app"
         "/System/Applications/System Settings.app"
