@@ -212,7 +212,7 @@ All scripts are designed to be:
 
 The Dock is automatically configured with these apps (left to right):
 
-> Finder → Calendar → Things 3 → Messages → Arc → Stremio → Photos → Claude → Cursor → Ghostty → Screen Sharing → Settings → [Trash]
+> Finder → Calendar → Things 3 → Messages → Safari → Chrome → Arc → Stremio → Photos → Obsidian → ChatGPT → Claude → Cursor → Ghostty → Telegram → Screen Sharing → iPhone Mirroring → Settings → [Trash]
 
 - Recent apps: disabled
 - To customize, edit the `DOCK_APPS` array in `macos/.macos`
