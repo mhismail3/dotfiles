@@ -1,0 +1,2 @@
+2025-12-19T19:54:44.686Z [DEBUG] [Query.readMessages] First result received for single-turn query, closing stdin
+2025-12-19T19:55:21.388Z [DEBUG] [Query.readMessages] First result received for single-turn query, closing stdin

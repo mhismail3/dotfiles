@@ -1,0 +1,92 @@
+2025-12-22T09:10:35.040Z [DEBUG] Getting matching hook commands for SessionEnd with query: clear
+2025-12-22T09:10:35.040Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:35.040Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T09:10:35.040Z [DEBUG] Cleared all session hooks for session 4297684d-9a63-4037-8328-945b789122d9
+2025-12-22T09:10:35.041Z [DEBUG] Getting matching hook commands for SessionStart with query: clear
+2025-12-22T09:10:35.041Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:35.041Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T09:10:35.043Z [DEBUG] FileHistory: Added snapshot for 78a9fe0a-3db2-4a58-b632-c8d9ecf8de05, tracking 0 files
+2025-12-22T09:10:35.047Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T09:10:35.052Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T09:10:37.095Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T09:10:37.095Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T09:10:37.095Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T09:10:37.095Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T09:10:37.112Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T09:10:37.113Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:37.113Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T09:10:37.113Z [DEBUG] FileHistory: Making snapshot for message 8107906b-0cb1-4908-b280-d9774e0de49c
+2025-12-22T09:10:37.113Z [DEBUG] FileHistory: Added snapshot for 8107906b-0cb1-4908-b280-d9774e0de49c, tracking 0 files
+2025-12-22T09:10:37.938Z [DEBUG] Stream started - received first chunk
+2025-12-22T09:10:42.744Z [DEBUG] Stream started - received first chunk
+2025-12-22T09:10:48.121Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T09:10:48.121Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T09:10:48.121Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T09:10:48.125Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T09:10:48.125Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:48.125Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:48.125Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T09:10:48.125Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:48.125Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:48.125Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T09:10:48.125Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:48.125Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:49.064Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T09:10:49.064Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:49.064Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:49.158Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T09:10:49.158Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:49.158Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:49.291Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T09:10:49.291Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:49.291Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T09:10:49.297Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T09:10:49.297Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T09:10:49.297Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T09:10:49.297Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T09:10:54.581Z [DEBUG] Stream started - received first chunk
+2025-12-22T09:10:57.411Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T09:10:57.412Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T09:10:57.412Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T09:10:57.418Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T09:10:57.418Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.418Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.418Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T09:10:57.418Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.418Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.418Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T09:10:57.418Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.418Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.430Z [ERROR] Error: Unable to determine image format
+2025-12-22T09:10:57.439Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T09:10:57.439Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.439Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.439Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T09:10:57.439Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.439Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.439Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T09:10:57.439Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:57.439Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T09:10:57.445Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T09:10:57.445Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T09:10:57.445Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T09:10:57.445Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T09:10:57.857Z [ERROR] Error streaming, falling back to non-streaming mode: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Could not process image"},"request_id":"req_011CWMTyohC4zSxGp3EnuUET"}
+2025-12-22T09:10:58.283Z [ERROR] Error in non-streaming fallback: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Could not process image"},"request_id":"req_011CWMTyqQdPbpxzfPcxyGpi"}
+2025-12-22T09:10:58.284Z [ERROR] Error: Error: 400 {"type":"error","error":{"type":"invalid_request_error","message":"Could not process image"},"request_id":"req_011CWMTyqQdPbpxzfPcxyGpi"}
+    at generate (/$bunfs/root/claude:454:11098)
+    at makeRequest (/$bunfs/root/claude:801:5435)
+    at processTicksAndRejections (native:7:39)
+2025-12-22T09:10:58.297Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-22T09:10:58.297Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T09:10:58.297Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T09:11:47.607Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T09:11:47.697Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T09:11:50.520Z [DEBUG] UserCommandMessage rendering: "status" (args: "none")
+2025-12-22T09:11:50.520Z [DEBUG] isSkillFormat: false
+2025-12-22T09:11:50.531Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T09:11:50.536Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T09:11:57.435Z [DEBUG] UserCommandMessage rendering: "usage" (args: "none")
+2025-12-22T09:11:57.435Z [DEBUG] isSkillFormat: false
+2025-12-22T09:11:57.444Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T09:11:57.448Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager

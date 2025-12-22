@@ -1,0 +1,895 @@
+2025-12-20T09:54:24.905Z [DEBUG] Getting matching hook commands for SessionEnd with query: clear
+2025-12-20T09:54:24.905Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:54:24.905Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-20T09:54:24.905Z [DEBUG] Cleared all session hooks for session 610d0018-7e44-4d15-a754-14cf49c7b9a6
+2025-12-20T09:54:24.906Z [DEBUG] Getting matching hook commands for SessionStart with query: clear
+2025-12-20T09:54:24.906Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:54:24.906Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-20T09:54:24.908Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.74/claude
+2025-12-20T09:54:24.908Z [DEBUG] FileHistory: Added snapshot for 7b5ad7e0-e73c-4d8f-9cc7-42c04f519795, tracking 0 files
+2025-12-20T09:54:24.913Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-20T09:55:24.923Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-20T09:55:24.923Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:55:24.923Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-20T09:58:19.270Z [ERROR] Error: Error: ENOENT: no such file or directory, open '/Users/moose/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots/SCR-20251220-cpxd.png /Users/moose/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots/SCR-20251220-cpzb.png'
+    at readFileSync (unknown)
+    at <anonymous> (/$bunfs/root/claude:12:598)
+    at sW (/$bunfs/root/claude:11:8463)
+    at readFileBytesSync (/$bunfs/root/claude:12:558)
+    at E4_ (/$bunfs/root/claude:335:87228)
+    at E4_ (/$bunfs/root/claude:335:87524)
+    at <anonymous> (/$bunfs/root/claude:2522:6531)
+    at cR (/$bunfs/root/claude:202:23045)
+    at g$ (/$bunfs/root/claude:202:31768)
+    at W0 (/$bunfs/root/claude:202:31487)
+2025-12-20T09:58:20.514Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:58:20.514Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:58:20.514Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:58:20.514Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:58:20.532Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-20T09:58:20.532Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:20.532Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T09:58:20.532Z [DEBUG] FileHistory: Making snapshot for message c20c9345-eed0-4f25-85ce-a58de273f2ad
+2025-12-20T09:58:20.532Z [DEBUG] FileHistory: Added snapshot for c20c9345-eed0-4f25-85ce-a58de273f2ad, tracking 0 files
+2025-12-20T09:58:21.178Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:22.290Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:28.426Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T09:58:28.433Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T09:58:28.433Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.433Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T09:58:28.433Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:28.434Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:28.437Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:28.437Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.437Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:28.437Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:28.437Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.437Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:28.591Z [DEBUG] [SLOW OPERATION DETECTED] fs.readFileBytesSync (142.8ms)
+2025-12-20T09:58:28.703Z [DEBUG] [SLOW OPERATION DETECTED] fs.readFileBytesSync (112.2ms)
+2025-12-20T09:58:28.749Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T09:58:28.749Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.749Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T09:58:28.862Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:28.862Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.862Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:28.868Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:28.868Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:28.868Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:28.876Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:58:28.876Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:58:28.876Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:58:28.876Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:58:29.696Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:31.020Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:34.961Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:34.962Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:34.962Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:34.967Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:34.967Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.967Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.967Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:34.967Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.967Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.967Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:34.967Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.967Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.983Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:34.983Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.983Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.983Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:34.983Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.983Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.983Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:34.983Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:34.983Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:34.990Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:58:34.990Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:58:34.990Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:58:34.990Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:58:37.520Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:39.715Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:39.717Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:39.717Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:39.717Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:39.729Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:39.729Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:39.729Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:39.736Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:58:39.736Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:58:39.736Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:58:39.736Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:58:42.090Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:58:44.103Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T09:58:44.105Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T09:58:44.105Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:44.105Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:44.121Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T09:58:44.121Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:58:44.121Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T09:58:44.125Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:58:44.125Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:58:44.125Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:58:44.126Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:58:46.217Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:59:13.171Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T09:59:13.176Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T09:59:13.176Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:13.176Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T09:59:13.188Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224753188
+2025-12-20T09:59:13.188Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T09:59:13.188Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224753188 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T09:59:13.188Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T09:59:13.188Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224753188
+2025-12-20T09:59:13.188Z [DEBUG] Temp file written successfully, size: 593 bytes
+2025-12-20T09:59:13.188Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224753188 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T09:59:13.188Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T09:59:13.194Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T09:59:13.194Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:13.194Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T09:59:13.199Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:59:13.199Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:59:13.199Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:59:13.199Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:59:15.411Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:59:17.457Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T09:59:17.461Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T09:59:17.461Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:17.461Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T09:59:17.472Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224757472
+2025-12-20T09:59:17.472Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T09:59:17.472Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T09:59:17.472Z [DEBUG] Applied original permissions to temp file
+2025-12-20T09:59:17.472Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224757472 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T09:59:17.472Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T09:59:17.472Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224757472
+2025-12-20T09:59:17.472Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T09:59:17.473Z [DEBUG] Temp file written successfully, size: 597 bytes
+2025-12-20T09:59:17.473Z [DEBUG] Applied original permissions to temp file
+2025-12-20T09:59:17.473Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224757472 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T09:59:17.473Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T09:59:17.479Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T09:59:17.479Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:17.479Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T09:59:17.483Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:59:17.483Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:59:17.483Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:59:17.483Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:59:20.031Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:59:30.207Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T09:59:30.210Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T09:59:30.210Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:30.210Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T09:59:30.222Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224770222
+2025-12-20T09:59:30.222Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T09:59:30.223Z [DEBUG] Temp file written successfully, size: 11286 bytes
+2025-12-20T09:59:30.223Z [DEBUG] Applied original permissions to temp file
+2025-12-20T09:59:30.223Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224770222 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T09:59:30.223Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T09:59:30.224Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T09:59:30.232Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T09:59:30.232Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:30.232Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T09:59:30.252Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:59:30.252Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:59:30.252Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:59:30.252Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:59:32.295Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:59:45.806Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T09:59:45.809Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T09:59:45.809Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:45.809Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T09:59:45.821Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224785821
+2025-12-20T09:59:45.821Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T09:59:45.821Z [DEBUG] Temp file written successfully, size: 11108 bytes
+2025-12-20T09:59:45.821Z [DEBUG] Applied original permissions to temp file
+2025-12-20T09:59:45.821Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224785821 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T09:59:45.821Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T09:59:45.827Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T09:59:45.827Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:59:45.827Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T09:59:45.860Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:59:45.860Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:59:45.860Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:59:45.860Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:59:47.964Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:00:16.526Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:00:16.533Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:00:16.533Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:16.533Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:16.541Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224816541
+2025-12-20T10:00:16.541Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:00:16.542Z [DEBUG] Temp file written successfully, size: 12469 bytes
+2025-12-20T10:00:16.542Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:00:16.542Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224816541 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:00:16.542Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:00:16.553Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:00:16.553Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:16.553Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:16.631Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:00:16.631Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:00:16.631Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:00:16.631Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:00:19.791Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:00:35.620Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:00:35.628Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:00:35.628Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:35.628Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:35.639Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224835639
+2025-12-20T10:00:35.639Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:00:35.639Z [DEBUG] Temp file written successfully, size: 11980 bytes
+2025-12-20T10:00:35.639Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:00:35.639Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224835639 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:00:35.639Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:00:35.650Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:00:35.650Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:35.650Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:35.678Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:00:35.678Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:00:35.678Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:00:35.678Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:00:37.748Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:00:42.371Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:00:42.375Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:00:42.375Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:42.375Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:42.383Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224842383
+2025-12-20T10:00:42.383Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:00:42.383Z [DEBUG] Temp file written successfully, size: 11977 bytes
+2025-12-20T10:00:42.383Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:00:42.383Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766224842383 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:00:42.383Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:00:42.392Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:00:42.392Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:42.392Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:00:42.408Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:00:42.408Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:00:42.408Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:00:42.408Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:00:44.623Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:00:48.051Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:00:48.057Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:00:48.057Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:48.057Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:00:48.066Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224848066
+2025-12-20T10:00:48.066Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:00:48.066Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:00:48.066Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:00:48.066Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224848066 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:00:48.067Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:00:48.067Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224848067
+2025-12-20T10:00:48.067Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:00:48.067Z [DEBUG] Temp file written successfully, size: 601 bytes
+2025-12-20T10:00:48.067Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:00:48.067Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224848067 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:00:48.067Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:00:48.074Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:00:48.074Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:00:48.074Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:00:48.079Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:00:48.079Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:00:48.079Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:00:48.079Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:00:50.045Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:01:51.143Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:01:51.147Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:01:51.147Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:01:51.147Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:01:51.161Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766224911161
+2025-12-20T10:01:51.161Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:01:51.162Z [DEBUG] Temp file written successfully, size: 8727 bytes
+2025-12-20T10:01:51.162Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:01:51.162Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766224911161 to /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts
+2025-12-20T10:01:51.162Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts written atomically
+2025-12-20T10:01:51.163Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts
+2025-12-20T10:01:51.170Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:01:51.170Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:01:51.170Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:01:51.199Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:01:51.199Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:01:51.199Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:01:51.199Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:01:53.394Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:06.403Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:02:06.410Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:02:06.410Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:06.410Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:06.418Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766224926418
+2025-12-20T10:02:06.418Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:06.418Z [DEBUG] Temp file written successfully, size: 9614 bytes
+2025-12-20T10:02:06.418Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:06.418Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766224926418 to /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts
+2025-12-20T10:02:06.418Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts written atomically
+2025-12-20T10:02:06.427Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:02:06.427Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:06.427Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:06.460Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:06.460Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:06.460Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:06.460Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:08.679Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:13.061Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:02:13.068Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:02:13.068Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:13.068Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:13.078Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224933078
+2025-12-20T10:02:13.078Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:13.078Z [DEBUG] Temp file written successfully, size: 13617 bytes
+2025-12-20T10:02:13.078Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:13.078Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224933078 to /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts
+2025-12-20T10:02:13.079Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts written atomically
+2025-12-20T10:02:13.083Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts
+2025-12-20T10:02:13.090Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:02:13.090Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:13.090Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:13.108Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:13.108Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:13.108Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:13.108Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:15.380Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:27.702Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:02:27.706Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:02:27.706Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:27.706Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:27.720Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224947720
+2025-12-20T10:02:27.720Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:27.720Z [DEBUG] Temp file written successfully, size: 13429 bytes
+2025-12-20T10:02:27.720Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:27.720Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224947720 to /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts
+2025-12-20T10:02:27.720Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts written atomically
+2025-12-20T10:02:27.730Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:02:27.730Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:27.730Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:27.764Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:27.764Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:27.764Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:27.764Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:30.811Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:37.055Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:02:37.058Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:02:37.058Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:37.058Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:37.067Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224957067
+2025-12-20T10:02:37.067Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:37.067Z [DEBUG] Temp file written successfully, size: 13415 bytes
+2025-12-20T10:02:37.067Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:37.067Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts.tmp.55930.1766224957067 to /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts
+2025-12-20T10:02:37.067Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/hooks.ts written atomically
+2025-12-20T10:02:37.077Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:02:37.077Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:37.077Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:02:37.098Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:37.098Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:37.098Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:37.098Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:39.390Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:43.089Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:02:43.092Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:02:43.092Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:43.092Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:02:43.104Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224963104
+2025-12-20T10:02:43.104Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:43.104Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:02:43.104Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:43.104Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224963104 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:02:43.104Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:02:43.104Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224963104
+2025-12-20T10:02:43.104Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:43.104Z [DEBUG] Temp file written successfully, size: 603 bytes
+2025-12-20T10:02:43.104Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:43.104Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224963104 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:02:43.104Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:02:43.109Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:02:43.109Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:43.109Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:02:43.113Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:43.113Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:43.113Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:43.113Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:45.344Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:46.292Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:02:46.295Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:02:46.295Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:46.295Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:02:46.336Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Bash
+2025-12-20T10:02:46.336Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:46.336Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:02:46.342Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:46.342Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:46.342Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:46.342Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:48.673Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:50.252Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:02:50.255Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:02:50.255Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:50.255Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:02:50.915Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:51.350Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:52.943Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T10:02:52.943Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:52.943Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:02:52.949Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:52.949Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:52.949Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:52.949Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:53.469Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:54.987Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:02:57.341Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:02:57.348Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:02:57.348Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:57.348Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:02:57.358Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224977358
+2025-12-20T10:02:57.358Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:57.359Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:02:57.359Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:57.359Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766224977358 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:02:57.359Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:02:57.359Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224977359
+2025-12-20T10:02:57.359Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:02:57.359Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:02:57.359Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:02:57.359Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766224977359 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:02:57.359Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:02:57.366Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:02:57.366Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:02:57.366Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:02:57.371Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:02:57.371Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:02:57.371Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:02:57.371Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:02:59.495Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:03:07.806Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-20T10:03:07.806Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:03:07.806Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:03:09.837Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:03:16.217Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-20T10:03:16.217Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:03:16.217Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:04:07.826Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-20T10:04:07.826Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:04:07.827Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-20T10:06:04.891Z [DEBUG] [SLOW OPERATION DETECTED] fs.readFileBytesSync (144.6ms)
+2025-12-20T10:06:04.906Z [DEBUG] Stored image 18 to /Users/moose/.claude/image-cache/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2/18.png
+2025-12-20T10:06:06.040Z [DEBUG] Stored image 18 to /Users/moose/.claude/image-cache/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2/18.png
+2025-12-20T10:06:06.051Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:06:06.051Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:06:06.051Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:06:06.051Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:06:06.064Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-20T10:06:06.064Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:06.064Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:06:06.064Z [DEBUG] FileHistory: Making snapshot for message 023ba13d-2a06-4b01-9ca6-638e32ac331e
+2025-12-20T10:06:06.065Z [DEBUG] FileHistory: Added snapshot for 023ba13d-2a06-4b01-9ca6-638e32ac331e, tracking 3 files
+2025-12-20T10:06:09.436Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:06:23.056Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:06:23.059Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:06:23.059Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:23.059Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:06:23.076Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:06:23.076Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:23.076Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:06:23.081Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:06:23.081Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:06:23.081Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:06:23.081Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:06:25.790Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:06:55.211Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:06:55.218Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:06:55.218Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:55.218Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:06:55.228Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225215228
+2025-12-20T10:06:55.228Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:06:55.229Z [DEBUG] Temp file written successfully, size: 13399 bytes
+2025-12-20T10:06:55.229Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:06:55.229Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225215228 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:06:55.229Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:06:55.240Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:06:55.240Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:55.240Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:06:55.337Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:06:55.337Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:06:55.337Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:06:55.337Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:06:57.757Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:06:59.561Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:06:59.564Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:06:59.564Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:06:59.564Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:07:00.979Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T10:07:00.979Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:00.979Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:07:00.983Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:00.983Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:00.983Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:00.983Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:07:01.716Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:03.427Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:16.648Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:07:16.651Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:07:16.651Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:16.651Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:16.663Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225236663
+2025-12-20T10:07:16.663Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:07:16.663Z [DEBUG] Temp file written successfully, size: 13607 bytes
+2025-12-20T10:07:16.663Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:07:16.663Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225236663 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:07:16.663Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:07:16.670Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:07:16.670Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:16.670Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:16.693Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:16.693Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:16.693Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:16.693Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:07:19.430Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:45.132Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:07:45.135Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:07:45.135Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:45.135Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:45.149Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225265149
+2025-12-20T10:07:45.149Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:07:45.149Z [DEBUG] Temp file written successfully, size: 14846 bytes
+2025-12-20T10:07:45.149Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:07:45.149Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225265149 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:07:45.149Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:07:45.154Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:07:45.154Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:45.154Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:45.184Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:45.184Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:45.184Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:45.184Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:07:48.511Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:50.914Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:07:50.918Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:07:50.918Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:50.918Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:50.929Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225270929
+2025-12-20T10:07:50.929Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:07:50.929Z [DEBUG] Temp file written successfully, size: 14842 bytes
+2025-12-20T10:07:50.929Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:07:50.929Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225270929 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:07:50.929Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:07:50.938Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:07:50.938Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:50.938Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:50.963Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:50.963Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:50.963Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:50.963Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:07:53.184Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:54.912Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:07:54.915Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:07:54.915Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:54.915Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:07:54.932Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:07:54.932Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:54.932Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:07:54.936Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:54.936Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:54.936Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:54.936Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:07:57.854Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:07:59.405Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:07:59.408Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:07:59.408Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:59.408Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:59.415Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225279415
+2025-12-20T10:07:59.415Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:07:59.415Z [DEBUG] Temp file written successfully, size: 14838 bytes
+2025-12-20T10:07:59.416Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:07:59.416Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225279415 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:07:59.416Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:07:59.425Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:07:59.425Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:07:59.425Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:07:59.441Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:07:59.441Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:07:59.441Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:07:59.441Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:08:01.490Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:02.776Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:08:02.784Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:08:02.784Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:02.784Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:08:03.873Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T10:08:03.873Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:03.873Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:08:03.878Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:08:03.878Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:08:03.878Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:08:03.878Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:08:04.403Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:06.332Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:28.908Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:08:28.912Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:08:28.912Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:28.912Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:08:28.920Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225308920
+2025-12-20T10:08:28.920Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:08:28.921Z [DEBUG] Temp file written successfully, size: 15349 bytes
+2025-12-20T10:08:28.921Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:08:28.921Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225308920 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:08:28.921Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:08:28.930Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:08:28.930Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:28.930Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:08:28.951Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:08:28.951Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:08:28.951Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:08:28.951Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:08:31.126Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:32.103Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:08:32.107Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:08:32.107Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:32.107Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:08:33.201Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T10:08:33.201Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:33.201Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:08:33.205Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:08:33.205Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:08:33.205Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:08:33.205Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:08:33.716Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:35.812Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:45.891Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-20T10:08:45.891Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:45.891Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:08:48.265Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:08:54.205Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-20T10:08:54.205Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:08:54.205Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:09:45.910Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-20T10:09:45.910Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:09:45.910Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-20T10:14:51.127Z [ERROR] Error: Error: ENOENT: no such file or directory, open '/Users/moose/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots/SCR-20251220-cvdv.png /Users/moose/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots/SCR-20251220-cvkd.png'
+    at readFileSync (unknown)
+    at <anonymous> (/$bunfs/root/claude:12:598)
+    at sW (/$bunfs/root/claude:11:8463)
+    at readFileBytesSync (/$bunfs/root/claude:12:558)
+    at E4_ (/$bunfs/root/claude:335:87228)
+    at E4_ (/$bunfs/root/claude:335:87524)
+    at <anonymous> (/$bunfs/root/claude:2522:6531)
+    at cR (/$bunfs/root/claude:202:23045)
+    at g$ (/$bunfs/root/claude:202:31768)
+    at W0 (/$bunfs/root/claude:202:31487)
+2025-12-20T10:14:52.898Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:14:52.898Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:14:52.898Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:14:52.898Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:14:52.909Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-20T10:14:52.909Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:14:52.909Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:14:52.911Z [DEBUG] FileHistory: Making snapshot for message 205e8717-6897-457e-a81e-8b624c94dd40
+2025-12-20T10:14:52.912Z [DEBUG] FileHistory: Added snapshot for 205e8717-6897-457e-a81e-8b624c94dd40, tracking 3 files
+2025-12-20T10:14:53.715Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:14:57.282Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:14:58.735Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:14:58.735Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:14:58.737Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:14:58.737Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:14:58.737Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:14:58.737Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:14:58.737Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:14:58.737Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:14:58.830Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:14:58.830Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:14:58.830Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:14:58.846Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:14:58.846Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:14:58.846Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:14:58.854Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:14:58.854Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:14:58.854Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:14:58.854Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:15:01.740Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:15:28.390Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:15:28.395Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:15:28.395Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:28.395Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:15:28.408Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225728408
+2025-12-20T10:15:28.408Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:15:28.408Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:15:28.408Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:15:28.408Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225728408 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:15:28.409Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:15:28.409Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225728409
+2025-12-20T10:15:28.409Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:15:28.409Z [DEBUG] Temp file written successfully, size: 545 bytes
+2025-12-20T10:15:28.409Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:15:28.409Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225728409 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:15:28.409Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:15:28.414Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:15:28.414Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:28.414Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:15:28.419Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:15:28.419Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:15:28.419Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:15:28.419Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:15:31.700Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:15:33.322Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:15:33.326Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:15:33.326Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:33.326Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:15:33.345Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:15:33.345Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:33.345Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:15:33.350Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:15:33.350Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:15:33.350Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:15:33.350Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:15:35.584Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:15:47.932Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:15:47.936Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:15:47.936Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:47.936Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:15:47.946Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225747946
+2025-12-20T10:15:47.946Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:15:47.946Z [DEBUG] Temp file written successfully, size: 15585 bytes
+2025-12-20T10:15:47.946Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:15:47.946Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225747946 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:15:47.947Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:15:47.955Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:15:47.955Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:15:47.955Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:15:47.976Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:15:47.976Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:15:47.976Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:15:47.976Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:15:51.168Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:16:39.366Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:16:39.370Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:16:39.370Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:39.370Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:16:39.381Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225799381
+2025-12-20T10:16:39.381Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:16:39.381Z [DEBUG] Temp file written successfully, size: 14820 bytes
+2025-12-20T10:16:39.381Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:16:39.381Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225799381 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:16:39.381Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:16:39.390Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:16:39.390Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:39.390Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:16:39.484Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:16:39.484Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:16:39.484Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:16:39.484Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:16:42.122Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:16:50.647Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:16:50.650Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:16:50.650Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:50.650Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:16:50.663Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225810663
+2025-12-20T10:16:50.663Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:16:50.663Z [DEBUG] Temp file written successfully, size: 14899 bytes
+2025-12-20T10:16:50.663Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:16:50.663Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts.tmp.55930.1766225810663 to /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts
+2025-12-20T10:16:50.663Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/toolStepManager.ts written atomically
+2025-12-20T10:16:50.669Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:16:50.669Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:50.669Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:16:50.702Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:16:50.702Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:16:50.702Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:16:50.702Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:16:54.337Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:16:57.985Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:16:57.989Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:16:57.989Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:57.989Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:16:58.003Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225818003
+2025-12-20T10:16:58.003Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:16:58.003Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:16:58.003Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:16:58.003Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225818003 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:16:58.003Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:16:58.003Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225818003
+2025-12-20T10:16:58.003Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:16:58.004Z [DEBUG] Temp file written successfully, size: 549 bytes
+2025-12-20T10:16:58.004Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:16:58.004Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225818003 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:16:58.004Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:16:58.008Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:16:58.008Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:16:58.008Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:16:58.013Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:16:58.013Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:16:58.013Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:16:58.013Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:00.370Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:02.331Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T10:17:02.334Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T10:17:02.334Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:02.334Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:17:02.353Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T10:17:02.353Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:02.353Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-20T10:17:02.359Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:17:02.359Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:17:02.359Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:17:02.359Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:04.579Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:19.156Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:17:19.159Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:17:19.159Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:19.159Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:17:19.174Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766225839174
+2025-12-20T10:17:19.174Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:17:19.174Z [DEBUG] Temp file written successfully, size: 10373 bytes
+2025-12-20T10:17:19.174Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:17:19.174Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766225839174 to /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts
+2025-12-20T10:17:19.175Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts written atomically
+2025-12-20T10:17:19.181Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:17:19.181Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:19.181Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:17:19.218Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:17:19.218Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:17:19.218Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:17:19.218Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:21.780Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:29.963Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T10:17:29.966Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T10:17:29.966Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:29.966Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:17:29.978Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766225849978
+2025-12-20T10:17:29.978Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:17:29.978Z [DEBUG] Temp file written successfully, size: 10765 bytes
+2025-12-20T10:17:29.978Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:17:29.978Z [DEBUG] Renaming /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts.tmp.55930.1766225849978 to /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts
+2025-12-20T10:17:29.979Z [DEBUG] File /Users/moose/Downloads/projects/claude-moose/src/discord/contentParser.ts written atomically
+2025-12-20T10:17:29.985Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T10:17:29.985Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:29.985Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-20T10:17:30.011Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:17:30.011Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:17:30.011Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:17:30.011Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:33.833Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:35.713Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T10:17:35.717Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T10:17:35.717Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:35.717Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:17:37.219Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T10:17:37.219Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:37.219Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-20T10:17:37.223Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:17:37.223Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:17:37.223Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:17:37.223Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:38.129Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:39.861Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:42.265Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-20T10:17:42.273Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-20T10:17:42.273Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:42.273Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:17:42.283Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225862283
+2025-12-20T10:17:42.283Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:17:42.283Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:17:42.283Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:17:42.283Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json.tmp.55930.1766225862283 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json
+2025-12-20T10:17:42.284Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-610d0018-7e44-4d15-a754-14cf49c7b9a6.json written atomically
+2025-12-20T10:17:42.284Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225862284
+2025-12-20T10:17:42.284Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T10:17:42.284Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T10:17:42.284Z [DEBUG] Applied original permissions to temp file
+2025-12-20T10:17:42.284Z [DEBUG] Renaming /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json.tmp.55930.1766225862284 to /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json
+2025-12-20T10:17:42.284Z [DEBUG] File /Users/moose/.claude/todos/a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2-agent-a69b0ab9-190a-452c-b8e9-d9fb5fa6c5f2.json written atomically
+2025-12-20T10:17:42.291Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-20T10:17:42.291Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:42.291Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-20T10:17:42.295Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T10:17:42.295Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T10:17:42.295Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T10:17:42.295Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T10:17:45.016Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:17:55.329Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-20T10:17:55.329Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:17:55.329Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:17:57.769Z [DEBUG] Stream started - received first chunk
+2025-12-20T10:18:04.392Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-20T10:18:04.392Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T10:18:04.392Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T10:25:10.852Z [DEBUG] UserCommandMessage rendering: "usage" (args: "none")
+2025-12-20T10:25:10.852Z [DEBUG] isSkillFormat: false
+2025-12-20T10:25:10.863Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.74/claude
+2025-12-20T10:25:10.869Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager

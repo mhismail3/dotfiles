@@ -1,0 +1,177 @@
+2025-12-19T10:45:27.818Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (13.2ms): security find-generic-password -a $USER -w -s "Claude Code"
+2025-12-19T10:45:27.836Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (17.5ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-19T10:45:27.842Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-19T10:45:27.849Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-19T10:45:27.849Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-19T10:45:27.849Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'userSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'userSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'userSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'projectSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'projectSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-19T10:45:27.851Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'projectSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-19T10:45:27.851Z [DEBUG] LSP server manager initialized successfully
+2025-12-19T10:45:27.851Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-19T10:45:27.851Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T10:45:27.853Z [DEBUG] Stats cache is up to date
+2025-12-19T10:45:27.854Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-19T10:45:27.854Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-19T10:45:27.894Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (39.0ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-19T10:45:27.895Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2025-12-19T10:45:27.906Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-19T10:45:27.906Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-19T10:45:27.906Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-19T10:45:27.906Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766141127906-ff7rvq.sh
+2025-12-19T10:45:27.906Z [DEBUG] Shell binary exists: true
+2025-12-19T10:45:27.906Z [DEBUG] Execution timeout: 10000ms
+2025-12-19T10:45:27.907Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/aca09e7d-1b83-4611-a471-88ab41c8e5e0-agent-aca09e7d-1b83-4611-a471-88ab41c8e5e0.json.tmp.29090.1766141127907
+2025-12-19T10:45:27.907Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-19T10:45:27.907Z [DEBUG] Renaming /Users/moose/.claude/todos/aca09e7d-1b83-4611-a471-88ab41c8e5e0-agent-aca09e7d-1b83-4611-a471-88ab41c8e5e0.json.tmp.29090.1766141127907 to /Users/moose/.claude/todos/aca09e7d-1b83-4611-a471-88ab41c8e5e0-agent-aca09e7d-1b83-4611-a471-88ab41c8e5e0.json
+2025-12-19T10:45:27.907Z [DEBUG] File /Users/moose/.claude/todos/aca09e7d-1b83-4611-a471-88ab41c8e5e0-agent-aca09e7d-1b83-4611-a471-88ab41c8e5e0.json written atomically
+2025-12-19T10:45:27.908Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-19T10:45:27.908Z [DEBUG] Total plugin skills loaded: 0
+2025-12-19T10:45:27.908Z [DEBUG] Total plugin commands loaded: 0
+2025-12-19T10:45:27.908Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T10:45:27.911Z [DEBUG] Total plugin agents loaded: 0
+2025-12-19T10:45:27.926Z [DEBUG] Loaded 3 unique skills (managed: 0, user: 2, project: 0, legacy commands: 1)
+2025-12-19T10:45:27.926Z [DEBUG] getSkills returning: 3 skill dir commands, 0 plugin skills
+2025-12-19T10:45:27.931Z [DEBUG] Git remote URL: null
+2025-12-19T10:45:27.931Z [DEBUG] No git remote URL found
+2025-12-19T10:45:27.931Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-19T10:45:27.931Z [ERROR] Failed to refresh marketplace claude-plugins-official: Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.
+
+Original error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...
+/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain
+/Users/moose/.ssh/config: terminating, 1 bad configuration options
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-12-19T10:45:27.931Z [WARN] Plugin autoupdate: failed to refresh marketplace claude-plugins-official: Failed to refresh marketplace 'claude-plugins-official': Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.
+
+Original error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...
+/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain
+/Users/moose/.ssh/config: terminating, 1 bad configuration options
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-12-19T10:45:27.931Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-19T10:45:27.939Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.29090.1766141127939
+2025-12-19T10:45:27.939Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T10:45:27.939Z [DEBUG] Temp file written successfully, size: 58124 bytes
+2025-12-19T10:45:27.939Z [DEBUG] Applied original permissions to temp file
+2025-12-19T10:45:27.939Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.29090.1766141127939 to /Users/moose/.claude.json
+2025-12-19T10:45:27.940Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T10:45:28.057Z [DEBUG] Shell snapshot created successfully (88848 bytes)
+2025-12-19T10:45:28.577Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-19T10:45:28.590Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2025-12-19T10:45:28.593Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.29090.1766141128593
+2025-12-19T10:45:28.593Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T10:45:28.593Z [DEBUG] Temp file written successfully, size: 58124 bytes
+2025-12-19T10:45:28.593Z [DEBUG] Applied original permissions to temp file
+2025-12-19T10:45:28.593Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.29090.1766141128593 to /Users/moose/.claude.json
+2025-12-19T10:45:28.594Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T10:45:28.763Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-19T10:45:28.763Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:28.764Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-19T10:45:28.766Z [DEBUG] Skills and commands included in Skill tool: homebrew-release, create-github-repo
+2025-12-19T10:45:28.771Z [DEBUG] Summarizing all 2 messages (~0 tokens)
+2025-12-19T10:45:28.834Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-19T10:45:28.834Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:28.834Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-19T10:45:28.839Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-19T10:45:28.839Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:28.839Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-19T10:45:29.830Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.29090.1766141129830
+2025-12-19T10:45:29.830Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T10:45:29.831Z [DEBUG] Temp file written successfully, size: 58051 bytes
+2025-12-19T10:45:29.831Z [DEBUG] Applied original permissions to temp file
+2025-12-19T10:45:29.831Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.29090.1766141129830 to /Users/moose/.claude.json
+2025-12-19T10:45:29.831Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T10:45:29.932Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T10:45:29.934Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T10:45:29.935Z [DEBUG] Official marketplace auto-install skipped: already_attempted
+2025-12-19T10:45:29.935Z [DEBUG] performStartupChecks called
+2025-12-19T10:45:29.935Z [DEBUG] Starting background plugin installations
+2025-12-19T10:45:29.935Z [DEBUG] performBackgroundPluginInstallations called
+2025-12-19T10:45:30.614Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-19T10:45:30.618Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.29090.1766141130618
+2025-12-19T10:45:30.619Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T10:45:30.619Z [DEBUG] Temp file written successfully, size: 58124 bytes
+2025-12-19T10:45:30.619Z [DEBUG] Applied original permissions to temp file
+2025-12-19T10:45:30.619Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.29090.1766141130618 to /Users/moose/.claude.json
+2025-12-19T10:45:30.619Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T10:45:30.622Z [DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+2025-12-19T10:45:30.622Z [DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+2025-12-19T10:45:30.642Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:30.648Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T10:45:30.652Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T10:45:30.652Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T10:45:30.652Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T10:45:30.652Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T10:45:30.662Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.29090.1766141130662
+2025-12-19T10:45:30.662Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T10:45:30.662Z [DEBUG] Temp file written successfully, size: 58305 bytes
+2025-12-19T10:45:30.662Z [DEBUG] Applied original permissions to temp file
+2025-12-19T10:45:30.662Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.29090.1766141130662 to /Users/moose/.claude.json
+2025-12-19T10:45:30.662Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T10:45:30.673Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-19T10:45:30.673Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:30.673Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T10:45:30.674Z [DEBUG] Total plugin output styles loaded: 0
+2025-12-19T10:45:30.678Z [DEBUG] FileHistory: Added snapshot for 1183ebb9-cf47-4844-bdf3-0c3ff5b45677, tracking 0 files
+2025-12-19T10:45:32.419Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:33.203Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:33.895Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T10:45:33.895Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:33.895Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T10:45:34.900Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T10:45:34.900Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:34.900Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T10:45:36.474Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:38.258Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-19T10:45:38.266Z [DEBUG] [SLOW OPERATION DETECTED] fs.existsSync (5.5ms)
+2025-12-19T10:45:39.046Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-19T10:45:39.046Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:39.046Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:45:42.239Z [DEBUG] tree-sitter: loaded from embedded
+2025-12-19T10:45:43.006Z [DEBUG] No session environment scripts found
+2025-12-19T10:45:44.703Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:45.485Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-19T10:45:45.485Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:45.485Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:45:46.278Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T10:45:46.278Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T10:45:46.278Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T10:45:46.278Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T10:45:50.242Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:45:52.656Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-19T10:45:52.657Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-19T10:45:53.543Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-19T10:45:53.543Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:53.543Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:45:53.543Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-19T10:45:53.543Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:45:53.543Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:45:59.715Z [DEBUG] [SLOW OPERATION DETECTED] fs.existsSync (5.5ms)
+2025-12-19T10:46:01.072Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Bash
+2025-12-19T10:46:01.072Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:46:01.072Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:46:01.085Z [DEBUG] Stream started - received first chunk
+2025-12-19T10:46:01.958Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-19T10:46:01.958Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:46:01.958Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T10:46:03.492Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T10:46:03.492Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T10:46:03.492Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T10:46:03.492Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T10:46:04.605Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-19T10:46:04.606Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-19T10:46:04.614Z [DEBUG] [SLOW OPERATION DETECTED] fs.statSync (5.9ms)
+2025-12-19T10:46:05.319Z [DEBUG] Loaded 3 unique skills (managed: 0, user: 2, project: 0, legacy commands: 1)
+2025-12-19T10:46:05.319Z [DEBUG] getSkills returning: 3 skill dir commands, 0 plugin skills
+2025-12-19T10:46:05.320Z [DEBUG] Skills and commands included in Skill tool: homebrew-release, create-github-repo
+2025-12-19T10:46:06.013Z [DEBUG] Getting matching hook commands for SessionEnd with query: other
+2025-12-19T10:46:06.013Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T10:46:06.013Z [DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)

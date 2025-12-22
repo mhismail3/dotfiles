@@ -1,0 +1,163 @@
+2025-12-20T08:59:33.696Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-20T08:59:33.717Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (18.6ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-20T08:59:33.839Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-20T08:59:33.839Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-20T08:59:33.839Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-20T08:59:33.842Z [DEBUG] LSP server manager initialized successfully
+2025-12-20T08:59:33.842Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-20T08:59:33.842Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-20T08:59:33.843Z [DEBUG] Stats cache is up to date
+2025-12-20T08:59:33.846Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-20T08:59:33.952Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (104.4ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-20T08:59:33.953Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2025-12-20T08:59:34.017Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-20T08:59:34.017Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-20T08:59:34.017Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-20T08:59:34.017Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766221174017-0ewjc8.sh
+2025-12-20T08:59:34.017Z [DEBUG] Shell binary exists: true
+2025-12-20T08:59:34.017Z [DEBUG] Execution timeout: 10000ms
+2025-12-20T08:59:34.018Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/49afc848-0814-4eda-81f3-08b7db940c4b-agent-49afc848-0814-4eda-81f3-08b7db940c4b.json.tmp.78178.1766221174018
+2025-12-20T08:59:34.023Z [DEBUG] [SLOW OPERATION DETECTED] fs.writeFileSync (5.4ms)
+2025-12-20T08:59:34.023Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-20T08:59:34.023Z [DEBUG] Renaming /Users/moose/.claude/todos/49afc848-0814-4eda-81f3-08b7db940c4b-agent-49afc848-0814-4eda-81f3-08b7db940c4b.json.tmp.78178.1766221174018 to /Users/moose/.claude/todos/49afc848-0814-4eda-81f3-08b7db940c4b-agent-49afc848-0814-4eda-81f3-08b7db940c4b.json
+2025-12-20T08:59:34.023Z [DEBUG] File /Users/moose/.claude/todos/49afc848-0814-4eda-81f3-08b7db940c4b-agent-49afc848-0814-4eda-81f3-08b7db940c4b.json written atomically
+2025-12-20T08:59:34.026Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-20T08:59:34.026Z [DEBUG] Total plugin skills loaded: 0
+2025-12-20T08:59:34.026Z [DEBUG] Total plugin commands loaded: 0
+2025-12-20T08:59:34.026Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-20T08:59:34.029Z [DEBUG] Total plugin agents loaded: 0
+2025-12-20T08:59:34.029Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, legacy commands: 0)
+2025-12-20T08:59:34.029Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills
+2025-12-20T08:59:34.033Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2025-12-20T08:59:34.034Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-20T08:59:34.034Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T08:59:34.034Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-20T08:59:34.037Z [DEBUG] Total plugin output styles loaded: 0
+2025-12-20T08:59:34.050Z [DEBUG] Git remote URL: null
+2025-12-20T08:59:34.050Z [DEBUG] No git remote URL found
+2025-12-20T08:59:34.050Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-20T08:59:34.052Z [DEBUG] Skills and commands included in Skill tool:
+2025-12-20T08:59:34.099Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.78178.1766221174099
+2025-12-20T08:59:34.099Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T08:59:34.102Z [DEBUG] Temp file written successfully, size: 61304 bytes
+2025-12-20T08:59:34.102Z [DEBUG] Applied original permissions to temp file
+2025-12-20T08:59:34.102Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.78178.1766221174099 to /Users/moose/.claude.json
+2025-12-20T08:59:34.102Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-20T08:59:34.143Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-20T08:59:34.143Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:34.143Z [DEBUG] Matched 1 unique hooks for query "Explore" (1 before deduplication)
+2025-12-20T08:59:34.195Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-20T08:59:34.195Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:34.195Z [DEBUG] Matched 1 unique hooks for query "Plan" (1 before deduplication)
+2025-12-20T08:59:34.299Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T08:59:34.299Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T08:59:34.299Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T08:59:34.299Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T08:59:34.301Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-20T08:59:34.301Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:34.301Z [DEBUG] Matched 1 unique hooks for query "no match query" (1 before deduplication)
+2025-12-20T08:59:34.448Z [DEBUG] Shell snapshot created successfully (89691 bytes)
+2025-12-20T08:59:34.468Z [DEBUG] Remote settings: No settings found (404)
+2025-12-20T08:59:34.468Z [DEBUG] Programmatic settings change notification for policySettings
+2025-12-20T08:59:34.468Z [DEBUG] Plugin hooks: reloading due to policySettings change
+2025-12-20T08:59:34.468Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-20T08:59:34.469Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-20T08:59:35.356Z [DEBUG] Successfully refreshed marketplace: claude-plugins-official
+2025-12-20T08:59:35.356Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-20T08:59:35.728Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:36.955Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-20T08:59:36.955Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:36.955Z [DEBUG] Matched 1 unique hooks for query "no match query" (1 before deduplication)
+2025-12-20T08:59:37.232Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:38.688Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:40.345Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-20T08:59:40.345Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-20T08:59:40.345Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:40.345Z [DEBUG] Matched 1 unique hooks for query "Glob" (1 before deduplication)
+2025-12-20T08:59:40.439Z [DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/Users/moose/Downloads/projects/claude-moose/node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-darwin/rg)
+2025-12-20T08:59:40.712Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-20T08:59:40.712Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:40.712Z [DEBUG] Matched 1 unique hooks for query "no match query" (1 before deduplication)
+2025-12-20T08:59:50.435Z [DEBUG] "rg error (signal=SIGTERM, code=null, stderr: rg: /Users/moose/Pictures/Photos Library.photoslibrary: IO error for operation on /Users/moose/Pictures/Photos Library.photoslibrary: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CallHistoryTransactions: IO error for operation on /Users/moose/Library/Application Support/CallHistoryTransactions: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CloudDocs: IO error for operation on /Users/moose/Library/Application Support/CloudDocs: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.sharedfilelist: IO error for operation on /Users/moose/Library/Application Support/com.apple.sharedfilelist: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/Knowledge: IO error for operation on /Users/moose/Library/Application Support/Knowledge: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.TCC: IO error for operation on /Users/moose/Library/Application Support/com.apple.TCC: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/FileProvider: IO error for operation on /Users/moose/Library/Application Support/FileProvider: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/AddressBook: IO error for operation on /Users/moose/Library/Application Support/AddressBook: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/FaceTime: IO error for operation on /Users/moose/Library/Application Support/FaceTime: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/DifferentialPrivacy: IO error for operation on /Users/moose/Library/Application Support/DifferentialPrivacy: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.avfoundation/Frecents: IO error for operation on /Users/moose/Library/Application Support/com.apple.avfoundation/Frecents: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CallHistoryDB: IO error for operation on /Users/moose/Library/Application Support/CallHistoryDB: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Assistant/SiriVocabulary: IO error for operation on /Users/moose/Library/Assistant/SiriVocabulary: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Daemon Containers: IO error for operation on /Users/moose/Library/Daemon Containers: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Autosave Information: IO error for operation on /Users/moose/Library/Autosave Information: Operation not permitted (os error 1)\nrg: /Users/moose/Library/IdentityServices: IO error for operation on /Users/moose/Library/IdentityServices: Operation not permitted (os error 1)\n), 0 results"
+2025-12-20T08:59:50.436Z [ERROR] "Error: Error: Command failed: /Users/moose/Downloads/projects/claude-moose/node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-darwin/rg --files --glob downloads/projects/claude-moose/**/README* --sort=modified --no-ignore --hidden /Users/moose\nrg: /Users/moose/Pictures/Photos Library.photoslibrary: IO error for operation on /Users/moose/Pictures/Photos Library.photoslibrary: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CallHistoryTransactions: IO error for operation on /Users/moose/Library/Application Support/CallHistoryTransactions: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CloudDocs: IO error for operation on /Users/moose/Library/Application Support/CloudDocs: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.sharedfilelist: IO error for operation on /Users/moose/Library/Application Support/com.apple.sharedfilelist: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/Knowledge: IO error for operation on /Users/moose/Library/Application Support/Knowledge: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.TCC: IO error for operation on /Users/moose/Library/Application Support/com.apple.TCC: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/FileProvider: IO error for operation on /Users/moose/Library/Application Support/FileProvider: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/AddressBook: IO error for operation on /Users/moose/Library/Application Support/AddressBook: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/FaceTime: IO error for operation on /Users/moose/Library/Application Support/FaceTime: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/DifferentialPrivacy: IO error for operation on /Users/moose/Library/Application Support/DifferentialPrivacy: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/com.apple.avfoundation/Frecents: IO error for operation on /Users/moose/Library/Application Support/com.apple.avfoundation/Frecents: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Application Support/CallHistoryDB: IO error for operation on /Users/moose/Library/Application Support/CallHistoryDB: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Assistant/SiriVocabulary: IO error for operation on /Users/moose/Library/Assistant/SiriVocabulary: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Daemon Containers: IO error for operation on /Users/moose/Library/Daemon Containers: Operation not permitted (os error 1)\nrg: /Users/moose/Library/Autosave Information: IO error for operation on /Users/moose/Library/Autosave Information: Operation not permitted (os error 1)\nrg: /Users/moose/Library/IdentityServices: IO error for operation on /Users/moose/Library/IdentityServices: Operation not permitted (os error 1)\n\n    at genericNodeError (node:internal/errors:985:15)\n    at wrappedFn (node:internal/errors:539:14)\n    at ChildProcess.exithandler (node:child_process:417:12)\n    at ChildProcess.emit (node:events:508:28)\n    at ChildProcess.emit (node:domain:489:12)\n    at maybeClose (node:internal/child_process:1101:16)\n    at ChildProcess._handle.onexit (node:internal/child_process:305:5)"
+2025-12-20T08:59:50.439Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-20T08:59:50.439Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:50.439Z [DEBUG] Matched 1 unique hooks for query "Glob" (1 before deduplication)
+2025-12-20T08:59:50.554Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T08:59:50.554Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T08:59:50.554Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T08:59:50.554Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T08:59:52.740Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:53.748Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T08:59:53.749Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T08:59:53.749Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:53.749Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-20T08:59:53.777Z [DEBUG] tree-sitter: loaded from disk
+2025-12-20T08:59:53.787Z [DEBUG] No session environment scripts found
+2025-12-20T08:59:53.817Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T08:59:53.817Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:53.817Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-20T08:59:53.882Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T08:59:53.882Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T08:59:53.882Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T08:59:53.882Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T08:59:54.209Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:56.491Z [DEBUG] Stream started - received first chunk
+2025-12-20T08:59:57.245Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-20T08:59:57.245Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-20T08:59:57.245Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:57.245Z [DEBUG] Matched 1 unique hooks for query "Read" (1 before deduplication)
+2025-12-20T08:59:57.254Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-20T08:59:57.254Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T08:59:57.254Z [DEBUG] Matched 1 unique hooks for query "Read" (1 before deduplication)
+2025-12-20T08:59:57.321Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T08:59:57.321Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T08:59:57.321Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T08:59:57.321Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:00:01.972Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:07.695Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-20T09:00:07.695Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-20T09:00:07.695Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T09:00:07.695Z [DEBUG] Matched 1 unique hooks for query "Edit" (1 before deduplication)
+2025-12-20T09:00:07.704Z [DEBUG] Writing to temp file: /Users/moose/downloads/projects/claude-moose/README.md.tmp.78178.1766221207704
+2025-12-20T09:00:07.704Z [DEBUG] Preserving file permissions: 100600
+2025-12-20T09:00:07.710Z [DEBUG] [SLOW OPERATION DETECTED] fs.writeFileSync (5.8ms)
+2025-12-20T09:00:07.710Z [DEBUG] Temp file written successfully, size: 5243 bytes
+2025-12-20T09:00:07.710Z [DEBUG] Applied original permissions to temp file
+2025-12-20T09:00:07.710Z [DEBUG] Renaming /Users/moose/downloads/projects/claude-moose/README.md.tmp.78178.1766221207704 to /Users/moose/downloads/projects/claude-moose/README.md
+2025-12-20T09:00:07.711Z [DEBUG] File /Users/moose/downloads/projects/claude-moose/README.md written atomically
+2025-12-20T09:00:07.715Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-20T09:00:07.715Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T09:00:07.715Z [DEBUG] Matched 1 unique hooks for query "Edit" (1 before deduplication)
+2025-12-20T09:00:07.783Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:00:07.783Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:00:07.783Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:00:07.783Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:00:09.478Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:12.099Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-20T09:00:12.100Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-20T09:00:12.100Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T09:00:12.100Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-20T09:00:12.560Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:12.590Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:12.683Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:13.045Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:13.272Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-20T09:00:13.272Z [DEBUG] Found 1 hook matchers in settings
+2025-12-20T09:00:13.272Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-20T09:00:13.377Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-20T09:00:13.377Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-20T09:00:13.377Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-20T09:00:13.377Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-20T09:00:13.380Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-20T09:00:13.380Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, legacy commands: 0)
+2025-12-20T09:00:13.380Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills
+2025-12-20T09:00:13.381Z [DEBUG] Skills and commands included in Skill tool:
+2025-12-20T09:00:13.720Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:19.012Z [DEBUG] Stream started - received first chunk
+2025-12-20T09:00:20.270Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-20T09:00:20.270Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:00:20.270Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-20T09:00:20.276Z [DEBUG] Getting matching hook commands for SessionEnd with query: other
+2025-12-20T09:00:20.276Z [DEBUG] Found 0 hook matchers in settings
+2025-12-20T09:00:20.276Z [DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)

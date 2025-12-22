@@ -1,0 +1,175 @@
+2025-12-19T19:54:39.340Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-19T19:54:39.367Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (21.5ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-19T19:54:39.391Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-19T19:54:39.391Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-19T19:54:39.391Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-19T19:54:39.393Z [DEBUG] LSP server manager initialized successfully
+2025-12-19T19:54:39.393Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-19T19:54:39.394Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T19:54:39.396Z [DEBUG] Stats cache is up to date
+2025-12-19T19:54:39.398Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-19T19:54:39.446Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (46.4ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-19T19:54:39.446Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2025-12-19T19:54:39.456Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-19T19:54:39.456Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-19T19:54:39.456Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-19T19:54:39.456Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766174079456-835iyq.sh
+2025-12-19T19:54:39.456Z [DEBUG] Shell binary exists: true
+2025-12-19T19:54:39.456Z [DEBUG] Execution timeout: 10000ms
+2025-12-19T19:54:39.457Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/b7e29657-fd9a-4fa4-9d16-1982f311728d-agent-b7e29657-fd9a-4fa4-9d16-1982f311728d.json.tmp.57245.1766174079457
+2025-12-19T19:54:39.460Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-19T19:54:39.460Z [DEBUG] Renaming /Users/moose/.claude/todos/b7e29657-fd9a-4fa4-9d16-1982f311728d-agent-b7e29657-fd9a-4fa4-9d16-1982f311728d.json.tmp.57245.1766174079457 to /Users/moose/.claude/todos/b7e29657-fd9a-4fa4-9d16-1982f311728d-agent-b7e29657-fd9a-4fa4-9d16-1982f311728d.json
+2025-12-19T19:54:39.460Z [DEBUG] File /Users/moose/.claude/todos/b7e29657-fd9a-4fa4-9d16-1982f311728d-agent-b7e29657-fd9a-4fa4-9d16-1982f311728d.json written atomically
+2025-12-19T19:54:39.463Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-19T19:54:39.463Z [DEBUG] Total plugin skills loaded: 0
+2025-12-19T19:54:39.463Z [DEBUG] Total plugin commands loaded: 0
+2025-12-19T19:54:39.463Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T19:54:39.466Z [DEBUG] Total plugin agents loaded: 0
+2025-12-19T19:54:39.466Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, legacy commands: 0)
+2025-12-19T19:54:39.466Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills
+2025-12-19T19:54:39.472Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2025-12-19T19:54:39.473Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-19T19:54:39.473Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:39.473Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-19T19:54:39.477Z [DEBUG] Total plugin output styles loaded: 0
+2025-12-19T19:54:39.486Z [DEBUG] Git remote URL: null
+2025-12-19T19:54:39.486Z [DEBUG] No git remote URL found
+2025-12-19T19:54:39.486Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-19T19:54:39.488Z [DEBUG] Skills and commands included in Skill tool:
+2025-12-19T19:54:39.492Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-19T19:54:39.492Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:39.492Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-19T19:54:39.493Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-19T19:54:39.493Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:39.493Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-19T19:54:39.497Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T19:54:39.498Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T19:54:39.498Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T19:54:39.498Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T19:54:39.498Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-19T19:54:39.498Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:39.498Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:54:39.500Z [ERROR] "Failed to refresh marketplace claude-plugins-official: Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.\n\nOriginal error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...\n/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain\r\n/Users/moose/.ssh/config: terminating, 1 bad configuration options\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+2025-12-19T19:54:39.500Z [WARN] "Plugin autoupdate: failed to refresh marketplace claude-plugins-official: Failed to refresh marketplace 'claude-plugins-official': Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.\n\nOriginal error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...\n/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain\r\n/Users/moose/.ssh/config: terminating, 1 bad configuration options\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+2025-12-19T19:54:39.500Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-19T19:54:39.559Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.57245.1766174079559
+2025-12-19T19:54:39.559Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T19:54:39.564Z [DEBUG] [SLOW OPERATION DETECTED] fs.writeFileSync (5.2ms)
+2025-12-19T19:54:39.564Z [DEBUG] Temp file written successfully, size: 59530 bytes
+2025-12-19T19:54:39.565Z [DEBUG] Applied original permissions to temp file
+2025-12-19T19:54:39.565Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.57245.1766174079559 to /Users/moose/.claude.json
+2025-12-19T19:54:39.565Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T19:54:39.611Z [DEBUG] Remote settings: No settings found (404)
+2025-12-19T19:54:39.611Z [DEBUG] Programmatic settings change notification for policySettings
+2025-12-19T19:54:39.611Z [DEBUG] Plugin hooks: reloading due to policySettings change
+2025-12-19T19:54:39.611Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T19:54:39.612Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T19:54:39.674Z [DEBUG] Shell snapshot created successfully (89618 bytes)
+2025-12-19T19:54:40.246Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:54:41.477Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T19:54:41.477Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:41.477Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:54:41.596Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:54:41.722Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:54:44.685Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-19T19:54:44.685Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:44.685Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:54:44.690Z [DEBUG] Getting matching hook commands for SessionEnd with query: other
+2025-12-19T19:54:44.690Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:54:44.690Z [DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)
+2025-12-19T19:55:08.207Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-19T19:55:08.229Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (17.9ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-19T19:55:08.252Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-19T19:55:08.252Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-19T19:55:08.252Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-19T19:55:08.254Z [DEBUG] LSP server manager initialized successfully
+2025-12-19T19:55:08.254Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-19T19:55:08.254Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T19:55:08.255Z [DEBUG] Stats cache is up to date
+2025-12-19T19:55:08.257Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-19T19:55:08.305Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (46.4ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-19T19:55:08.306Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2025-12-19T19:55:08.314Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-19T19:55:08.314Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-19T19:55:08.314Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-19T19:55:08.315Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766174108314-r547k2.sh
+2025-12-19T19:55:08.315Z [DEBUG] Shell binary exists: true
+2025-12-19T19:55:08.315Z [DEBUG] Execution timeout: 10000ms
+2025-12-19T19:55:08.315Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/64429f7c-3c06-42cc-828d-c25caac16a99-agent-64429f7c-3c06-42cc-828d-c25caac16a99.json.tmp.57542.1766174108315
+2025-12-19T19:55:08.319Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-19T19:55:08.319Z [DEBUG] Renaming /Users/moose/.claude/todos/64429f7c-3c06-42cc-828d-c25caac16a99-agent-64429f7c-3c06-42cc-828d-c25caac16a99.json.tmp.57542.1766174108315 to /Users/moose/.claude/todos/64429f7c-3c06-42cc-828d-c25caac16a99-agent-64429f7c-3c06-42cc-828d-c25caac16a99.json
+2025-12-19T19:55:08.319Z [DEBUG] File /Users/moose/.claude/todos/64429f7c-3c06-42cc-828d-c25caac16a99-agent-64429f7c-3c06-42cc-828d-c25caac16a99.json written atomically
+2025-12-19T19:55:08.322Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-19T19:55:08.322Z [DEBUG] Total plugin skills loaded: 0
+2025-12-19T19:55:08.322Z [DEBUG] Total plugin commands loaded: 0
+2025-12-19T19:55:08.322Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T19:55:08.325Z [DEBUG] Total plugin agents loaded: 0
+2025-12-19T19:55:08.325Z [DEBUG] Loaded 0 unique skills (managed: 0, user: 0, project: 0, legacy commands: 0)
+2025-12-19T19:55:08.325Z [DEBUG] getSkills returning: 0 skill dir commands, 0 plugin skills
+2025-12-19T19:55:08.331Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2025-12-19T19:55:08.336Z [DEBUG] Git remote URL: null
+2025-12-19T19:55:08.336Z [DEBUG] No git remote URL found
+2025-12-19T19:55:08.336Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-19T19:55:08.338Z [DEBUG] Skills and commands included in Skill tool:
+2025-12-19T19:55:08.342Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-19T19:55:08.342Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:08.342Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-19T19:55:08.344Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-19T19:55:08.344Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:08.344Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-19T19:55:08.347Z [ERROR] "Failed to refresh marketplace claude-plugins-official: Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.\n\nOriginal error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...\n/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain\r\n/Users/moose/.ssh/config: terminating, 1 bad configuration options\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+2025-12-19T19:55:08.347Z [WARN] "Plugin autoupdate: failed to refresh marketplace claude-plugins-official: Failed to refresh marketplace 'claude-plugins-official': Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.\n\nOriginal error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...\n/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain\r\n/Users/moose/.ssh/config: terminating, 1 bad configuration options\r\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists."
+2025-12-19T19:55:08.347Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-19T19:55:08.352Z [DEBUG] Getting matching hook commands for SessionStart with query: resume
+2025-12-19T19:55:08.352Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:08.352Z [DEBUG] Matched 0 unique hooks for query "resume" (0 before deduplication)
+2025-12-19T19:55:08.361Z [DEBUG] Total plugin output styles loaded: 0
+2025-12-19T19:55:08.371Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T19:55:08.371Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T19:55:08.371Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T19:55:08.371Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T19:55:08.372Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-19T19:55:08.372Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:08.372Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:55:08.416Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.57542.1766174108416
+2025-12-19T19:55:08.416Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T19:55:08.420Z [DEBUG] Temp file written successfully, size: 59530 bytes
+2025-12-19T19:55:08.420Z [DEBUG] Applied original permissions to temp file
+2025-12-19T19:55:08.420Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.57542.1766174108416 to /Users/moose/.claude.json
+2025-12-19T19:55:08.421Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T19:55:08.476Z [DEBUG] Shell snapshot created successfully (89618 bytes)
+2025-12-19T19:55:08.484Z [DEBUG] Remote settings: No settings found (404)
+2025-12-19T19:55:08.484Z [DEBUG] Programmatic settings change notification for policySettings
+2025-12-19T19:55:08.484Z [DEBUG] Plugin hooks: reloading due to policySettings change
+2025-12-19T19:55:08.484Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T19:55:08.485Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T19:55:09.315Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:55:10.562Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T19:55:10.562Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:10.562Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:55:10.656Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:55:11.268Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:55:12.813Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-19T19:55:12.814Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-19T19:55:12.814Z [DEBUG] Found 1 hook matchers in settings
+2025-12-19T19:55:12.814Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-19T19:55:12.849Z [DEBUG] tree-sitter: loaded from disk
+2025-12-19T19:55:12.860Z [DEBUG] No session environment scripts found
+2025-12-19T19:55:12.927Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-19T19:55:12.927Z [DEBUG] Found 1 hook matchers in settings
+2025-12-19T19:55:12.927Z [DEBUG] Matched 1 unique hooks for query "Bash" (1 before deduplication)
+2025-12-19T19:55:12.936Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T19:55:12.936Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T19:55:12.936Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T19:55:12.936Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T19:55:13.356Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:55:14.262Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T19:55:14.262Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:14.262Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:55:15.197Z [DEBUG] Stream started - received first chunk
+2025-12-19T19:55:21.387Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-19T19:55:21.387Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:21.387Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T19:55:21.391Z [DEBUG] Getting matching hook commands for SessionEnd with query: other
+2025-12-19T19:55:21.391Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T19:55:21.391Z [DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)

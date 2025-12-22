@@ -1,0 +1,1006 @@
+2025-12-22T18:13:36.428Z [DEBUG] Getting matching hook commands for SessionEnd with query: clear
+2025-12-22T18:13:36.428Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:13:36.428Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T18:13:36.428Z [DEBUG] Cleared all session hooks for session 23d5056a-61af-45ec-9101-f0fc7dfed6a1
+2025-12-22T18:13:36.428Z [DEBUG] Getting matching hook commands for SessionStart with query: clear
+2025-12-22T18:13:36.428Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:13:36.428Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T18:13:36.430Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T18:13:36.430Z [DEBUG] FileHistory: Added snapshot for e09efdff-889e-4557-af3d-0f18b7d737db, tracking 0 files
+2025-12-22T18:13:36.435Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T18:13:36.443Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766427216443
+2025-12-22T18:13:36.443Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T18:13:36.443Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T18:13:36.443Z [DEBUG] Applied original permissions to temp file
+2025-12-22T18:13:36.443Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766427216443 to /Users/moose/.claude.json
+2025-12-22T18:13:36.443Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T18:13:36.445Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766427216445
+2025-12-22T18:13:36.445Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T18:13:36.445Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T18:13:36.445Z [DEBUG] Applied original permissions to temp file
+2025-12-22T18:13:36.445Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766427216445 to /Users/moose/.claude.json
+2025-12-22T18:13:36.445Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T18:14:36.443Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-22T18:14:36.443Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:14:36.443Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-22T18:17:07.153Z [DEBUG] Applying permission update: Setting mode to 'default'
+2025-12-22T18:17:07.627Z [DEBUG] Applying permission update: Setting mode to 'acceptEdits'
+2025-12-22T18:17:08.104Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766427428104
+2025-12-22T18:17:08.104Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T18:17:08.105Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T18:17:08.105Z [DEBUG] Applied original permissions to temp file
+2025-12-22T18:17:08.105Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766427428104 to /Users/moose/.claude.json
+2025-12-22T18:17:08.105Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T18:17:08.105Z [DEBUG] Applying permission update: Setting mode to 'plan'
+2025-12-22T18:17:09.716Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:17:09.716Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:17:09.717Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:17:09.717Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:17:09.743Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T18:17:09.743Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:09.743Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T18:17:09.746Z [DEBUG] FileHistory: Making snapshot for message e5e96a3b-2f26-4216-873f-6692a6a600f9
+2025-12-22T18:17:09.746Z [DEBUG] FileHistory: Added snapshot for e5e96a3b-2f26-4216-873f-6692a6a600f9, tracking 0 files
+2025-12-22T18:17:10.298Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:15.869Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:30.320Z [DEBUG] executePreToolHooks called for tool: Task
+2025-12-22T18:17:30.320Z [DEBUG] executePreToolHooks called for tool: Task
+2025-12-22T18:17:30.320Z [DEBUG] executePreToolHooks called for tool: Task
+2025-12-22T18:17:30.324Z [DEBUG] Getting matching hook commands for PreToolUse with query: Task
+2025-12-22T18:17:30.324Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.324Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:17:30.324Z [DEBUG] Getting matching hook commands for PreToolUse with query: Task
+2025-12-22T18:17:30.324Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.324Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:17:30.324Z [DEBUG] Getting matching hook commands for PreToolUse with query: Task
+2025-12-22T18:17:30.324Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.324Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:17:30.344Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-22T18:17:30.344Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.344Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-22T18:17:30.349Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-22T18:17:30.349Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.349Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-22T18:17:30.349Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-22T18:17:30.349Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:30.349Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-22T18:17:31.491Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:31.722Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:31.922Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:32.561Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:32.564Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:32.564Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:32.564Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:32.610Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:32.610Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:32.610Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:32.912Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:32.920Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:32.920Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:32.920Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:32.960Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:32.960Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:32.960Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:33.070Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:33.164Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:33.169Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:33.169Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:33.169Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:33.169Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:33.178Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:33.178Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:33.178Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:33.189Z [ERROR] Error: Error: EISDIR: illegal operation on a directory, read
+    at readFileSync (unknown)
+    at <anonymous> (/$bunfs/root/claude:12:500)
+    at sW (/$bunfs/root/claude:11:8463)
+    at readFileSync (/$bunfs/root/claude:12:465)
+    at $w_ (/$bunfs/root/claude:4697:22559)
+    at call (/$bunfs/root/claude:966:945)
+    at call (/$bunfs/root/claude:962:6251)
+    at ho7 (/$bunfs/root/claude:2142:17437)
+    at processTicksAndRejections (native:7:39)
+2025-12-22T18:17:33.201Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Read
+2025-12-22T18:17:33.201Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:33.201Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:33.224Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:33.224Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:33.224Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:33.457Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:33.503Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:33.766Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:34.030Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:34.480Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:17:34.489Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:17:34.489Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.489Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:34.489Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:34.498Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:34.498Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.498Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:34.518Z [ERROR] Error: Error: EISDIR: illegal operation on a directory, read
+    at readFileSync (unknown)
+    at <anonymous> (/$bunfs/root/claude:12:500)
+    at sW (/$bunfs/root/claude:11:8463)
+    at readFileSync (/$bunfs/root/claude:12:465)
+    at $w_ (/$bunfs/root/claude:4697:22559)
+    at call (/$bunfs/root/claude:966:945)
+    at call (/$bunfs/root/claude:962:6251)
+    at ho7 (/$bunfs/root/claude:2142:17437)
+    at processTicksAndRejections (native:7:39)
+2025-12-22T18:17:34.526Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Read
+2025-12-22T18:17:34.526Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.526Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:34.840Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:34.843Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:34.843Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.843Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:34.843Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:34.846Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:34.846Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.846Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:34.866Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:34.866Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.866Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:34.888Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:34.888Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:34.888Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:35.348Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:35.423Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:17:35.423Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:35.423Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:36.036Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:36.142Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:36.996Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:37.004Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:37.004Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.004Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:37.004Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:37.008Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:37.008Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.008Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:37.018Z [ERROR] Error: Error: EISDIR: illegal operation on a directory, read
+    at readFileSync (unknown)
+    at <anonymous> (/$bunfs/root/claude:12:500)
+    at sW (/$bunfs/root/claude:11:8463)
+    at readFileSync (/$bunfs/root/claude:12:465)
+    at $w_ (/$bunfs/root/claude:4697:22559)
+    at call (/$bunfs/root/claude:966:945)
+    at call (/$bunfs/root/claude:962:6251)
+    at ho7 (/$bunfs/root/claude:2142:17437)
+    at processTicksAndRejections (native:7:39)
+2025-12-22T18:17:37.031Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Read
+2025-12-22T18:17:37.031Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.031Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:37.052Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:37.052Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.052Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:37.159Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:17:37.159Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:17:37.159Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:17:37.162Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:17:37.162Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.162Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:37.162Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:17:37.162Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.162Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:37.162Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:17:37.162Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:37.162Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:37.477Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:37.511Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:38.005Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:17:38.005Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.005Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:38.017Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:38.132Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:17:38.132Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.132Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:38.208Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:38.212Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:38.212Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.212Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:38.228Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:38.228Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.228Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:38.271Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:17:38.271Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.271Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:38.389Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:38.396Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:38.396Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.396Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:38.396Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:38.399Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:38.399Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.399Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:38.418Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:38.418Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.418Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:38.520Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:38.520Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:38.520Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:39.559Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:39.572Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:39.666Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:40.254Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:40.653Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:40.654Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:40.659Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:40.659Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.659Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:40.659Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:40.659Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.659Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:40.715Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:40.715Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.715Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:40.754Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:40.754Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.754Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:40.818Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:40.818Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:40.819Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:40.826Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:40.826Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.826Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:40.826Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:40.826Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.826Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:40.826Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:40.826Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.826Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:40.846Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:40.846Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.846Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:40.846Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:40.846Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.846Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:40.846Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:40.846Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:40.846Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:41.192Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:17:41.201Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:17:41.201Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:41.201Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:41.216Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:41.576Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:41.767Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:17:41.767Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:41.767Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:17:42.816Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:43.198Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:43.303Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:43.838Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:43.838Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:43.838Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:43.842Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:43.842Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.842Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:43.842Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:43.842Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.842Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:43.842Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:43.842Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.842Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:43.866Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:43.866Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.866Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:43.866Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:43.866Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.866Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:43.866Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:43.866Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:43.866Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.498Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.499Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.499Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.499Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.502Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.502Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.502Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.502Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.502Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.502Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.502Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.502Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.502Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.502Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.502Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.502Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.532Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.532Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.532Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.532Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.532Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.532Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.532Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.532Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.532Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.532Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.532Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.532Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.613Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.613Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.613Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:44.616Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.616Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.616Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.616Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.616Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.616Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.616Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:44.616Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.616Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.639Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.639Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.639Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.639Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.639Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.639Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:44.832Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:44.832Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:44.832Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:46.310Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:46.661Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:47.028Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:47.485Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:47.486Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:47.486Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:47.492Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:47.492Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.492Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.492Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:47.492Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.492Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.492Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:47.492Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.492Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.519Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:47.519Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.519Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.519Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:47.519Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.519Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.519Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:47.519Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.519Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.533Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:47.533Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:47.538Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:47.538Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.538Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.538Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:47.538Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.538Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.576Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:47.576Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.576Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:47.576Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:47.576Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:47.576Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.209Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:48.209Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:48.210Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:48.218Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:48.218Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.218Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.218Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:48.218Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.218Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.218Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:48.218Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.218Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.241Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:48.241Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.241Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.241Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:48.241Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.241Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:48.241Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:48.241Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:48.241Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:49.530Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:49.630Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:50.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.590Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.590Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.590Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.590Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.590Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.590Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.590Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.590Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.590Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.616Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.616Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.616Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.616Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.616Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.616Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.725Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.725Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.725Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:50.728Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.728Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.728Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.728Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.728Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.728Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.728Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:50.728Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.728Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.748Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.748Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.748Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.748Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.748Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.748Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.748Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.748Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.748Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:50.793Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:50.793Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:50.793Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:51.307Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:52.153Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:52.189Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:52.193Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:52.193Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:52.193Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:52.214Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:52.214Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:52.214Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:53.647Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:53.651Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:53.651Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.651Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:53.651Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:53.651Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:53.659Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:53.659Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.659Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:53.659Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:53.659Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.659Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:53.684Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:53.684Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.684Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:53.684Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:53.684Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.684Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:53.715Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:53.715Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:53.716Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:54.404Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:54.454Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:54.832Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:55.205Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:55.513Z [DEBUG] [SLOW OPERATION DETECTED] fs.statSync (8.9ms)
+2025-12-22T18:17:55.923Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T18:17:55.929Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T18:17:55.929Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.929Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:55.929Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:55.937Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:55.937Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.937Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.937Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:55.937Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:55.938Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:55.942Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:55.942Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.942Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.942Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:55.942Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.942Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.942Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:55.942Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.942Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.968Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:55.968Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.968Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.978Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:55.978Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.978Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.978Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:55.978Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.978Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.978Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:55.978Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.978Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:55.992Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T18:17:55.992Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:55.992Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T18:17:56.134Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:56.137Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:56.137Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:56.137Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:56.156Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:56.156Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:56.156Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:56.916Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:57.711Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:59.008Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:59.008Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:59.008Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:17:59.013Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:59.013Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.013Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.013Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:59.013Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.013Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.013Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:17:59.013Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.013Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.041Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:59.041Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.041Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.041Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:59.041Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.041Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.041Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:17:59.041Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:17:59.041Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:17:59.659Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:17:59.974Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:00.359Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:01.346Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:01.347Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:01.350Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:01.350Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:01.350Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:01.350Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:01.350Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:01.350Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:01.375Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:01.375Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:01.375Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:01.375Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:01.375Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:01.375Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.225Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:02.225Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:02.225Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:02.229Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:02.229Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.229Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.229Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:02.229Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.229Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.229Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:02.229Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.229Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.252Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:02.252Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.252Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.252Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:02.252Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.252Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:02.252Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:02.252Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:02.252Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:03.123Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:04.775Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:06.095Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:06.096Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:06.103Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:06.103Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:06.103Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:06.103Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:06.103Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:06.103Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:06.130Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:06.130Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:06.130Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:06.130Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:06.130Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:06.130Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:08.111Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:09.209Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:09.209Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:09.213Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:09.213Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:09.213Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:09.213Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:09.213Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:09.213Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:09.234Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:09.234Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:09.234Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:09.234Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:09.234Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:09.234Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:11.874Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:12.725Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:18:12.729Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:18:12.729Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:12.729Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:12.753Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:18:12.753Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:12.753Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:18:15.310Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:18:24.733Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T18:18:24.733Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:24.733Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T18:18:24.742Z [DEBUG] Getting matching hook commands for PostToolUse with query: Task
+2025-12-22T18:18:24.742Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:24.742Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:18:36.933Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T18:18:36.933Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:36.933Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T18:18:36.945Z [DEBUG] Getting matching hook commands for PostToolUse with query: Task
+2025-12-22T18:18:36.945Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:36.945Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:18:39.990Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T18:18:39.990Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:39.990Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T18:18:40.002Z [DEBUG] Getting matching hook commands for PostToolUse with query: Task
+2025-12-22T18:18:40.002Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:18:40.002Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:18:40.010Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:18:40.010Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:18:40.010Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:18:40.010Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:18:45.121Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:19:22.687Z [DEBUG] executePreToolHooks called for tool: Task
+2025-12-22T18:19:22.691Z [DEBUG] Getting matching hook commands for PreToolUse with query: Task
+2025-12-22T18:19:22.691Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:22.691Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:19:22.715Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-22T18:19:22.715Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:22.715Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-22T18:19:27.906Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:19:30.259Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:19:30.264Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:19:30.264Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:30.264Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:30.264Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:30.268Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:30.268Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:30.268Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:30.300Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:30.301Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:30.301Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:30.916Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:19:30.916Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:30.916Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:33.518Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:19:35.337Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:19:35.338Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T18:19:35.343Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:19:35.343Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:35.343Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:35.343Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T18:19:35.343Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:35.343Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:36.032Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:19:36.032Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:36.032Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:36.156Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T18:19:36.156Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:36.156Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T18:19:41.761Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:19:48.113Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:48.113Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:48.114Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:48.114Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:48.117Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:48.117Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.117Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.117Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:48.117Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.117Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.117Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:48.117Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.117Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.117Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:48.117Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.117Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.138Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:48.138Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.138Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.138Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:48.138Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.138Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.138Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:48.138Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.138Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:48.138Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:48.138Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:48.138Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:53.680Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:19:56.294Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:56.295Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:56.295Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:19:56.297Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:56.297Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.297Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:56.297Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:56.297Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.297Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:56.297Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:19:56.297Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.297Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:56.318Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:56.318Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.318Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:56.318Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:56.318Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.318Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:19:56.318Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:19:56.318Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:19:56.318Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:02.087Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:20:04.683Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:04.683Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:04.683Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:04.687Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:04.687Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.687Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:04.687Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:04.687Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.687Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:04.687Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:04.687Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.687Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:04.713Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:04.713Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.713Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:04.713Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:04.713Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.713Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:04.713Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:04.713Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:04.713Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:11.706Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:20:14.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:14.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:14.582Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:14.588Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:14.588Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.588Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:14.588Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:14.588Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.588Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:14.588Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:14.588Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.588Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:14.611Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:14.611Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.611Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:14.611Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:14.611Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.611Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:14.775Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:14.775Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:14.775Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:21.121Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:20:24.060Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:24.060Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:24.061Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:24.068Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:24.068Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.068Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:24.068Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:24.068Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.068Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:24.068Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:24.068Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.068Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:24.089Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:24.089Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.089Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:24.089Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:24.089Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.089Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:24.089Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:24.089Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:24.089Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:30.475Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:20:32.199Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:32.200Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T18:20:32.203Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:32.203Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:32.203Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:32.203Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T18:20:32.203Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:32.203Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:32.224Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:32.224Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:32.224Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:32.224Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T18:20:32.224Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:20:32.224Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T18:20:38.044Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:21:49.425Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T18:21:49.425Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:21:49.425Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T18:21:49.433Z [DEBUG] Getting matching hook commands for PostToolUse with query: Task
+2025-12-22T18:21:49.433Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:21:49.433Z [DEBUG] Matched 0 unique hooks for query "Task" (0 before deduplication)
+2025-12-22T18:21:49.440Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:21:49.440Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:21:49.440Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:21:49.440Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:21:55.998Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:22:11.815Z [DEBUG] executePreToolHooks called for tool: AskUserQuestion
+2025-12-22T18:22:11.819Z [DEBUG] Getting matching hook commands for PreToolUse with query: AskUserQuestion
+2025-12-22T18:22:11.819Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:22:11.819Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:22:11.835Z [DEBUG] executePermissionRequestHooks called for tool: AskUserQuestion
+2025-12-22T18:22:11.840Z [DEBUG] Getting matching hook commands for PermissionRequest with query: AskUserQuestion
+2025-12-22T18:22:11.840Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:22:11.840Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:22:17.840Z [DEBUG] Getting matching hook commands for Notification with query: permission_prompt
+2025-12-22T18:22:17.840Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:22:17.840Z [DEBUG] Matched 0 unique hooks for query "permission_prompt" (0 before deduplication)
+2025-12-22T18:31:06.932Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T18:31:06.933Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T18:31:06.943Z [DEBUG] Getting matching hook commands for PostToolUse with query: AskUserQuestion
+2025-12-22T18:31:06.943Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:31:06.943Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:31:06.954Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:31:06.954Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:31:06.954Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:31:06.954Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:31:12.491Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:32:31.926Z [WARN] Streaming stall detected: 71.6s gap between events (stall #1)
+2025-12-22T18:32:32.457Z [WARN] Streaming completed with 1 stall(s), total stall time: 71.6s
+2025-12-22T18:32:32.469Z [DEBUG] executePreToolHooks called for tool: Write
+2025-12-22T18:32:32.472Z [DEBUG] Getting matching hook commands for PreToolUse with query: Write
+2025-12-22T18:32:32.472Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:32:32.472Z [DEBUG] Matched 0 unique hooks for query "Write" (0 before deduplication)
+2025-12-22T18:32:32.478Z [DEBUG] Writing to temp file: /Users/moose/.claude/plans/cryptic-sleeping-zebra.md.tmp.22145.1766428352478
+2025-12-22T18:32:32.478Z [DEBUG] Temp file written successfully, size: 15156 bytes
+2025-12-22T18:32:32.478Z [DEBUG] Renaming /Users/moose/.claude/plans/cryptic-sleeping-zebra.md.tmp.22145.1766428352478 to /Users/moose/.claude/plans/cryptic-sleeping-zebra.md
+2025-12-22T18:32:32.478Z [DEBUG] File /Users/moose/.claude/plans/cryptic-sleeping-zebra.md written atomically
+2025-12-22T18:32:32.480Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/.claude/plans/cryptic-sleeping-zebra.md
+2025-12-22T18:32:32.482Z [DEBUG] [lspRecommendation] Looking for LSP plugins for .md
+2025-12-22T18:32:32.484Z [DEBUG] Getting matching hook commands for PostToolUse with query: Write
+2025-12-22T18:32:32.484Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:32:32.484Z [DEBUG] Matched 0 unique hooks for query "Write" (0 before deduplication)
+2025-12-22T18:32:32.491Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:32:32.491Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:32:32.491Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:32:32.491Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:32:37.532Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:32:44.015Z [DEBUG] executePreToolHooks called for tool: AskUserQuestion
+2025-12-22T18:32:44.019Z [DEBUG] Getting matching hook commands for PreToolUse with query: AskUserQuestion
+2025-12-22T18:32:44.019Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:32:44.019Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:32:44.035Z [DEBUG] executePermissionRequestHooks called for tool: AskUserQuestion
+2025-12-22T18:32:44.039Z [DEBUG] Getting matching hook commands for PermissionRequest with query: AskUserQuestion
+2025-12-22T18:32:44.039Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:32:44.039Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:32:50.042Z [DEBUG] Getting matching hook commands for Notification with query: permission_prompt
+2025-12-22T18:32:50.042Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:32:50.042Z [DEBUG] Matched 0 unique hooks for query "permission_prompt" (0 before deduplication)
+2025-12-22T18:38:38.084Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T18:38:38.085Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T18:38:38.104Z [DEBUG] Getting matching hook commands for PostToolUse with query: AskUserQuestion
+2025-12-22T18:38:38.104Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:38:38.104Z [DEBUG] Matched 0 unique hooks for query "AskUserQuestion" (0 before deduplication)
+2025-12-22T18:38:38.123Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:38:38.123Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:38:38.123Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:38:38.123Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:38:44.722Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:38:54.609Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T18:38:54.612Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T18:38:54.612Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:38:54.612Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T18:38:54.618Z [DEBUG] Writing to temp file: /Users/moose/.claude/plans/cryptic-sleeping-zebra.md.tmp.22145.1766428734618
+2025-12-22T18:38:54.618Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T18:38:54.618Z [DEBUG] Temp file written successfully, size: 15367 bytes
+2025-12-22T18:38:54.618Z [DEBUG] Applied original permissions to temp file
+2025-12-22T18:38:54.618Z [DEBUG] Renaming /Users/moose/.claude/plans/cryptic-sleeping-zebra.md.tmp.22145.1766428734618 to /Users/moose/.claude/plans/cryptic-sleeping-zebra.md
+2025-12-22T18:38:54.618Z [DEBUG] File /Users/moose/.claude/plans/cryptic-sleeping-zebra.md written atomically
+2025-12-22T18:38:54.628Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T18:38:54.628Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:38:54.628Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T18:38:54.632Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T18:38:54.632Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T18:38:54.632Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T18:38:54.632Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T18:38:59.347Z [DEBUG] Stream started - received first chunk
+2025-12-22T18:39:06.030Z [DEBUG] executePreToolHooks called for tool: ExitPlanMode
+2025-12-22T18:39:06.033Z [DEBUG] Getting matching hook commands for PreToolUse with query: ExitPlanMode
+2025-12-22T18:39:06.033Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:39:06.033Z [DEBUG] Matched 0 unique hooks for query "ExitPlanMode" (0 before deduplication)
+2025-12-22T18:39:06.055Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.056Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.056Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.056Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.056Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.056Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.057Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.057Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.116Z [DEBUG] executePermissionRequestHooks called for tool: ExitPlanMode
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.160Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.189Z [DEBUG] Getting matching hook commands for PermissionRequest with query: ExitPlanMode
+2025-12-22T18:39:06.189Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:39:06.189Z [DEBUG] Matched 0 unique hooks for query "ExitPlanMode" (0 before deduplication)
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:06.241Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T18:39:12.154Z [DEBUG] Getting matching hook commands for Notification with query: permission_prompt
+2025-12-22T18:39:12.154Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T18:39:12.154Z [DEBUG] Matched 0 unique hooks for query "permission_prompt" (0 before deduplication)
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.441Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.442Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.442Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.695Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.695Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.695Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.695Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.696Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.696Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.696Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:13.696Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.113Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:14.114Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.066Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.067Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.067Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.067Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.067Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.068Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.068Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.068Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.425Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.426Z [DEBUG] Language not supported while highlighting code, falling back to markdown:
+2025-12-22T19:19:15.513Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T19:19:15.515Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T19:19:15.516Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766431155516
+2025-12-22T19:19:15.516Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T19:19:15.516Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T19:19:15.516Z [DEBUG] Applied original permissions to temp file
+2025-12-22T19:19:15.516Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766431155516 to /Users/moose/.claude.json
+2025-12-22T19:19:15.517Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T19:19:15.518Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766431155518
+2025-12-22T19:19:15.518Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T19:19:15.518Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T19:19:15.518Z [DEBUG] Applied original permissions to temp file
+2025-12-22T19:19:15.518Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766431155518 to /Users/moose/.claude.json
+2025-12-22T19:19:15.518Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T19:19:15.519Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.22145.1766431155519
+2025-12-22T19:19:15.519Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T19:19:15.519Z [DEBUG] Temp file written successfully, size: 64735 bytes
+2025-12-22T19:19:15.519Z [DEBUG] Applied original permissions to temp file
+2025-12-22T19:19:15.519Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.22145.1766431155519 to /Users/moose/.claude.json
+2025-12-22T19:19:15.520Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T20:01:47.031Z [DEBUG] Getting matching hook commands for SessionEnd with query: prompt_input_exit
+2025-12-22T20:01:47.031Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T20:01:47.031Z [DEBUG] Matched 0 unique hooks for query "prompt_input_exit" (0 before deduplication)

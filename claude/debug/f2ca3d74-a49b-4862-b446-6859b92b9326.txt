@@ -1,0 +1,128 @@
+2025-12-21T07:23:38.823Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (20.5ms): security find-generic-password -a $USER -w -s "Claude Code"
+2025-12-21T07:23:38.842Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (19.4ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-21T07:23:38.850Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-21T07:23:38.859Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-21T07:23:38.859Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-21T07:23:38.859Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'userSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'userSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'userSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'projectSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'projectSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-21T07:23:38.860Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'projectSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-21T07:23:38.861Z [DEBUG] LSP server manager initialized successfully
+2025-12-21T07:23:38.861Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-21T07:23:38.862Z [DEBUG] Loading plugin rust-analyzer-lsp from source: "./plugins/rust-analyzer-lsp"
+2025-12-21T07:23:38.862Z [DEBUG] Using provided version for rust-analyzer-lsp@claude-plugins-official: 1.0.0
+2025-12-21T07:23:38.862Z [DEBUG] Plugin rust-analyzer-lsp@claude-plugins-official version 1.0.0 already cached at /Users/moose/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0
+2025-12-21T07:23:38.862Z [DEBUG] Copied local plugin rust-analyzer-lsp to versioned cache: /Users/moose/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0
+2025-12-21T07:23:38.862Z [DEBUG] Plugin rust-analyzer-lsp has no entry.skills defined
+2025-12-21T07:23:38.862Z [DEBUG] Found 1 plugins (1 enabled, 0 disabled)
+2025-12-21T07:23:38.864Z [DEBUG] Stats cache is up to date
+2025-12-21T07:23:38.866Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-21T07:23:38.866Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-21T07:23:38.912Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (44.8ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-21T07:23:38.912Z [DEBUG] Loaded 1 installed plugins from /Users/moose/.claude/plugins/installed_plugins.json
+2025-12-21T07:23:38.924Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-21T07:23:38.924Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-21T07:23:38.924Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-21T07:23:38.924Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766301818924-y33clb.sh
+2025-12-21T07:23:38.924Z [DEBUG] Shell binary exists: true
+2025-12-21T07:23:38.924Z [DEBUG] Execution timeout: 10000ms
+2025-12-21T07:23:38.925Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/f2ca3d74-a49b-4862-b446-6859b92b9326-agent-f2ca3d74-a49b-4862-b446-6859b92b9326.json.tmp.26914.1766301818925
+2025-12-21T07:23:38.925Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-21T07:23:38.925Z [DEBUG] Renaming /Users/moose/.claude/todos/f2ca3d74-a49b-4862-b446-6859b92b9326-agent-f2ca3d74-a49b-4862-b446-6859b92b9326.json.tmp.26914.1766301818925 to /Users/moose/.claude/todos/f2ca3d74-a49b-4862-b446-6859b92b9326-agent-f2ca3d74-a49b-4862-b446-6859b92b9326.json
+2025-12-21T07:23:38.925Z [DEBUG] File /Users/moose/.claude/todos/f2ca3d74-a49b-4862-b446-6859b92b9326-agent-f2ca3d74-a49b-4862-b446-6859b92b9326.json written atomically
+2025-12-21T07:23:38.927Z [DEBUG] getPluginSkills: Processing 1 enabled plugins
+2025-12-21T07:23:38.927Z [DEBUG] Checking plugin rust-analyzer-lsp: skillsPath=none, skillsPaths=0 paths
+2025-12-21T07:23:38.927Z [DEBUG] Total plugin skills loaded: 0
+2025-12-21T07:23:38.927Z [DEBUG] Total plugin commands loaded: 0
+2025-12-21T07:23:38.927Z [DEBUG] Registered 0 hooks from 1 plugins
+2025-12-21T07:23:38.929Z [DEBUG] Total plugin agents loaded: 0
+2025-12-21T07:23:38.944Z [DEBUG] Loaded 3 unique skills (managed: 0, user: 2, project: 0, legacy commands: 1)
+2025-12-21T07:23:38.944Z [DEBUG] getSkills returning: 3 skill dir commands, 0 plugin skills
+2025-12-21T07:23:38.948Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301818948
+2025-12-21T07:23:38.948Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:38.948Z [DEBUG] Temp file written successfully, size: 64427 bytes
+2025-12-21T07:23:38.948Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:38.948Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301818948 to /Users/moose/.claude.json
+2025-12-21T07:23:38.948Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:38.959Z [DEBUG] Git remote URL: null
+2025-12-21T07:23:38.959Z [DEBUG] No git remote URL found
+2025-12-21T07:23:38.959Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-21T07:23:39.084Z [DEBUG] Shell snapshot created successfully (89237 bytes)
+2025-12-21T07:23:39.118Z [DEBUG] Metrics opt-out API response: enabled=true, vcsLinking=false
+2025-12-21T07:23:39.260Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-21T07:23:39.269Z [DEBUG] All plugins already exist, skipping migration
+2025-12-21T07:23:39.271Z [DEBUG] Initialized versioned plugins system with 1 plugins
+2025-12-21T07:23:39.274Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301819274
+2025-12-21T07:23:39.274Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:39.274Z [DEBUG] Temp file written successfully, size: 64427 bytes
+2025-12-21T07:23:39.274Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:39.274Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301819274 to /Users/moose/.claude.json
+2025-12-21T07:23:39.274Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:39.276Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-21T07:23:39.276Z [DEBUG] Found 0 hook matchers in settings
+2025-12-21T07:23:39.276Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-21T07:23:39.278Z [DEBUG] Skills and commands included in Skill tool: homebrew-release, create-github-repo
+2025-12-21T07:23:39.283Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-21T07:23:39.283Z [DEBUG] Found 0 hook matchers in settings
+2025-12-21T07:23:39.283Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-21T07:23:39.285Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-21T07:23:39.285Z [DEBUG] Found 0 hook matchers in settings
+2025-12-21T07:23:39.285Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-21T07:23:39.818Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301819818
+2025-12-21T07:23:39.818Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:39.819Z [DEBUG] Temp file written successfully, size: 64354 bytes
+2025-12-21T07:23:39.819Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:39.819Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301819818 to /Users/moose/.claude.json
+2025-12-21T07:23:39.819Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:39.823Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-21T07:23:39.825Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-21T07:23:39.826Z [DEBUG] Official marketplace auto-install skipped: already_attempted
+2025-12-21T07:23:39.826Z [DEBUG] performStartupChecks called
+2025-12-21T07:23:39.826Z [DEBUG] Starting background plugin installations
+2025-12-21T07:23:39.826Z [DEBUG] performBackgroundPluginInstallations called
+2025-12-21T07:23:39.834Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-21T07:23:39.836Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301819836
+2025-12-21T07:23:39.836Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:39.837Z [DEBUG] Temp file written successfully, size: 64427 bytes
+2025-12-21T07:23:39.837Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:39.837Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301819836 to /Users/moose/.claude.json
+2025-12-21T07:23:39.837Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:39.838Z [DEBUG] Found 1 enabled plugins
+2025-12-21T07:23:39.838Z [DEBUG] All plugins already exist, skipping migration
+2025-12-21T07:23:39.838Z [DEBUG] Found 1 installed plugins (V2 format)
+2025-12-21T07:23:39.838Z [DEBUG] Loaded plugins - Enabled: 1, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+2025-12-21T07:23:39.838Z [DEBUG] Found 0 missing plugins (not installed):
+2025-12-21T07:23:39.838Z [DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+2025-12-21T07:23:39.859Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301819859
+2025-12-21T07:23:39.859Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:39.859Z [DEBUG] Temp file written successfully, size: 64427 bytes
+2025-12-21T07:23:39.859Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:39.859Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301819859 to /Users/moose/.claude.json
+2025-12-21T07:23:39.860Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:39.860Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.26914.1766301819860
+2025-12-21T07:23:39.860Z [DEBUG] Preserving file permissions: 100600
+2025-12-21T07:23:39.860Z [DEBUG] Temp file written successfully, size: 64427 bytes
+2025-12-21T07:23:39.860Z [DEBUG] Applied original permissions to temp file
+2025-12-21T07:23:39.860Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.26914.1766301819860 to /Users/moose/.claude.json
+2025-12-21T07:23:39.861Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-21T07:23:39.863Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-21T07:23:39.874Z [DEBUG] Summarizing all 2 messages (~0 tokens)
+2025-12-21T07:23:40.121Z [DEBUG] Successfully refreshed marketplace: claude-plugins-official
+2025-12-21T07:23:40.121Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-21T07:23:40.122Z [DEBUG] Using provided version for rust-analyzer-lsp@claude-plugins-official: 1.0.0
+2025-12-21T07:23:40.330Z [DEBUG] Stream started - received first chunk
+2025-12-21T07:23:40.567Z [DEBUG] Stream started - received first chunk
+2025-12-21T07:23:40.637Z [DEBUG] Summarizing all 2 messages (~0 tokens)
+2025-12-21T07:23:41.234Z [DEBUG] Stream started - received first chunk
+2025-12-21T07:23:41.564Z [DEBUG] Summarizing all 2 messages (~0 tokens)
+2025-12-21T07:23:41.734Z [DEBUG] Stream started - received first chunk
+2025-12-21T07:23:42.035Z [DEBUG] Stream started - received first chunk
+2025-12-21T07:23:42.207Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-21T07:23:42.207Z [DEBUG] Found 0 hook matchers in settings
+2025-12-21T07:23:42.207Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-21T07:23:42.699Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-21T07:23:42.699Z [DEBUG] Found 0 hook matchers in settings
+2025-12-21T07:23:42.699Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)

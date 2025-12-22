@@ -1,0 +1,830 @@
+2025-12-22T10:01:17.323Z [DEBUG] Getting matching hook commands for SessionEnd with query: clear
+2025-12-22T10:01:17.323Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:17.323Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T10:01:17.323Z [DEBUG] Cleared all session hooks for session 8d95cad3-b3fa-4f14-81b8-a052bb7d51b2
+2025-12-22T10:01:17.324Z [DEBUG] Getting matching hook commands for SessionStart with query: clear
+2025-12-22T10:01:17.324Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:17.324Z [DEBUG] Matched 0 unique hooks for query "clear" (0 before deduplication)
+2025-12-22T10:01:17.325Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.75/claude
+2025-12-22T10:01:17.326Z [DEBUG] FileHistory: Added snapshot for a9d064ce-aceb-43da-90f1-9a30b82636e8, tracking 0 files
+2025-12-22T10:01:17.331Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-22T10:01:20.995Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:01:20.995Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:01:20.995Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:01:20.995Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:01:21.011Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T10:01:21.011Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:21.011Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:01:21.011Z [DEBUG] FileHistory: Making snapshot for message 9741ffa7-9dda-4046-a500-734234af7257
+2025-12-22T10:01:21.012Z [DEBUG] FileHistory: Added snapshot for 9741ffa7-9dda-4046-a500-734234af7257, tracking 0 files
+2025-12-22T10:01:22.146Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:01:22.927Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:01:26.956Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:01:26.956Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T10:01:26.963Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:01:26.963Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:26.963Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:01:26.963Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T10:01:26.963Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:26.963Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T10:01:26.963Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:01:26.967Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:01:26.967Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:26.967Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:26.999Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:01:26.999Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:26.999Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:27.034Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:01:27.034Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:27.034Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:01:27.434Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:01:27.944Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T10:01:27.944Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:27.944Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T10:01:27.949Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:01:27.949Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:01:27.949Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:01:27.949Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:01:31.564Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:01:33.199Z [DEBUG] executePreToolHooks called for tool: Glob
+2025-12-22T10:01:33.206Z [DEBUG] Getting matching hook commands for PreToolUse with query: Glob
+2025-12-22T10:01:33.206Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:33.206Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T10:01:33.758Z [DEBUG] Getting matching hook commands for PostToolUse with query: Glob
+2025-12-22T10:01:33.758Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:33.758Z [DEBUG] Matched 0 unique hooks for query "Glob" (0 before deduplication)
+2025-12-22T10:01:33.764Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:01:33.764Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:01:33.764Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:01:33.764Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:01:37.239Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:01:40.563Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:01:40.564Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:01:40.564Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:01:40.567Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:01:40.567Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.567Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.567Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:01:40.567Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.567Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.567Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:01:40.567Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.567Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.591Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:01:40.591Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.591Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.591Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:01:40.591Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.591Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.591Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:01:40.591Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:01:40.591Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:01:40.600Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:01:40.600Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:01:40.600Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:01:40.600Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:01:43.405Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:02:02.286Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:02:02.290Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:02:02.290Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:02.290Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:02:02.300Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397722300
+2025-12-22T10:02:02.301Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.301Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397722300 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:02:02.301Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:02:02.301Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397722301
+2025-12-22T10:02:02.301Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.301Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397722301 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:02:02.301Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:02:02.301Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397722301
+2025-12-22T10:02:02.301Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.301Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397722301 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:02:02.301Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:02:02.301Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397722301
+2025-12-22T10:02:02.302Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.302Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397722301 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:02:02.302Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:02:02.302Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397722302
+2025-12-22T10:02:02.302Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.302Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397722302 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:02:02.302Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:02:02.302Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397722302
+2025-12-22T10:02:02.302Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:02:02.302Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397722302 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:02:02.302Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:02:02.302Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397722302
+2025-12-22T10:02:02.302Z [DEBUG] Temp file written successfully, size: 592 bytes
+2025-12-22T10:02:02.302Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397722302 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:02:02.302Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:02:02.308Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:02:02.308Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:02.308Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:02:02.313Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:02:02.313Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:02:02.313Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:02:02.313Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:02:04.467Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:02:35.014Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:02:35.018Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:02:35.018Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:35.018Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:35.029Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397755029
+2025-12-22T10:02:35.029Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:02:35.029Z [DEBUG] Temp file written successfully, size: 18939 bytes
+2025-12-22T10:02:35.029Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:02:35.029Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397755029 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:02:35.029Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:02:35.034Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:02:35.043Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:02:35.043Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:35.043Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:35.119Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:02:35.119Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:02:35.119Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:02:35.119Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:02:37.713Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:02:42.957Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:02:42.960Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:02:42.960Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:42.960Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:42.976Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397762976
+2025-12-22T10:02:42.976Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:02:42.977Z [DEBUG] Temp file written successfully, size: 18993 bytes
+2025-12-22T10:02:42.977Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:02:42.977Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397762976 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:02:42.977Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:02:42.987Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:02:42.987Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:42.987Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:43.009Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:02:43.009Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:02:43.009Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:02:43.009Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:02:45.976Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:02:47.706Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:02:47.713Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:02:47.713Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:47.713Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:02:47.732Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:02:47.732Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:47.732Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:02:47.738Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:02:47.738Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:02:47.738Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:02:47.738Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:02:50.115Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:02:59.371Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:02:59.375Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:02:59.375Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:59.375Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:59.383Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397779383
+2025-12-22T10:02:59.383Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:02:59.384Z [DEBUG] Temp file written successfully, size: 19953 bytes
+2025-12-22T10:02:59.384Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:02:59.384Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766397779383 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:02:59.384Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:02:59.394Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:02:59.394Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:02:59.394Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:02:59.425Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:02:59.425Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:02:59.425Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:02:59.425Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:03.065Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:07.442Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:03:07.446Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:03:07.446Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:07.446Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:07.459Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397787459
+2025-12-22T10:03:07.459Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.459Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.459Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.459Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397787459 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:03:07.459Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:03:07.459Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397787459
+2025-12-22T10:03:07.459Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.460Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.460Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.460Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397787459 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:03:07.460Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:03:07.460Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397787460
+2025-12-22T10:03:07.460Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.460Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.460Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.460Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397787460 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:03:07.460Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:03:07.460Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397787460
+2025-12-22T10:03:07.460Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.460Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.460Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.460Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397787460 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:03:07.460Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:03:07.460Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397787460
+2025-12-22T10:03:07.460Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.460Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.460Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.460Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397787460 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:03:07.461Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:03:07.461Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397787461
+2025-12-22T10:03:07.461Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.461Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:07.461Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.461Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397787461 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:03:07.461Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:03:07.461Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397787461
+2025-12-22T10:03:07.461Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:07.461Z [DEBUG] Temp file written successfully, size: 596 bytes
+2025-12-22T10:03:07.461Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:07.461Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397787461 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:03:07.461Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:03:07.466Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:03:07.466Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:07.466Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:07.471Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:07.471Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:07.471Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:07.471Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:09.717Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:20.522Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:03:20.529Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:03:20.529Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:20.529Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:03:20.538Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/index.css.tmp.2565.1766397800538
+2025-12-22T10:03:20.538Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:20.538Z [DEBUG] Temp file written successfully, size: 12580 bytes
+2025-12-22T10:03:20.538Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:20.538Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/index.css.tmp.2565.1766397800538 to /Users/moose/Downloads/projects/clauset/frontend/src/index.css
+2025-12-22T10:03:20.538Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/index.css written atomically
+2025-12-22T10:03:20.543Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/clauset/frontend/src/index.css
+2025-12-22T10:03:20.550Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:03:20.550Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:20.550Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:03:20.577Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:20.577Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:20.577Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:20.577Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:22.889Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:24.892Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:03:24.896Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:03:24.896Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:24.896Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:24.909Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397804909
+2025-12-22T10:03:24.909Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.909Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.909Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.909Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397804909 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:03:24.910Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:03:24.910Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397804910
+2025-12-22T10:03:24.910Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.910Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.910Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.910Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397804910 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:03:24.910Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:03:24.910Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397804910
+2025-12-22T10:03:24.910Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.910Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.910Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.910Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397804910 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:03:24.910Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:03:24.910Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397804910
+2025-12-22T10:03:24.910Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.910Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.910Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.910Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397804910 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:03:24.910Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:03:24.910Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397804910
+2025-12-22T10:03:24.910Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.910Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.910Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.910Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397804910 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:03:24.910Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:03:24.910Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397804910
+2025-12-22T10:03:24.910Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.911Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:24.911Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.911Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397804910 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:03:24.911Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:03:24.911Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397804911
+2025-12-22T10:03:24.911Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:24.911Z [DEBUG] Temp file written successfully, size: 575 bytes
+2025-12-22T10:03:24.911Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:24.911Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397804911 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:03:24.911Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:03:24.916Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:03:24.916Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:24.916Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:24.924Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:24.924Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:24.924Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:24.924Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:27.417Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:28.950Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:03:28.954Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:03:28.954Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:28.954Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:03:28.995Z [DEBUG] Getting matching hook commands for PostToolUseFailure with query: Bash
+2025-12-22T10:03:28.995Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:28.995Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:03:29.000Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:29.000Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:29.000Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:29.000Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:31.719Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:33.379Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:03:33.388Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:03:33.388Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:33.388Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:03:33.811Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:34.107Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:36.370Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:03:36.370Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:36.370Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:03:36.375Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:36.375Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:36.375Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:36.375Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:36.755Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:39.773Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:41.889Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:03:41.894Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:03:41.894Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:41.894Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:41.907Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397821907
+2025-12-22T10:03:41.907Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.907Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.907Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.907Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766397821907 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:03:41.907Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:03:41.907Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397821907
+2025-12-22T10:03:41.907Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.908Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.908Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.908Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766397821907 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:03:41.908Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:03:41.908Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397821908
+2025-12-22T10:03:41.908Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.908Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.908Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.908Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766397821908 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:03:41.908Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:03:41.908Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397821908
+2025-12-22T10:03:41.908Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.908Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.908Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.908Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766397821908 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:03:41.908Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:03:41.908Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397821908
+2025-12-22T10:03:41.908Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.908Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.908Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.908Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766397821908 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:03:41.908Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:03:41.908Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397821908
+2025-12-22T10:03:41.908Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.908Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.908Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.908Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766397821908 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:03:41.908Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:03:41.908Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397821908
+2025-12-22T10:03:41.908Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:03:41.909Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:03:41.909Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:03:41.909Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766397821908 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:03:41.909Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:03:41.913Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:03:41.914Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:41.914Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:03:41.918Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:03:41.918Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:03:41.918Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:03:41.918Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:03:44.170Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:03:54.273Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-22T10:03:54.273Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:03:54.273Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:03:56.663Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:04:09.657Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T10:04:09.657Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:04:09.657Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:04:54.287Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-22T10:04:54.287Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:04:54.287Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-22T10:12:16.440Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:12:16.441Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:12:16.441Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:12:16.441Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:12:16.450Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T10:12:16.450Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:12:16.450Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:12:16.453Z [DEBUG] FileHistory: Making snapshot for message c619372c-2e17-4bea-b7a9-a8343e2d5a3a
+2025-12-22T10:12:16.454Z [DEBUG] FileHistory: Added snapshot for c619372c-2e17-4bea-b7a9-a8343e2d5a3a, tracking 2 files
+2025-12-22T10:12:17.182Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:12:19.258Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:13:19.530Z [DEBUG] [SLOW OPERATION DETECTED] fs.statSync (7.9ms)
+2025-12-22T10:13:30.017Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:13:30.021Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:13:30.021Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:30.021Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:13:30.037Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:13:30.037Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:30.037Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:13:30.042Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:13:30.042Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:13:30.042Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:13:30.042Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:13:32.460Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:13:44.632Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:13:44.638Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:13:44.638Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:44.638Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:13:44.647Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398424647
+2025-12-22T10:13:44.647Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:13:44.647Z [DEBUG] Temp file written successfully, size: 19978 bytes
+2025-12-22T10:13:44.647Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:13:44.647Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398424647 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:13:44.647Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:13:44.656Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:13:44.656Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:44.656Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:13:44.677Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:13:44.677Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:13:44.677Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:13:44.677Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:13:47.156Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:13:50.809Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:13:50.816Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:13:50.816Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:50.816Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:13:50.825Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398430825
+2025-12-22T10:13:50.825Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:13:50.825Z [DEBUG] Temp file written successfully, size: 20134 bytes
+2025-12-22T10:13:50.825Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:13:50.825Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398430825 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:13:50.825Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:13:50.835Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:13:50.835Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:50.835Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:13:50.858Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:13:50.858Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:13:50.858Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:13:50.858Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:13:54.722Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:13:56.879Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:13:56.883Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:13:56.883Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:56.883Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:13:58.840Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:13:58.840Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:13:58.840Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:13:58.844Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:13:58.845Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:13:58.845Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:13:58.845Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:13:59.827Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:14:01.320Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:14:05.283Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-22T10:14:05.283Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:14:05.283Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:14:05.299Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.2565.1766398445299
+2025-12-22T10:14:05.299Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:14:05.299Z [DEBUG] Temp file written successfully, size: 65025 bytes
+2025-12-22T10:14:05.299Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:14:05.299Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.2565.1766398445299 to /Users/moose/.claude.json
+2025-12-22T10:14:05.299Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-22T10:14:08.121Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:14:14.970Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T10:14:14.970Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:14:14.970Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:16:25.883Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:16:25.883Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:16:25.883Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:16:25.883Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:16:25.899Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T10:16:25.899Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:25.899Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:16:25.899Z [DEBUG] FileHistory: Making snapshot for message fc4796ce-29ad-4bbe-b0fd-d12b347700a2
+2025-12-22T10:16:25.900Z [DEBUG] FileHistory: Added snapshot for fc4796ce-29ad-4bbe-b0fd-d12b347700a2, tracking 2 files
+2025-12-22T10:16:26.657Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:28.793Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:34.081Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:16:34.090Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:16:34.090Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:34.090Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:16:34.165Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:16:34.165Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:34.165Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:16:34.171Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:16:34.171Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:16:34.171Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:16:34.171Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:16:34.889Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:36.377Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:41.910Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:16:41.919Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:16:41.919Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:41.919Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:16:42.736Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:44.113Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:44.535Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:16:44.535Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:44.535Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:16:44.541Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:16:44.541Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:16:44.541Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:16:44.541Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:16:45.116Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:47.408Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:16:49.412Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:16:49.415Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:16:49.415Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:49.415Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:16:49.433Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:16:49.433Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:16:49.433Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:16:49.438Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:16:49.438Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:16:49.438Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:16:49.438Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:16:52.168Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:17:05.906Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:17:05.910Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:17:05.910Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:17:05.910Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:17:05.921Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398625921
+2025-12-22T10:17:05.921Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.922Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.922Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.922Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398625921 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:17:05.922Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:17:05.922Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398625922
+2025-12-22T10:17:05.922Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.922Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.922Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.922Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398625922 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:17:05.922Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:17:05.922Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398625922
+2025-12-22T10:17:05.922Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.922Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.922Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.922Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398625922 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:17:05.922Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:17:05.922Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398625922
+2025-12-22T10:17:05.922Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.922Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.922Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.922Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398625922 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:17:05.922Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:17:05.923Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398625923
+2025-12-22T10:17:05.923Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.923Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.923Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.923Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398625923 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:17:05.923Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:17:05.923Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398625923
+2025-12-22T10:17:05.923Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.923Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:17:05.923Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.923Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398625923 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:17:05.923Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:17:05.923Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398625923
+2025-12-22T10:17:05.923Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:05.923Z [DEBUG] Temp file written successfully, size: 380 bytes
+2025-12-22T10:17:05.923Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:05.923Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398625923 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:17:05.923Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:17:05.929Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:17:05.929Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:17:05.929Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:17:05.934Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:17:05.934Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:17:05.934Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:17:05.934Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:17:08.523Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:17:57.308Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:17:57.310Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:17:57.310Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:17:57.310Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:17:57.319Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398677319
+2025-12-22T10:17:57.319Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:17:57.319Z [DEBUG] Temp file written successfully, size: 23138 bytes
+2025-12-22T10:17:57.319Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:17:57.319Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398677319 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:17:57.319Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:17:57.330Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:17:57.330Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:17:57.330Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:17:57.448Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:17:57.448Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:17:57.448Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:17:57.448Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:17:59.970Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:01.962Z [DEBUG] executePreToolHooks called for tool: Read
+2025-12-22T10:18:01.965Z [DEBUG] Getting matching hook commands for PreToolUse with query: Read
+2025-12-22T10:18:01.965Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:01.965Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:18:01.984Z [DEBUG] Getting matching hook commands for PostToolUse with query: Read
+2025-12-22T10:18:01.984Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:01.984Z [DEBUG] Matched 0 unique hooks for query "Read" (0 before deduplication)
+2025-12-22T10:18:01.990Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:18:01.990Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:18:01.990Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:18:01.990Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:18:04.557Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:11.227Z [DEBUG] executePreToolHooks called for tool: Edit
+2025-12-22T10:18:11.230Z [DEBUG] Getting matching hook commands for PreToolUse with query: Edit
+2025-12-22T10:18:11.230Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:11.230Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:18:11.238Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398691238
+2025-12-22T10:18:11.238Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:11.238Z [DEBUG] Temp file written successfully, size: 23198 bytes
+2025-12-22T10:18:11.238Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:11.238Z [DEBUG] Renaming /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx.tmp.2565.1766398691238 to /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx
+2025-12-22T10:18:11.239Z [DEBUG] File /Users/moose/Downloads/projects/clauset/frontend/src/components/terminal/TerminalView.tsx written atomically
+2025-12-22T10:18:11.248Z [DEBUG] Getting matching hook commands for PostToolUse with query: Edit
+2025-12-22T10:18:11.248Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:11.248Z [DEBUG] Matched 0 unique hooks for query "Edit" (0 before deduplication)
+2025-12-22T10:18:11.277Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:18:11.277Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:18:11.277Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:18:11.277Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:18:13.663Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:16.376Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:18:16.384Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:18:16.384Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:16.384Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:18:16.393Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398696393
+2025-12-22T10:18:16.393Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.393Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.393Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.393Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398696393 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:18:16.393Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:18:16.393Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398696393
+2025-12-22T10:18:16.393Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.393Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.393Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.393Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398696393 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:18:16.394Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:18:16.394Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398696394
+2025-12-22T10:18:16.394Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.394Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.394Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.394Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398696394 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:18:16.394Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:18:16.394Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398696394
+2025-12-22T10:18:16.394Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.394Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.394Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.394Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398696394 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:18:16.394Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:18:16.394Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398696394
+2025-12-22T10:18:16.394Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.394Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.394Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.394Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398696394 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:18:16.394Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:18:16.394Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398696394
+2025-12-22T10:18:16.394Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.394Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:16.394Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.394Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398696394 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:18:16.395Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:18:16.395Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398696395
+2025-12-22T10:18:16.395Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:16.395Z [DEBUG] Temp file written successfully, size: 384 bytes
+2025-12-22T10:18:16.395Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:16.395Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398696395 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:18:16.395Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:18:16.403Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:18:16.403Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:16.403Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:18:16.407Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:18:16.407Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:18:16.407Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:18:16.407Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:18:19.086Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:20.897Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:18:20.901Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:18:20.901Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:20.901Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:18:22.684Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:18:22.684Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:22.684Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:18:22.689Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:18:22.689Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:18:22.689Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:18:22.689Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:18:23.427Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:25.161Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:26.856Z [DEBUG] executePreToolHooks called for tool: TodoWrite
+2025-12-22T10:18:26.864Z [DEBUG] Getting matching hook commands for PreToolUse with query: TodoWrite
+2025-12-22T10:18:26.864Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:26.864Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:18:26.875Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398706875
+2025-12-22T10:18:26.875Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.876Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.876Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.876Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json.tmp.2565.1766398706875 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json
+2025-12-22T10:18:26.876Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-78a15137-ffa0-40eb-ace2-d61160ec6eea.json written atomically
+2025-12-22T10:18:26.876Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398706876
+2025-12-22T10:18:26.876Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.876Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.876Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.876Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json.tmp.2565.1766398706876 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json
+2025-12-22T10:18:26.876Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-5a9554e7-b5a1-48bc-9d1f-ed0727298931.json written atomically
+2025-12-22T10:18:26.876Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398706876
+2025-12-22T10:18:26.876Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.877Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.877Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.877Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json.tmp.2565.1766398706876 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json
+2025-12-22T10:18:26.877Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-e9c3a565-a4d0-4bf4-bc2b-667f845f6c07.json written atomically
+2025-12-22T10:18:26.877Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398706877
+2025-12-22T10:18:26.877Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.877Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.877Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.877Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json.tmp.2565.1766398706877 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json
+2025-12-22T10:18:26.877Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-3e7aba73-d266-4001-9755-6d83ce42dbbc.json written atomically
+2025-12-22T10:18:26.877Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398706877
+2025-12-22T10:18:26.877Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.877Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.877Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.877Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json.tmp.2565.1766398706877 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json
+2025-12-22T10:18:26.877Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-575ef2e7-e72f-4b45-a214-b6d34c353756.json written atomically
+2025-12-22T10:18:26.877Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398706877
+2025-12-22T10:18:26.877Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.877Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.877Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.877Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json.tmp.2565.1766398706877 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json
+2025-12-22T10:18:26.877Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-8d95cad3-b3fa-4f14-81b8-a052bb7d51b2.json written atomically
+2025-12-22T10:18:26.877Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398706877
+2025-12-22T10:18:26.877Z [DEBUG] Preserving file permissions: 100600
+2025-12-22T10:18:26.877Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-22T10:18:26.877Z [DEBUG] Applied original permissions to temp file
+2025-12-22T10:18:26.877Z [DEBUG] Renaming /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json.tmp.2565.1766398706877 to /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json
+2025-12-22T10:18:26.877Z [DEBUG] File /Users/moose/.claude/todos/c14eaeca-7c8f-4655-8047-1b8c51cd9a16-agent-c14eaeca-7c8f-4655-8047-1b8c51cd9a16.json written atomically
+2025-12-22T10:18:26.883Z [DEBUG] Getting matching hook commands for PostToolUse with query: TodoWrite
+2025-12-22T10:18:26.883Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:26.883Z [DEBUG] Matched 0 unique hooks for query "TodoWrite" (0 before deduplication)
+2025-12-22T10:18:26.888Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:18:26.888Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:18:26.888Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:18:26.888Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:18:29.464Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:38.614Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-22T10:18:38.614Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:38.614Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:18:41.056Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:18:50.782Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T10:18:50.782Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:18:50.782Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:19:38.629Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-22T10:19:38.629Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:19:38.629Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)
+2025-12-22T10:25:46.649Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:25:46.649Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:25:46.649Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:25:46.649Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:25:46.665Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-22T10:25:46.665Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:25:46.665Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:25:46.665Z [DEBUG] FileHistory: Making snapshot for message beb91bde-4cba-4cb1-a8ad-e03c4eadfe82
+2025-12-22T10:25:46.666Z [DEBUG] FileHistory: Added snapshot for beb91bde-4cba-4cb1-a8ad-e03c4eadfe82, tracking 2 files
+2025-12-22T10:25:47.174Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:49.122Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:50.243Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:25:50.250Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:25:50.250Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:25:50.250Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:25:50.314Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:25:50.314Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:25:50.314Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:25:50.319Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:25:50.319Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:25:50.319Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:25:50.319Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:25:51.608Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:53.137Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:58.203Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-22T10:25:58.211Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-22T10:25:58.211Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:25:58.211Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:25:58.751Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:58.977Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:25:59.136Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-22T10:25:59.136Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:25:59.136Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-22T10:25:59.141Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-22T10:25:59.141Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-22T10:25:59.141Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-22T10:25:59.141Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-22T10:25:59.554Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:26:01.727Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:26:02.646Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-22T10:26:02.646Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:26:02.646Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:26:06.310Z [DEBUG] Stream started - received first chunk
+2025-12-22T10:26:14.952Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-22T10:26:14.952Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:26:14.952Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-22T10:27:02.663Z [DEBUG] Getting matching hook commands for Notification with query: idle_prompt
+2025-12-22T10:27:02.663Z [DEBUG] Found 0 hook matchers in settings
+2025-12-22T10:27:02.663Z [DEBUG] Matched 0 unique hooks for query "idle_prompt" (0 before deduplication)

@@ -10,6 +10,7 @@
 #   - commands/ (custom slash commands)
 #   - skills/ (custom skills)
 #   - plans/ (agent plan files)
+#   - debug/ (session debug logs)
 #
 # Options:
 #   --force, -f    Skip confirmation prompts
@@ -41,6 +42,7 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  - commands/      (custom slash commands)"
                 echo "  - skills/        (custom skills)"
                 echo "  - plans/         (agent plan files)"
+                echo "  - debug/         (session debug logs)"
                 exit 0
                 ;;
             *) echo "Unknown option: $1"; exit 1 ;;
@@ -115,6 +117,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && ((config_items++))
+    [[ -d "$CLAUDE_CONFIG_SRC/debug" ]] && ((config_items++))
 
     if [[ $config_items -eq 0 ]]; then
         warn "No config files found in $CLAUDE_CONFIG_SRC"
@@ -129,6 +132,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && echo "  - commands/ (custom slash commands)"
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && echo "  - skills/ (custom skills)"
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && echo "  - plans/ (agent plan files)"
+    [[ -d "$CLAUDE_CONFIG_SRC/debug" ]] && echo "  - debug/ (session debug logs)"
     echo ""
 
     if ! confirm "Apply Claude Code settings?" "y"; then
@@ -168,6 +172,11 @@ setup_claude() {
     # Symlink plans/ directory
     if [[ -d "$CLAUDE_CONFIG_SRC/plans" ]]; then
         symlink_dir "$CLAUDE_CONFIG_SRC/plans" "$CLAUDE_HOME/plans" || ((failed++))
+    fi
+
+    # Symlink debug/ directory
+    if [[ -d "$CLAUDE_CONFIG_SRC/debug" ]]; then
+        symlink_dir "$CLAUDE_CONFIG_SRC/debug" "$CLAUDE_HOME/debug" || ((failed++))
     fi
 
     if [[ $failed -gt 0 ]]; then

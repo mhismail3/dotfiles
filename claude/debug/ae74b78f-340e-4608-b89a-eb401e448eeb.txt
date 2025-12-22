@@ -1,0 +1,295 @@
+2025-12-19T18:23:57.326Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (16.4ms): security find-generic-password -a $USER -w -s "Claude Code"
+2025-12-19T18:23:57.344Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (17.5ms): security find-generic-password -a "moose" -w -s "Claude Code-credentials"
+2025-12-19T18:23:57.351Z [DEBUG] Watching for changes in setting files /Users/moose/.claude, /Users/moose/.claude...
+2025-12-19T18:23:57.360Z [DEBUG] [LSP MANAGER] initializeLspServerManager() called
+2025-12-19T18:23:57.360Z [DEBUG] [LSP MANAGER] Created manager instance, state=pending
+2025-12-19T18:23:57.360Z [DEBUG] [LSP MANAGER] Starting async initialization (generation 1)
+2025-12-19T18:23:57.361Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'userSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-19T18:23:57.362Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'userSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-19T18:23:57.362Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'userSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-19T18:23:57.362Z [DEBUG] Applying permission update: Adding 11 allow rule(s) to destination 'projectSettings': ["Bash","Edit","Write","ExitPlanMode","NotebookEdit","Skill","SlashCommand","WebFetch","WebSearch","Edit(/Users/moose/Downloads/**)","Write(/Users/moose/Downloads/**)"]
+2025-12-19T18:23:57.362Z [DEBUG] Applying permission update: Adding 66 deny rule(s) to destination 'projectSettings': ["Bash(sudo:*)","Bash(su:*)","Bash(doas:*)","Bash(rm -rf /:*)","Bash(rm -rf /*:*)","Bash(rm -rf ~:*)","Bash(rm -rf /Users:*)","Bash(rm -rf /System:*)","Bash(rm -rf /Library:*)","Bash(rm -rf /Applications:*)","Bash(rm -fr:*)","Bash(rm -r -f:*)","Bash(dd:*)","Bash(shred:*)","Bash(mkfs:*)","Bash(mkfs.ext3:*)","Bash(mkfs.ext4:*)","Bash(mkfs.xfs:*)","Bash(fdisk:*)","Bash(parted:*)","Bash(diskutil:*)","Bash(chmod 777 /:*)","Bash(chmod -R 777:*)","Bash(chmod 777 /*:*)","Bash(chown -R:*)","Bash(chgrp -R:*)","Bash(fork:*)","Bash(history | sh:*)","Bash(crontab -r:*)","Bash(> /dev/sd:*)","Bash(>/dev/sd:*)","Bash(cat /dev/urandom:*)","Bash(cat /dev/random:*)","Bash(reboot:*)","Bash(shutdown:*)","Bash(halt:*)","Bash(poweroff:*)","Bash(init 0:*)","Bash(init 6:*)","Bash(systemctl reboot:*)","Bash(systemctl poweroff:*)","Bash(killall:*)","Bash(pkill:*)","Bash(kill -9:*)","Bash(kill -KILL:*)","Bash(iptables:*)","Bash(ip6tables:*)","Bash(ufw:*)","Bash(pfctl:*)","Bash(firewall-cmd:*)","Bash(launchctl:*)","Bash(systemctl enable:*)","Bash(systemctl disable:*)","Bash(systemctl start:*)","Bash(systemctl stop:*)","Bash(service:*)","Bash(nc -l:*)","Bash(netcat -l:*)","Bash(ncat -l:*)","Bash(eval:*)","Bash(exec:*)","Bash(source /dev:*)","Bash(. /dev:*)","Bash(bash -c:*)","Bash(sh -c:*)","Bash(zsh -c:*)"]
+2025-12-19T18:23:57.362Z [DEBUG] Applying permission update: Adding 79 ask rule(s) to destination 'projectSettings': ["Bash(rm:*)","Bash(git reset --hard:*)","Bash(git clean:*)","Bash(git checkout -f:*)","Bash(npm install:*)","Bash(npm i:*)","Bash(npm ci:*)","Bash(pip install:*)","Bash(brew install:*)","Bash(brew uninstall:*)","Bash(docker run:*)","Bash(docker exec:*)","Bash(docker build:*)","Bash(docker-compose up:*)","Bash(docker-compose down:*)","Bash(ssh-keygen -R:*)","Bash(ssh-add -D:*)","Bash(defaults write:*)","Bash(defaults delete:*)","Bash(scutil:*)","Bash(nvram:*)","Bash(csrutil:*)","Bash(spctl:*)","Bash(xattr -c:*)","Bash(xattr -d:*)","Bash(SetFile:*)","Bash(GetFileInfo:*)","Edit(/System/**)","Edit(/Library/**)","Edit(/Applications/**)","Edit(/usr/**)","Edit(/bin/**)","Edit(/sbin/**)","Edit(/etc/**)","Edit(/var/**)","Edit(/private/**)","Edit(/opt/**)","Edit(/cores/**)","Edit(/Users/moose/Library/**)","Edit(/Users/moose/Applications/**)","Edit(/Users/moose/.ssh/**)","Edit(/Users/moose/.gnupg/**)","Edit(/Users/moose/.gpg/**)","Edit(/Users/moose/.aws/**)","Edit(/Users/moose/.azure/**)","Edit(/Users/moose/.gcloud/**)","Edit(/Users/moose/.kube/**)","Edit(/Users/moose/.docker/**)","Edit(/Users/moose/.netrc)","Edit(/Users/moose/.npmrc)","Edit(/Users/moose/.pypirc)","Edit(/Users/moose/.zshrc)","Edit(/Users/moose/.bashrc)","Edit(/Users/moose/.bash_profile)","Edit(/Users/moose/.profile)","Edit(/Users/moose/.zprofile)","Edit(/Users/moose/.gitconfig)","Edit(/Users/moose/.git-credentials)","Write(/System/**)","Write(/Library/**)","Write(/Applications/**)","Write(/usr/**)","Write(/bin/**)","Write(/sbin/**)","Write(/etc/**)","Write(/var/**)","Write(/private/**)","Write(/opt/**)","Write(/cores/**)","Write(/Users/moose/Library/**)","Write(/Users/moose/Applications/**)","Write(/Users/moose/.ssh/**)","Write(/Users/moose/.gnupg/**)","Write(/Users/moose/.gpg/**)","Write(/Users/moose/.aws/**)","Write(/Users/moose/.azure/**)","Write(/Users/moose/.gcloud/**)","Write(/Users/moose/.kube/**)","Write(/Users/moose/.docker/**)"]
+2025-12-19T18:23:57.362Z [DEBUG] LSP server manager initialized successfully
+2025-12-19T18:23:57.363Z [DEBUG] LSP notification handlers registered successfully for all 0 server(s)
+2025-12-19T18:23:57.363Z [DEBUG] Found 0 plugins (0 enabled, 0 disabled)
+2025-12-19T18:23:57.365Z [DEBUG] Stats cache is up to date
+2025-12-19T18:23:57.366Z [DEBUG] Loading skills from: managed=/Library/Application Support/ClaudeCode/.claude/skills, user=/Users/moose/.claude/skills, project=[]
+2025-12-19T18:23:57.367Z [DEBUG] Passes: Cache stale, returning cached data and refreshing in background
+2025-12-19T18:23:57.409Z [DEBUG] [SLOW OPERATION DETECTED] execSyncWithDefaults_DEPRECATED (40.9ms): ps aux | grep -E "Visual Studio Code|Code Helper|Cursor Helper|Windsurf Helper|IntelliJ IDEA|PyCharm
+2025-12-19T18:23:57.409Z [DEBUG] installed_plugins.json doesn't exist, returning empty V2 object
+2025-12-19T18:23:57.421Z [DEBUG] Creating shell snapshot for zsh (/bin/zsh)
+2025-12-19T18:23:57.421Z [DEBUG] Looking for shell config file: /Users/moose/.zshrc
+2025-12-19T18:23:57.421Z [DEBUG] Snapshots directory: /Users/moose/.claude/shell-snapshots
+2025-12-19T18:23:57.421Z [DEBUG] Creating snapshot at: /Users/moose/.claude/shell-snapshots/snapshot-zsh-1766168637421-y52xy3.sh
+2025-12-19T18:23:57.421Z [DEBUG] Shell binary exists: true
+2025-12-19T18:23:57.421Z [DEBUG] Execution timeout: 10000ms
+2025-12-19T18:23:57.422Z [DEBUG] Writing to temp file: /Users/moose/.claude/todos/ae74b78f-340e-4608-b89a-eb401e448eeb-agent-ae74b78f-340e-4608-b89a-eb401e448eeb.json.tmp.46008.1766168637422
+2025-12-19T18:23:57.422Z [DEBUG] Temp file written successfully, size: 2 bytes
+2025-12-19T18:23:57.422Z [DEBUG] Renaming /Users/moose/.claude/todos/ae74b78f-340e-4608-b89a-eb401e448eeb-agent-ae74b78f-340e-4608-b89a-eb401e448eeb.json.tmp.46008.1766168637422 to /Users/moose/.claude/todos/ae74b78f-340e-4608-b89a-eb401e448eeb-agent-ae74b78f-340e-4608-b89a-eb401e448eeb.json
+2025-12-19T18:23:57.422Z [DEBUG] File /Users/moose/.claude/todos/ae74b78f-340e-4608-b89a-eb401e448eeb-agent-ae74b78f-340e-4608-b89a-eb401e448eeb.json written atomically
+2025-12-19T18:23:57.425Z [DEBUG] getPluginSkills: Processing 0 enabled plugins
+2025-12-19T18:23:57.425Z [DEBUG] Total plugin skills loaded: 0
+2025-12-19T18:23:57.425Z [DEBUG] Total plugin commands loaded: 0
+2025-12-19T18:23:57.425Z [DEBUG] Registered 0 hooks from 0 plugins
+2025-12-19T18:23:57.427Z [DEBUG] Total plugin agents loaded: 0
+2025-12-19T18:23:57.429Z [DEBUG] Loaded 3 unique skills (managed: 0, user: 2, project: 0, legacy commands: 1)
+2025-12-19T18:23:57.429Z [DEBUG] getSkills returning: 3 skill dir commands, 0 plugin skills
+2025-12-19T18:23:57.448Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168637448
+2025-12-19T18:23:57.448Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:57.448Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:57.448Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:57.448Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168637448 to /Users/moose/.claude.json
+2025-12-19T18:23:57.448Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:57.452Z [DEBUG] Git remote URL: null
+2025-12-19T18:23:57.452Z [DEBUG] No git remote URL found
+2025-12-19T18:23:57.452Z [DEBUG] Not in a GitHub repository, skipping path mapping update
+2025-12-19T18:23:57.455Z [ERROR] Failed to refresh marketplace claude-plugins-official: Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.
+
+Original error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...
+/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain
+/Users/moose/.ssh/config: terminating, 1 bad configuration options
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-12-19T18:23:57.455Z [WARN] Plugin autoupdate: failed to refresh marketplace claude-plugins-official: Failed to refresh marketplace 'claude-plugins-official': Failed to clone marketplace repository: SSH authentication failed. Please ensure your SSH keys are configured for GitHub, or use an HTTPS URL instead.
+
+Original error: Cloning into '/Users/moose/.claude/plugins/marketplaces/claude-plugins-official'...
+/Users/moose/.ssh/config: line 3: Bad configuration option: usekeychain
+/Users/moose/.ssh/config: terminating, 1 bad configuration options
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+2025-12-19T18:23:57.455Z [DEBUG] Plugin autoupdate: checking installed plugins
+2025-12-19T18:23:57.592Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168637592
+2025-12-19T18:23:57.592Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:57.592Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:57.592Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:57.592Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168637592 to /Users/moose/.claude.json
+2025-12-19T18:23:57.592Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:57.592Z [DEBUG] Passes eligibility cached for org c5d988b3-1d97-497b-baa4-3f1883c818c9: true
+2025-12-19T18:23:57.626Z [DEBUG] Shell snapshot created successfully (88848 bytes)
+2025-12-19T18:23:57.964Z [DEBUG] Passes: Using fresh cached eligibility data
+2025-12-19T18:23:57.980Z [DEBUG] Initialized versioned plugins system with 0 plugins
+2025-12-19T18:23:57.982Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168637982
+2025-12-19T18:23:57.982Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:57.983Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:57.983Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:57.983Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168637982 to /Users/moose/.claude.json
+2025-12-19T18:23:57.983Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:58.205Z [DEBUG] Getting matching hook commands for SessionStart with query: startup
+2025-12-19T18:23:58.205Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:23:58.205Z [DEBUG] Matched 0 unique hooks for query "startup" (0 before deduplication)
+2025-12-19T18:23:58.208Z [DEBUG] Skills and commands included in Skill tool: homebrew-release, create-github-repo
+2025-12-19T18:23:58.216Z [DEBUG] Summarizing all 115 messages (~39085 tokens)
+2025-12-19T18:23:58.242Z [DEBUG] Getting matching hook commands for SubagentStart with query: Explore
+2025-12-19T18:23:58.242Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:23:58.242Z [DEBUG] Matched 0 unique hooks for query "Explore" (0 before deduplication)
+2025-12-19T18:23:58.244Z [DEBUG] Getting matching hook commands for SubagentStart with query: Plan
+2025-12-19T18:23:58.244Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:23:58.244Z [DEBUG] Matched 0 unique hooks for query "Plan" (0 before deduplication)
+2025-12-19T18:23:59.249Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168639249
+2025-12-19T18:23:59.249Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:59.250Z [DEBUG] Temp file written successfully, size: 59442 bytes
+2025-12-19T18:23:59.250Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:59.250Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168639249 to /Users/moose/.claude.json
+2025-12-19T18:23:59.250Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:59.452Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T18:23:59.455Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T18:23:59.455Z [DEBUG] Official marketplace auto-install skipped: already_attempted
+2025-12-19T18:23:59.455Z [DEBUG] performStartupChecks called
+2025-12-19T18:23:59.455Z [DEBUG] Starting background plugin installations
+2025-12-19T18:23:59.455Z [DEBUG] performBackgroundPluginInstallations called
+2025-12-19T18:23:59.854Z [DEBUG] AutoUpdaterWrapper: Installation type: package-manager
+2025-12-19T18:23:59.858Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168639858
+2025-12-19T18:23:59.858Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:59.859Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:59.859Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:59.859Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168639858 to /Users/moose/.claude.json
+2025-12-19T18:23:59.859Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:59.862Z [DEBUG] Setting installation status: 0 marketplaces, 0 installable plugins, 0 uninstallable plugins
+2025-12-19T18:23:59.863Z [DEBUG] Loaded plugins - Enabled: 0, Disabled: 0, Commands: 0, Agents: 0, Errors: 0
+2025-12-19T18:23:59.887Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:23:59.892Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168639892
+2025-12-19T18:23:59.892Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:59.892Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:59.893Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:59.893Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168639892 to /Users/moose/.claude.json
+2025-12-19T18:23:59.893Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:59.894Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168639894
+2025-12-19T18:23:59.894Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:23:59.894Z [DEBUG] Temp file written successfully, size: 59515 bytes
+2025-12-19T18:23:59.894Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:23:59.894Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168639894 to /Users/moose/.claude.json
+2025-12-19T18:23:59.894Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:23:59.898Z [DEBUG] Detected Homebrew cask installation: /opt/homebrew/Caskroom/claude-code/2.0.73/claude
+2025-12-19T18:23:59.900Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T18:23:59.900Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T18:23:59.900Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T18:23:59.900Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T18:24:00.455Z [DEBUG] Getting matching hook commands for UserPromptSubmit with query: undefined
+2025-12-19T18:24:00.455Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:00.455Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T18:24:00.460Z [DEBUG] Total plugin output styles loaded: 0
+2025-12-19T18:24:00.474Z [DEBUG] FileHistory: Added snapshot for e011cac5-3927-4a4d-94d3-7eaaf56f14d7, tracking 0 files
+2025-12-19T18:24:01.083Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:02.068Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:04.086Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T18:24:04.086Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:04.086Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T18:24:05.500Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:07.103Z [DEBUG] executePreToolHooks called for tool: Bash
+2025-12-19T18:24:07.708Z [DEBUG] Getting matching hook commands for PreToolUse with query: Bash
+2025-12-19T18:24:07.708Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:07.708Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T18:24:07.717Z [DEBUG] [SLOW OPERATION DETECTED] fs.existsSync (5.6ms)
+2025-12-19T18:24:08.935Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T18:24:08.935Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:08.935Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T18:24:09.550Z [DEBUG] tree-sitter: loaded from embedded
+2025-12-19T18:24:10.738Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:11.541Z [DEBUG] No session environment scripts found
+2025-12-19T18:24:12.757Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:13.353Z [DEBUG] Getting matching hook commands for PostToolUse with query: Bash
+2025-12-19T18:24:13.353Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:13.353Z [DEBUG] Matched 0 unique hooks for query "Bash" (0 before deduplication)
+2025-12-19T18:24:13.965Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T18:24:13.966Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T18:24:13.966Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T18:24:13.966Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T18:24:19.410Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:20.419Z [DEBUG] [SLOW OPERATION DETECTED] fs.existsSync (5.9ms)
+2025-12-19T18:24:21.016Z [DEBUG] executePreToolHooks called for tool: Write
+2025-12-19T18:24:21.621Z [DEBUG] Getting matching hook commands for PreToolUse with query: Write
+2025-12-19T18:24:21.621Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:21.621Z [DEBUG] Matched 0 unique hooks for query "Write" (0 before deduplication)
+2025-12-19T18:24:23.449Z [DEBUG] [SLOW OPERATION DETECTED] fs.statSync (6.6ms)
+2025-12-19T18:24:23.450Z [DEBUG] FileHistory: Tracked file modification for /Users/moose/Downloads/projects/test/test.md
+2025-12-19T18:24:24.453Z [DEBUG] Ripgrep first use test: PASSED (mode=builtin, path=/opt/homebrew/Caskroom/claude-code/2.0.73/claude)
+2025-12-19T18:24:24.456Z [DEBUG] rg error (signal=undefined, code=ABORT_ERR, stderr: rg: /Users/moose/Library/Caches/com.apple.ap.adprivacyd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Trial: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Mail: Operation not permitted (os error 1)
+rg: /Users/moose/Library/com.apple.aiml.instrumentation: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Sharing: Operation not permitted (os error 1)
+rg: /Users/moose/Library/HomeKit: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Messages: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Preferences/com.apple.messages.pinning.plist: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Preferences/com.apple.homed.plist: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Preferences/com.apple.MobileSMS.plist: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Preferences/com.apple.homed.notbackedup.plist: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Preferences/com.apple.AddressBook.plist: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.shortcuts: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.PegasusConfiguration: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.CoreSpeech/Caches/onDeviceCompilationCaches/secondPassChecker/25B78-426955d30e29ec1cfc3fe2b8901545e0b2781563_19.1028.1-galvatron_hsjs_v1_8bit_fp16_mil2bnns-19.1028.1-en-US.bnnsir: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.CoreSpeech/Caches/onDeviceCompilationCaches/speakerRecognition/25B78-426955d30e29ec1cfc3fe2b8901545e0b2781563_19.1028.1-int8_conformer_matrix_split-19.1028.1-en-US.bnnsir: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.mlhost: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.AppleSpell: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.Photos.PhotosFileProvider: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.replicatord: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.rapportd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.energykit: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.FaceTime: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.iCloudDrive: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/com.apple.Home.group: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.Journal: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.DeviceActivity: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/com.apple.bird: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.mail: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.findmy.findmylocateagent: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.reminders: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.transparency: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.Safari.SandboxBroker: Operation not permitted (os error 1)
+rg: /Users/moose/Library/DuetExpertCenter: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.moments: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.tipsnext: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.UserNotifications: Operation not permitted (os error 1)
+rg: /Users/moose/Library/AppleMediaServices: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.secure-control-center-preferences: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.contacts: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.VoiceMemos.shared: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.usernoted: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.stocks: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.siri.referenceResolution: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.icloud.searchpartyuseragent: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.accessibility.voicebanking: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.coreservices.useractivityd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.swtransparency: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.telephonyutilities.callservicesd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.feedback: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.photolibraryd.private: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/com.apple.stickersd.group: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.notes: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.siri.remembers: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.controlcenter: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.feedbacklogger: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/com.apple.systempreferences.cache: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.weather: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.scopedbookmarkagent: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.mobileslideshow.PhotosFileProvider: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.news: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.corerepair: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.printtool: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.sharingd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.ManagedSettings: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.studentd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.spotlight: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.loginwindow.persistent-apps: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.tv.sharedcontainer: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.tips: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.gamecenter: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.siri.userfeedbacklearning: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.newsd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.stocks-news: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Weather: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Suggestions: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.calendar: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.iBooks: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.SiriTTS: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.amsondevicestoraged: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.liveactivitiesd: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.portrait.BackgroundReplacement: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.appstoreagent: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.private.translation: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/com.apple.MailPersonaStorage: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Group Containers/group.com.apple.chronod: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Containers/com.apple.VoiceMemos: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Containers/com.apple.Safari.WebApp: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Containers/com.apple.stocks: Operation not permitted (os error 1)
+rg: /Users/moose/Library/Containers/com.apple.corerecents.recentsd/Data/Library/Recents: Operation not permitted (os error 1)
+), 1365 results
+2025-12-19T18:24:24.456Z [ERROR] AbortError: AbortError: The operation was aborted.
+    at unknown
+    at abortChildProcess (node:child_process:935:42)
+    at onAbortListener2 (node:child_process:35:24)
+    at abort (unknown)
+    at <anonymous> (/$bunfs/root/claude:4787:2171)
+2025-12-19T18:24:24.457Z [DEBUG] Writing to temp file: /Users/moose/Downloads/projects/test/test.md.tmp.46008.1766168664457
+2025-12-19T18:24:24.457Z [DEBUG] Temp file written successfully, size: 38 bytes
+2025-12-19T18:24:24.457Z [DEBUG] Renaming /Users/moose/Downloads/projects/test/test.md.tmp.46008.1766168664457 to /Users/moose/Downloads/projects/test/test.md
+2025-12-19T18:24:24.457Z [DEBUG] File /Users/moose/Downloads/projects/test/test.md written atomically
+2025-12-19T18:24:25.045Z [DEBUG] Getting matching hook commands for PostToolUse with query: Write
+2025-12-19T18:24:25.045Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:25.045Z [DEBUG] Matched 0 unique hooks for query "Write" (0 before deduplication)
+2025-12-19T18:24:26.966Z [DEBUG] LSP Diagnostics: getLSPDiagnosticAttachments called
+2025-12-19T18:24:26.966Z [DEBUG] LSP Diagnostics: Checking registry - 0 pending
+2025-12-19T18:24:26.966Z [DEBUG] Hooks: Found 0 total hooks in registry
+2025-12-19T18:24:26.966Z [DEBUG] Hooks: checkForNewResponses returning 0 responses
+2025-12-19T18:24:30.392Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:32.002Z [DEBUG] Getting matching hook commands for Stop with query: undefined
+2025-12-19T18:24:32.002Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:32.002Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T18:24:32.407Z [DEBUG] Writing to temp file: /Users/moose/.claude.json.tmp.46008.1766168672407
+2025-12-19T18:24:32.407Z [DEBUG] Preserving file permissions: 100600
+2025-12-19T18:24:32.408Z [DEBUG] Temp file written successfully, size: 59516 bytes
+2025-12-19T18:24:32.408Z [DEBUG] Applied original permissions to temp file
+2025-12-19T18:24:32.408Z [DEBUG] Renaming /Users/moose/.claude.json.tmp.46008.1766168672407 to /Users/moose/.claude.json
+2025-12-19T18:24:32.408Z [DEBUG] File /Users/moose/.claude.json written atomically
+2025-12-19T18:24:34.609Z [DEBUG] Stream started - received first chunk
+2025-12-19T18:24:34.934Z [DEBUG] Getting matching hook commands for SubagentStop with query: undefined
+2025-12-19T18:24:34.934Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:24:34.934Z [DEBUG] Matched 0 unique hooks for query "no match query" (0 before deduplication)
+2025-12-19T18:31:42.456Z [DEBUG] Getting matching hook commands for SessionEnd with query: other
+2025-12-19T18:31:42.456Z [DEBUG] Found 0 hook matchers in settings
+2025-12-19T18:31:42.456Z [DEBUG] Matched 0 unique hooks for query "other" (0 before deduplication)
