@@ -210,6 +210,6 @@ cask "private-internet-access"   # PIA VPN (requires sudo, handled by brew bundl
 mas "Things 3", id: 904280696
 mas "Hand Mirror", id: 1502839586  # Quick camera check from menu bar
 mas "Folder Peek", id: 1615988943  # Menu bar folder access (Sindre Sorhus)
-mas "Xcode", id: 497799835          # Xcode (required for some apps)
+# mas "Xcode", id: 497799835          # Xcode (required for some apps) (large download slows everything down)
 # mas "Amphetamine", id: 937984704  # Keep Mac awake (optional for server)
 
