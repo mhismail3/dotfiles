@@ -1,5 +1,0 @@
-2025-12-22T12:16:46.722Z [INFO] [Claude in Chrome] Attempting to connect to: /var/folders/x6/6_1201r16mg8wqv1z_r14wrr0000gn/T/claude-mcp-browser-bridge-moose
-2025-12-22T12:16:46.722Z [DEBUG] [Claude in Chrome] Starting MCP server
-2025-12-22T12:16:46.723Z [DEBUG] [Claude in Chrome] MCP server started
-2025-12-22T12:16:46.724Z [INFO] [Claude in Chrome] Socket security validation passed
-2025-12-22T12:16:46.737Z [INFO] [Claude in Chrome] Successfully connected to bridge server

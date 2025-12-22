@@ -10,7 +10,11 @@
 #   - commands/ (custom slash commands)
 #   - skills/ (custom skills)
 #   - plans/ (agent plan files)
-#   - debug/ (session debug logs)
+#   - plugins/installed_plugins.json (plugin manifest)
+#   - plugins/known_marketplaces.json (marketplace registry)
+#
+# Also syncs plugins: reinstalls any plugins listed in the manifest
+# that are missing from the local cache (for cross-machine sync).
 #
 # Options:
 #   --force, -f    Skip confirmation prompts
@@ -42,7 +46,9 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  - commands/      (custom slash commands)"
                 echo "  - skills/        (custom skills)"
                 echo "  - plans/         (agent plan files)"
-                echo "  - debug/         (session debug logs)"
+                echo "  - plugins/*.json (plugin & marketplace manifests)"
+                echo ""
+                echo "Also syncs plugins from manifest on new machines."
                 exit 0
                 ;;
             *) echo "Unknown option: $1"; exit 1 ;;
@@ -90,6 +96,61 @@ CLAUDE_CONFIG_SRC="$DOTFILES/claude"
 CLAUDE_HOME="$HOME/.claude"
 
 # ============================================================================
+# Plugin Sync Function
+# ============================================================================
+
+sync_claude_plugins() {
+    local manifest="$CLAUDE_HOME/plugins/installed_plugins.json"
+    [[ ! -f "$manifest" ]] && return 0
+
+    # Check if jq is available
+    if ! command -v jq &>/dev/null; then
+        echo "  jq not installed, skipping plugin sync"
+        return 0
+    fi
+
+    echo ""
+    echo "  Syncing plugins from manifest..."
+
+    local plugins
+    plugins=$(jq -r '.plugins | keys[]' "$manifest" 2>/dev/null)
+    [[ -z "$plugins" ]] && { echo "  No plugins in manifest"; return 0; }
+
+    local installed=0 failed=0
+
+    while IFS= read -r plugin; do
+        [[ -z "$plugin" ]] && continue
+
+        # Extract plugin name and marketplace from "name@marketplace" format
+        local name="${plugin%@*}"
+        local marketplace="${plugin#*@}"
+
+        # Check if plugin cache exists
+        local cache_path="$CLAUDE_HOME/plugins/cache/$marketplace/$name"
+        if [[ -d "$cache_path" ]]; then
+            continue  # Already installed
+        fi
+
+        echo "  Installing: $plugin"
+        if [[ "$DOTFILES_DRY_RUN" == "true" ]]; then
+            echo "    (dry-run) would install $plugin"
+            ((installed++))
+        elif claude plugin install "$plugin" &>/dev/null; then
+            ((installed++))
+        else
+            echo "    Failed to install $plugin"
+            ((failed++))
+        fi
+    done <<< "$plugins"
+
+    if [[ $installed -gt 0 ]] || [[ $failed -gt 0 ]]; then
+        echo "  Plugins: $installed installed, $failed failed"
+    else
+        echo "  All plugins already installed"
+    fi
+}
+
+# ============================================================================
 # Setup Function
 # ============================================================================
 
@@ -117,7 +178,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && ((config_items++))
-    [[ -d "$CLAUDE_CONFIG_SRC/debug" ]] && ((config_items++))
+    [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && ((config_items++))
 
     if [[ $config_items -eq 0 ]]; then
         warn "No config files found in $CLAUDE_CONFIG_SRC"
@@ -132,7 +193,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && echo "  - commands/ (custom slash commands)"
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && echo "  - skills/ (custom skills)"
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && echo "  - plans/ (agent plan files)"
-    [[ -d "$CLAUDE_CONFIG_SRC/debug" ]] && echo "  - debug/ (session debug logs)"
+    [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && echo "  - plugins/*.json (plugin manifests + auto-sync)"
     echo ""
 
     if ! confirm "Apply Claude Code settings?" "y"; then
@@ -174,9 +235,17 @@ setup_claude() {
         symlink_dir "$CLAUDE_CONFIG_SRC/plans" "$CLAUDE_HOME/plans" || ((failed++))
     fi
 
-    # Symlink debug/ directory
-    if [[ -d "$CLAUDE_CONFIG_SRC/debug" ]]; then
-        symlink_dir "$CLAUDE_CONFIG_SRC/debug" "$CLAUDE_HOME/debug" || ((failed++))
+    # Symlink plugin manifests (not cache - it's regenerable)
+    if [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]]; then
+        mkdir -p "$CLAUDE_HOME/plugins"
+        if [[ -f "$CLAUDE_CONFIG_SRC/plugins/installed_plugins.json" ]]; then
+            symlink "$CLAUDE_CONFIG_SRC/plugins/installed_plugins.json" "$CLAUDE_HOME/plugins/installed_plugins.json" || ((failed++))
+        fi
+        if [[ -f "$CLAUDE_CONFIG_SRC/plugins/known_marketplaces.json" ]]; then
+            symlink "$CLAUDE_CONFIG_SRC/plugins/known_marketplaces.json" "$CLAUDE_HOME/plugins/known_marketplaces.json" || ((failed++))
+        fi
+        # Sync plugins from manifest
+        sync_claude_plugins
     fi
 
     if [[ $failed -gt 0 ]]; then

@@ -1,0 +1,26 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "/Users/moose/.claude/plugins/marketplaces/claude-plugins-official",
+    "lastUpdated": "2025-12-22T21:54:01.430Z"
+  },
+  "dev-browser-marketplace": {
+    "source": {
+      "source": "github",
+      "repo": "sawyerhood/dev-browser"
+    },
+    "installLocation": "/Users/moose/.claude/plugins/marketplaces/dev-browser-marketplace",
+    "lastUpdated": "2025-12-22T21:18:17.010Z"
+  },
+  "every-marketplace": {
+    "source": {
+      "source": "git",
+      "url": "https://github.com/EveryInc/every-marketplace.git"
+    },
+    "installLocation": "/Users/moose/.claude/plugins/marketplaces/every-marketplace",
+    "lastUpdated": "2025-12-22T21:52:37.284Z"
+  }
+}

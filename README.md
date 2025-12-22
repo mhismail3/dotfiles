@@ -51,7 +51,6 @@ The bootstrap script supports multiple execution modes:
 | `claude` | Claude Code CLI configuration |
 | `superwhisper` | SuperWhisper configuration |
 | `raycast` | Raycast configuration |
-| `agent-ledger` | Agent memory ledger setup |
 | `macos` | macOS system preferences |
 
 ## What Gets Installed
@@ -115,14 +114,7 @@ The script will print these, but here's a summary:
 │   ├── superwhisper.sh   # SuperWhisper modes/settings
 │   ├── raycast.sh        # Raycast config import
 │   ├── ssh.sh            # SSH key generation
-│   ├── screenshots.sh    # Screenshot location
-│   └── agent-ledger.sh   # Agent memory ledger
-│
-├── agent-ledger/         # Cross-project agent memory
-│   ├── AGENTS.md         # Protocol rules for agents
-│   ├── ledger.jsonl      # Append-only memory log
-│   ├── index.md          # Semantic index
-│   └── sessions/         # Full chat transcripts
+│   └── screenshots.sh    # Screenshot location
 │
 ├── zsh/                  # Shell configuration
 │   ├── .zshrc

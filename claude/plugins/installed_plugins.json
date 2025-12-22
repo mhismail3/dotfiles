@@ -1,0 +1,75 @@
+{
+  "version": 2,
+  "plugins": {
+    "rust-analyzer-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2025-12-21T06:34:14.041Z",
+        "lastUpdated": "2025-12-21T06:34:14.041Z",
+        "isLocal": true
+      }
+    ],
+    "dev-browser@dev-browser-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/dev-browser-marketplace/dev-browser/unknown",
+        "version": "unknown",
+        "installedAt": "2025-12-22T21:19:46.780Z",
+        "lastUpdated": "2025-12-22T21:19:46.780Z",
+        "isLocal": true
+      }
+    ],
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/frontend-design/6d3752c000e2",
+        "version": "6d3752c000e2",
+        "installedAt": "2025-12-22T21:20:44.895Z",
+        "lastUpdated": "2025-12-22T21:23:36.311Z",
+        "isLocal": true
+      }
+    ],
+    "github@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/github/6d3752c000e2",
+        "version": "6d3752c000e2",
+        "installedAt": "2025-12-22T21:20:57.933Z",
+        "lastUpdated": "2025-12-22T21:23:36.312Z",
+        "isLocal": true
+      }
+    ],
+    "plugin-dev@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/plugin-dev/6d3752c000e2",
+        "version": "6d3752c000e2",
+        "installedAt": "2025-12-22T21:21:51.171Z",
+        "lastUpdated": "2025-12-22T21:23:36.312Z",
+        "isLocal": true
+      }
+    ],
+    "playwright@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/playwright/6d3752c000e2",
+        "version": "6d3752c000e2",
+        "installedAt": "2025-12-22T21:22:05.600Z",
+        "lastUpdated": "2025-12-22T21:23:36.313Z",
+        "isLocal": true
+      }
+    ],
+    "greptile@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/greptile/6d3752c000e2",
+        "version": "6d3752c000e2",
+        "installedAt": "2025-12-22T21:22:50.960Z",
+        "lastUpdated": "2025-12-22T21:23:36.312Z",
+        "isLocal": true
+      }
+    ]
+  }
+}

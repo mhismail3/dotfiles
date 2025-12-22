@@ -81,7 +81,6 @@ MODULES:
   claude            Claude Code CLI configuration
   superwhisper      SuperWhisper configuration
   raycast           Raycast configuration
-  agent-ledger      Agent memory ledger setup
   arc-extensions    Arc browser extensions (1Password, Raindrop.io)
   macos             macOS system preferences
 
@@ -110,7 +109,6 @@ list_modules() {
     echo "  claude            Claude Code CLI configuration"
     echo "  superwhisper      SuperWhisper configuration"
     echo "  raycast           Raycast configuration"
-    echo "  agent-ledger      Agent memory ledger setup"
     echo "  arc-extensions    Arc browser extensions (1Password, Raindrop.io)"
     echo "  macos             macOS system preferences"
     echo ""
@@ -866,18 +864,6 @@ run_raycast() {
 }
 
 ###############################################################################
-# Module: Agent Ledger
-###############################################################################
-
-run_agent_ledger() {
-    if [[ -f "$DOTFILES/setup/agent-ledger.sh" ]]; then
-        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/agent-ledger.sh"
-    else
-        warn "Agent ledger setup script not found"
-    fi
-}
-
-###############################################################################
 # Module: Arc Browser Extensions
 ###############################################################################
 
@@ -961,7 +947,6 @@ main() {
             claude)           run_claude ;;
             superwhisper)     run_superwhisper ;;
             raycast)          run_raycast ;;
-            agent-ledger)     run_agent_ledger ;;
             arc-extensions)   run_arc_extensions ;;
             macos)            run_macos ;;
             *)
@@ -980,7 +965,6 @@ main() {
         should_run_step "claude" && run_claude
         should_run_step "superwhisper" && run_superwhisper
         should_run_step "raycast" && run_raycast
-        should_run_step "agent-ledger" && run_agent_ledger
         should_run_step "arc-extensions" && run_arc_extensions
         should_run_step "macos" && run_macos
     fi
