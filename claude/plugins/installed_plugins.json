@@ -70,16 +70,6 @@
         "lastUpdated": "2025-12-22T21:23:36.312Z",
         "isLocal": true
       }
-    ],
-    "compound-engineering@every-marketplace": [
-      {
-        "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/every-marketplace/compound-engineering/2.16.0",
-        "version": "2.16.0",
-        "installedAt": "2025-12-22T22:23:28.702Z",
-        "lastUpdated": "2025-12-22T22:23:28.702Z",
-        "isLocal": true
-      }
     ]
   }
 }
