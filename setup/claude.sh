@@ -10,6 +10,7 @@
 #   - commands/ (custom slash commands)
 #   - skills/ (custom skills)
 #   - plans/ (agent plan files)
+#   - agents/ (custom agents)
 #   - plugins/installed_plugins.json (plugin manifest)
 #   - plugins/known_marketplaces.json (marketplace registry)
 #
@@ -46,6 +47,7 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  - commands/      (custom slash commands)"
                 echo "  - skills/        (custom skills)"
                 echo "  - plans/         (agent plan files)"
+                echo "  - agents/        (custom agents)"
                 echo "  - plugins/*.json (plugin & marketplace manifests)"
                 echo ""
                 echo "Also syncs plugins from manifest on new machines."
@@ -178,6 +180,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && ((config_items++))
+    [[ -d "$CLAUDE_CONFIG_SRC/agents" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && ((config_items++))
 
     if [[ $config_items -eq 0 ]]; then
@@ -193,6 +196,7 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/commands" ]] && echo "  - commands/ (custom slash commands)"
     [[ -d "$CLAUDE_CONFIG_SRC/skills" ]] && echo "  - skills/ (custom skills)"
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && echo "  - plans/ (agent plan files)"
+    [[ -d "$CLAUDE_CONFIG_SRC/agents" ]] && echo "  - agents/ (custom agents)"
     [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && echo "  - plugins/*.json (plugin manifests + auto-sync)"
     echo ""
 
@@ -233,6 +237,11 @@ setup_claude() {
     # Symlink plans/ directory
     if [[ -d "$CLAUDE_CONFIG_SRC/plans" ]]; then
         symlink_dir "$CLAUDE_CONFIG_SRC/plans" "$CLAUDE_HOME/plans" || ((failed++))
+    fi
+
+    # Symlink agents/ directory
+    if [[ -d "$CLAUDE_CONFIG_SRC/agents" ]]; then
+        symlink_dir "$CLAUDE_CONFIG_SRC/agents" "$CLAUDE_HOME/agents" || ((failed++))
     fi
 
     # Symlink plugin manifests (not cache - it's regenerable)

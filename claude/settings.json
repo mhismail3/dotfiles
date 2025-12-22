@@ -214,7 +214,8 @@
     "github@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "greptile@claude-plugins-official": true
+    "greptile@claude-plugins-official": true,
+    "compound-engineering@every-marketplace": true
   },
   "alwaysThinkingEnabled": true
 }
