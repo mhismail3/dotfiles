@@ -49,64 +49,39 @@ source "$HOME/.dotfiles/zsh/aliases.zsh"
 source "$HOME/.dotfiles/zsh/api-keys.zsh"
 
 ###############################################################################
-# Version Managers (Lazy Loading for Fast Startup)
+# Version Managers
 ###############################################################################
 
-# Go (lightweight, no lazy loading needed)
+# Go
 export GOPATH="$HOME/go"
 export PATH="$GOPATH/bin:$PATH"
 
-# Rust (lightweight, just add to PATH)
+# Rust
 [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
 
-# pyenv (lazy load to avoid ~100ms startup penalty)
+# pyenv - Initialize properly for both interactive and non-interactive shells
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv &>/dev/null; then
+    eval "$(pyenv init -)"
+fi
 
-_pyenv_lazy_load() {
-    unset -f pyenv python python3 pip pip3
-    if command -v pyenv &>/dev/null; then
-        eval "$(pyenv init -)"
-        # Note: pyenv virtualenv-init is very slow, only enable if needed
-        # eval "$(pyenv virtualenv-init -)"
-    fi
-}
-
-pyenv()   { _pyenv_lazy_load; pyenv "$@"; }
-python3() { _pyenv_lazy_load; python3 "$@"; }
-pip3()    { _pyenv_lazy_load; pip3 "$@"; }
-
-# nvm (lazy load to avoid ~200ms startup penalty)
+# nvm - Initialize properly for both interactive and non-interactive shells
 export NVM_DIR="$HOME/.nvm"
+if [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]; then
+    source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+fi
+# Bash completion only for interactive shells
+if [ -n "$PS1" ] && [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]; then
+    source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+fi
 
-_nvm_lazy_load() {
-    unset -f node npm npx nvm yarn pnpm _nvm_lazy_load
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
-}
-
-node()  { _nvm_lazy_load && node "$@"; }
-npm()   { _nvm_lazy_load && npm "$@"; }
-npx()   { _nvm_lazy_load && npx "$@"; }
-nvm()   { _nvm_lazy_load && nvm "$@"; }
-yarn()  { _nvm_lazy_load && yarn "$@"; }
-pnpm()  { _nvm_lazy_load && pnpm "$@"; }
-
-# rbenv (lazy load)
+# rbenv - Initialize properly for both interactive and non-interactive shells
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
-
-_rbenv_lazy_load() {
-    unset -f rbenv ruby gem bundle
-    if command -v rbenv &>/dev/null; then
-        eval "$(rbenv init - zsh)"
-    fi
-}
-
-rbenv()  { _rbenv_lazy_load; rbenv "$@"; }
-ruby()   { _rbenv_lazy_load; ruby "$@"; }
-gem()    { _rbenv_lazy_load; gem "$@"; }
-bundle() { _rbenv_lazy_load; bundle "$@"; }
+if command -v rbenv &>/dev/null; then
+    eval "$(rbenv init - zsh)"
+fi
 
 ###############################################################################
 # Zsh Plugins (from Homebrew)
@@ -182,7 +157,8 @@ bindkey '^I' autosuggest-accept-or-complete
 ###############################################################################
 # Performance Note
 ###############################################################################
-# Shell startup optimized with lazy loading of version managers.
+# Version managers are initialized immediately for reliability.
+# This adds ~100-200ms to shell startup but ensures compatibility with
+# non-interactive shells (Claude Code, scripts, etc.)
 # To profile startup time, run: time zsh -i -c exit
-# Or use: zmodload zsh/zprof at top, then zprof at bottom
 
