@@ -13,6 +13,8 @@
 #   - agents/ (custom agents)
 #   - plugins/installed_plugins.json (plugin manifest)
 #   - plugins/known_marketplaces.json (marketplace registry)
+#   - LEDGER.jsonl (cross-session memory)
+#   - ledger-context/ (session histories)
 #
 # Also syncs plugins: reinstalls any plugins listed in the manifest
 # that are missing from the local cache (for cross-machine sync).
@@ -42,13 +44,15 @@ if [[ "${(%):-%N}" == "$0" ]] || [[ "${BASH_SOURCE[0]:-$0}" == "$0" ]]; then
                 echo "  --dry-run, -n  Show what would be done"
                 echo ""
                 echo "This script symlinks Claude Code configuration files:"
-                echo "  - CLAUDE.md      (global agent instructions)"
-                echo "  - settings.json  (permissions, model, settings)"
-                echo "  - commands/      (custom slash commands)"
-                echo "  - skills/        (custom skills)"
-                echo "  - plans/         (agent plan files)"
-                echo "  - agents/        (custom agents)"
-                echo "  - plugins/*.json (plugin & marketplace manifests)"
+                echo "  - CLAUDE.md       (global agent instructions)"
+                echo "  - settings.json   (permissions, model, settings)"
+                echo "  - commands/       (custom slash commands)"
+                echo "  - skills/         (custom skills)"
+                echo "  - plans/          (agent plan files)"
+                echo "  - agents/         (custom agents)"
+                echo "  - plugins/*.json  (plugin & marketplace manifests)"
+                echo "  - LEDGER.jsonl    (cross-session memory)"
+                echo "  - ledger-context/ (session histories)"
                 echo ""
                 echo "Also syncs plugins from manifest on new machines."
                 exit 0
@@ -182,6 +186,8 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/agents" ]] && ((config_items++))
     [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && ((config_items++))
+    [[ -f "$CLAUDE_CONFIG_SRC/LEDGER.jsonl" ]] && ((config_items++))
+    [[ -d "$CLAUDE_CONFIG_SRC/ledger-context" ]] && ((config_items++))
 
     if [[ $config_items -eq 0 ]]; then
         warn "No config files found in $CLAUDE_CONFIG_SRC"
@@ -198,6 +204,8 @@ setup_claude() {
     [[ -d "$CLAUDE_CONFIG_SRC/plans" ]] && echo "  - plans/ (agent plan files)"
     [[ -d "$CLAUDE_CONFIG_SRC/agents" ]] && echo "  - agents/ (custom agents)"
     [[ -d "$CLAUDE_CONFIG_SRC/plugins" ]] && echo "  - plugins/*.json (plugin manifests + auto-sync)"
+    [[ -f "$CLAUDE_CONFIG_SRC/LEDGER.jsonl" ]] && echo "  - LEDGER.jsonl (cross-session memory)"
+    [[ -d "$CLAUDE_CONFIG_SRC/ledger-context" ]] && echo "  - ledger-context/ (session histories)"
     echo ""
 
     if ! confirm "Apply Claude Code settings?" "y"; then
@@ -242,6 +250,16 @@ setup_claude() {
     # Symlink agents/ directory
     if [[ -d "$CLAUDE_CONFIG_SRC/agents" ]]; then
         symlink_dir "$CLAUDE_CONFIG_SRC/agents" "$CLAUDE_HOME/agents" || ((failed++))
+    fi
+
+    # Symlink LEDGER.jsonl (cross-session memory)
+    if [[ -f "$CLAUDE_CONFIG_SRC/LEDGER.jsonl" ]]; then
+        symlink "$CLAUDE_CONFIG_SRC/LEDGER.jsonl" "$CLAUDE_HOME/LEDGER.jsonl" || ((failed++))
+    fi
+
+    # Symlink ledger-context/ directory (session histories)
+    if [[ -d "$CLAUDE_CONFIG_SRC/ledger-context" ]]; then
+        symlink_dir "$CLAUDE_CONFIG_SRC/ledger-context" "$CLAUDE_HOME/ledger-context" || ((failed++))
     fi
 
     # Symlink plugin manifests (not cache - it's regenerable)
