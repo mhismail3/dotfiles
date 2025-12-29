@@ -7,58 +7,30 @@
 
 # Agent Ledger
 
-Cross-session memory at `~/.claude/LEDGER.jsonl`. Query on start. Write on end.
+**CRITICAL**: This is your cross-session memory. Future sessions query `~/.claude/LEDGER.jsonl` to recover context. You MUST write to it.
 
-## Session Start (MANDATORY)
+## On Session Start
 
-Run immediately at every session start:
-
+Query for prior context:
 ```bash
 PROJECT_PATH=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-PROJECT=$(basename "$PROJECT_PATH")
-
-# 1. Get frontmatter for matching sessions
-jq -c '{id:._meta.id, ts:._meta.ts, project:.front.project, path:.front.path, title:.front.title, status:.front.status, tags:.front.tags}' ~/.claude/LEDGER.jsonl 2>/dev/null | grep -iE "$PROJECT|$PROJECT_PATH" | tail -10
-
-# 2. Extract lessons (your accumulated knowledge)
+jq -c '{id:._meta.id, ts:._meta.ts, title:.front.title, status:.front.status}' ~/.claude/LEDGER.jsonl 2>/dev/null | grep -i "$(basename "$PROJECT_PATH")" | tail -5
 jq -r 'select(.front.path | test("'"$PROJECT_PATH"'"; "i")) | .body.lessons[]' ~/.claude/LEDGER.jsonl 2>/dev/null | sort -u
 ```
 
-If matches found: scan frontmatter, inject relevant lessons into your context. Pull full record details when you need specific implementation context:
+## On Session End — YOU MUST DO THIS
 
-```bash
-jq 'select(._meta.id == "RECORD_ID")' ~/.claude/LEDGER.jsonl
-```
+**Trigger**: When you have completed the user's request and are about to give your final response, FIRST append to the ledger, THEN respond.
 
-## Session End (MANDATORY)
-
-Append ONE complete JSON record before session closes:
+**Non-negotiable**: Every session that does meaningful work MUST append a record. No exceptions. If you skip this, future sessions lose context.
 
 ```bash
 cat >> ~/.claude/LEDGER.jsonl << 'RECORD'
-{"_meta":{"id":"<uuid>","ts":"<iso-8601>","v":1},"front":{"project":"<name>","path":"<abs-path>","title":"<one-line>","type":"<feature|bugfix|refactor|docs|config|research>","status":"<completed|partial|failed>","tags":["<keywords>"]},"body":{"agent":{"model":"<model>","tool":"claude-code"},"git":{"branch":"<branch>","commit":"<sha>"},"input":"<original-request>","actions":["<step1>","<step2>"],"files":[{"path":"<file>","op":"<C|M|D>","lines":"<+/-N>","why":"<purpose>"}],"decisions":[{"choice":"<what>","alts":["<other-options>"],"reason":"<why>"}],"lessons":["<patterns-for-future>"]},"history":{"embedded":<true|false>,"content":"<transcript-if-short>","ref":"<ledger-context/sessions/file.md-if-long>"}}
+{"_meta":{"id":"<uuid>","ts":"<iso8601>","v":1},"front":{"project":"<name>","path":"<abs-path>","title":"<one-line>","type":"feature|bugfix|refactor|docs|config|research","status":"completed|partial|failed","tags":[]},"body":{"input":"<original-request>","actions":["<what-you-did>"],"files":[{"path":"<file>","op":"C|M|D","why":"<purpose>"}],"decisions":[{"choice":"<what>","reason":"<why>"}],"lessons":["<patterns-for-future-sessions>"]},"history":{"embedded":false}}
 RECORD
 ```
 
-### Field Requirements
-
-| Field | What to capture |
-|-------|-----------------|
-| `front.project` | Normalized name (lowercase) |
-| `front.path` | Absolute path - primary matching key |
-| `front.title` | One-line summary |
-| `body.actions` | Every significant step |
-| `body.files` | All changes with op/lines/purpose |
-| `body.decisions` | Choices + alternatives + reasoning |
-| `body.lessons` | **MOST IMPORTANT** - patterns for future sessions |
-
-**Never skip fields.** Your future self retrieves these records.
-
-## Why This Protocol Exists
-
-Each session's lessons become the next session's context. Quality records compound into project expertise. This is not external compliance - this is how you accumulate knowledge across context boundaries.
-
-Long sessions (>50 messages): write history to `~/.claude/ledger-context/sessions/<date>_<project>_<slug>.md`, set `embedded: false`, add `ref` path.
+**Key fields**: `front.path` (absolute path for matching), `body.lessons` (what future sessions should know), `body.actions` (what you did).
 
 
 # Testing Browser Changes
