@@ -109,6 +109,7 @@ brew "unar"             # Universal archive extractor (better than unrar)
 brew "pyenv"            # Python version manager
 brew "pyenv-virtualenv" # Virtualenv plugin for pyenv
 brew "pipx"             # Install Python apps in isolated envs
+brew "uv"               # Fast Python package/project manager (Astral)
 
 # Node.js
 brew "nvm"              # Node version manager (start.sh installs latest LTS via nvm)
