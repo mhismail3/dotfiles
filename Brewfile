@@ -167,6 +167,7 @@ cask "cursor-cli"       # Cursor Agent CLI (cursor-agent command)
 cask "visual-studio-code"
 cask "warp"             # Modern terminal
 cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
+cask "db-browser-for-sqlite"  # SQLite database browser
 
 ###############################################################################
 # AI Coding CLIs
