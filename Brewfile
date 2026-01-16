@@ -15,25 +15,6 @@ brew "curl"             # Transfer data (newer than system)
 brew "openssh"          # SSH (newer than system)
 
 ###############################################################################
-# CLI Tools - Modern Replacements
-###############################################################################
-
-brew "bat"              # Better cat with syntax highlighting
-brew "eza"              # Better ls (successor to exa)
-brew "fd"               # Better find
-brew "ripgrep"          # Better grep (rg)
-brew "sd"               # Better sed for find/replace
-brew "zoxide"           # Better cd with frecency
-brew "fzf"              # Fuzzy finder
-brew "htop"             # Better top
-brew "btop"             # Even better top with graphs
-brew "ncdu"             # Disk usage analyzer
-brew "dust"             # Better du
-brew "duf"              # Better df
-brew "procs"            # Better ps
-brew "tldr"             # Simplified man pages
-
-###############################################################################
 # CLI Tools - Development & Productivity
 ###############################################################################
 
@@ -81,13 +62,6 @@ brew "iperf3"           # Network performance
 brew "rsync"            # File sync (newer than system)
 brew "ssh-copy-id"      # Copy SSH keys to servers
 brew "mas"              # Mac App Store CLI
-
-###############################################################################
-# CLI Tools - Port Management
-###############################################################################
-
-tap "productdevbook/tap"
-cask "portkiller"       # Kill processes by port number
 
 ###############################################################################
 # CLI Tools - Compression & Archives
@@ -163,9 +137,7 @@ cask "obsidian"         # Note-taking and knowledge management
 ###############################################################################
 
 cask "cursor"           # AI code editor
-cask "cursor-cli"       # Cursor Agent CLI (cursor-agent command)
 cask "visual-studio-code"
-cask "warp"             # Modern terminal
 cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
 cask "db-browser-for-sqlite"  # SQLite database browser
 
@@ -174,7 +146,6 @@ cask "db-browser-for-sqlite"  # SQLite database browser
 ###############################################################################
 
 brew "gemini-cli"       # Google Gemini CLI
-brew "llm"              # CLI for LLMs (Simon Willison)
 brew "opencode"         # Open-source AI coding agent (TUI)
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
@@ -193,7 +164,6 @@ cask "google-drive"     # Google Drive sync
 cask "stremio"          # Open-source media center
 cask "telegram"         # Messaging app
 cask "vlc"              # Media player
-cask "keka"             # Archive utility (better than The Unarchiver)
 cask "shottr"           # Screenshot tool
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
 cask "logi-options+"    # Logitech mouse/keyboard customization
@@ -211,7 +181,5 @@ cask "private-internet-access"   # PIA VPN (requires sudo, handled by brew bundl
 
 mas "Things 3", id: 904280696
 mas "Hand Mirror", id: 1502839586  # Quick camera check from menu bar
-mas "Folder Peek", id: 1615988943  # Menu bar folder access (Sindre Sorhus)
-# mas "Xcode", id: 497799835          # Xcode (required for some apps) (large download slows everything down)
-# mas "Amphetamine", id: 937984704  # Keep Mac awake (optional for server)
+mas "Folder Peek", id: 1615988943  # Menu bar folder access
 

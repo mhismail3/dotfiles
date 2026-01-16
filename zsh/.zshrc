@@ -15,7 +15,6 @@ plugins=(
     # npm plugin removed - conflicts with nvm lazy loading
     python
     brew
-    zoxide
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -104,23 +103,6 @@ if type brew &>/dev/null; then
     autoload -Uz compinit
     compinit
 fi
-
-###############################################################################
-# Tools
-###############################################################################
-
-# fzf (use new --zsh integration if available)
-if command -v fzf &>/dev/null; then
-    eval "$(fzf --zsh)"
-fi
-
-# zoxide (better cd)
-if command -v zoxide &>/dev/null; then
-    eval "$(zoxide init zsh)"
-fi
-
-# Starship prompt (optional - uncomment to use instead of Oh My Zsh theme)
-# eval "$(starship init zsh)"
 
 ###############################################################################
 # Options

@@ -14,62 +14,12 @@ alias dot="cd ~/.dotfiles"
 alias proj="cd ~/Downloads/projects"
 
 ###############################################################################
-# Modern Replacements
+# Listing
 ###############################################################################
 
-# ls → eza
-if command -v eza &>/dev/null; then
-    alias ls="eza"
-    alias ll="eza -la"
-    alias la="eza -a"
-    alias lt="eza --tree --level=2"
-    alias l="eza -l"
-else
-    alias ll="ls -la"
-    alias la="ls -a"
-fi
-
-# cat → bat
-if command -v bat &>/dev/null; then
-    alias cat="bat --paging=never"
-    alias catp="bat"
-fi
-
-# find → fd (only create alias for common use, keep find available as /usr/bin/find)
-if command -v fd &>/dev/null; then
-    alias fnd="fd"
-    # Note: We don't alias find→fd because fd has different syntax
-    # Use: fnd instead of find for the new behavior
-fi
-
-# grep → ripgrep (only create alias, keep grep available)
-if command -v rg &>/dev/null; then
-    alias rgrep="rg"
-    # Note: We don't alias grep→rg because rg has different syntax
-    # Use: rgrep instead of grep for the new behavior
-fi
-
-# top → btop/htop
-if command -v btop &>/dev/null; then
-    alias top="btop"
-elif command -v htop &>/dev/null; then
-    alias top="htop"
-fi
-
-# du → dust
-if command -v dust &>/dev/null; then
-    alias du="dust"
-fi
-
-# df → duf
-if command -v duf &>/dev/null; then
-    alias df="duf"
-fi
-
-# ps → procs
-if command -v procs &>/dev/null; then
-    alias ps="procs"
-fi
+alias ll="ls -la"
+alias la="ls -a"
+alias l="ls -l"
 
 ###############################################################################
 # Git

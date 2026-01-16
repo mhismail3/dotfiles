@@ -216,5 +216,6 @@
     "playwright@claude-plugins-official": true,
     "greptile@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "model": "opus"
 }

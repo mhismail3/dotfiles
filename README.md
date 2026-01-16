@@ -57,23 +57,22 @@ The bootstrap script supports multiple execution modes:
 
 ### CLI Tools
 - GNU coreutils, findutils, sed, awk, grep
-- Modern replacements: `bat`, `eza`, `fd`, `ripgrep`, `fzf`, `zoxide`
 - Dev tools: `git`, `gh`, `neovim`, `tmux`, `jq`, `httpie`
 - Version managers: `pyenv`, `nvm`, `rbenv`, `rustup`
 
 ### Apps
 - **Browsers:** Arc, Chrome
 - **Editors:** Cursor, VS Code
-- **Terminals:** Warp, Terminal
+- **Terminals:** Ghostty
 - **Productivity:** Raycast, 1Password, Things 3
 - **Cloud:** Synology Drive, Google Drive
-- **Media:** Stremio, VLC, Keka, qBittorrent
-- **AI CLIs:** Gemini CLI, Codex, Claude Code
+- **Media:** Stremio, VLC, qBittorrent
+- **AI CLIs:** Gemini CLI, Codex, Claude Code, OpenCode
 
 ### Shell
 - Zsh with Oh My Zsh
 - Lazy-loaded version managers (fast shell startup)
-- Modern CLI aliases
+- Git, navigation, and system aliases
 
 ## What the Script Does
 
@@ -204,7 +203,7 @@ All scripts are designed to be:
 
 The Dock is automatically configured with these apps (left to right):
 
-> Finder → Calendar → Things 3 → Messages → Safari → Chrome → Arc → Stremio → Photos → Obsidian → ChatGPT → Claude → Cursor → Ghostty → Telegram → Screen Sharing → iPhone Mirroring → Settings → [Trash]
+> Calendar → Things 3 → Messages → Safari → Chrome → Arc → Stremio → Photos → ChatGPT → Claude → Cursor → Ghostty → Screen Sharing → iPhone Mirroring → Settings
 
 - Recent apps: disabled
 - To customize, edit the `DOCK_APPS` array in `macos/.macos`
