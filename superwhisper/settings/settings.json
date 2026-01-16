@@ -1,8 +1,7 @@
 {
   "modeKeys" : [
-    "voice to text",
-    "default",
-    "custom"
+    "custom",
+    "default"
   ],
   "replacements" : [
 
