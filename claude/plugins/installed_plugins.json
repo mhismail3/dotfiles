@@ -6,18 +6,19 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/rust-analyzer-lsp/1.0.0",
         "version": "1.0.0",
-        "installedAt": "2025-12-21T06:34:14.041Z",
-        "lastUpdated": "2025-12-21T06:34:14.041Z"
-        "lastUpdated": "2025-12-21T06:34:14.041Z"
+        "installedAt": "2026-01-27T23:02:27.776Z",
+        "lastUpdated": "2026-01-27T23:02:27.776Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "dev-browser@dev-browser-marketplace": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/dev-browser-marketplace/dev-browser/unknown",
-        "version": "unknown",
-        "installedAt": "2025-12-22T21:19:46.780Z",
-        "lastUpdated": "2025-12-22T21:19:46.780Z"
+        "installPath": "/Users/moose/.claude/plugins/cache/dev-browser-marketplace/dev-browser/58c332a7c61a",
+        "version": "58c332a7c61a",
+        "installedAt": "2026-01-27T23:02:27.968Z",
+        "lastUpdated": "2026-01-27T23:02:27.968Z",
+        "gitCommitSha": "58c332a7c61a5c35de215d577a53bf24fb7d0820"
       }
     ],
     "frontend-design@claude-plugins-official": [
@@ -25,8 +26,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/frontend-design/e30768372b41",
         "version": "e30768372b41",
-        "installedAt": "2025-12-22T21:20:44.895Z",
-        "lastUpdated": "2026-01-21T06:44:41.308Z"
+        "installedAt": "2026-01-27T23:02:28.287Z",
+        "lastUpdated": "2026-01-27T23:02:28.287Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "github@claude-plugins-official": [
@@ -34,8 +36,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/github/e30768372b41",
         "version": "e30768372b41",
-        "installedAt": "2025-12-22T21:20:57.933Z",
-        "lastUpdated": "2026-01-21T06:44:41.305Z"
+        "installedAt": "2026-01-27T23:02:28.347Z",
+        "lastUpdated": "2026-01-27T23:02:28.347Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "plugin-dev@claude-plugins-official": [
@@ -43,8 +46,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/plugin-dev/e30768372b41",
         "version": "e30768372b41",
-        "installedAt": "2025-12-22T21:21:51.171Z",
-        "lastUpdated": "2026-01-21T06:44:41.330Z"
+        "installedAt": "2026-01-27T23:02:28.436Z",
+        "lastUpdated": "2026-01-27T23:02:28.436Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "playwright@claude-plugins-official": [
@@ -52,8 +56,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/playwright/e30768372b41",
         "version": "e30768372b41",
-        "installedAt": "2025-12-22T21:22:05.600Z",
-        "lastUpdated": "2026-01-21T06:44:41.331Z"
+        "installedAt": "2026-01-27T23:02:28.475Z",
+        "lastUpdated": "2026-01-27T23:02:28.475Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "greptile@claude-plugins-official": [
@@ -61,8 +66,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/greptile/e30768372b41",
         "version": "e30768372b41",
-        "installedAt": "2025-12-22T21:22:50.960Z",
-        "lastUpdated": "2026-01-21T06:44:41.333Z"
+        "installedAt": "2026-01-27T23:02:28.506Z",
+        "lastUpdated": "2026-01-27T23:02:28.506Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ],
     "swift-lsp@claude-plugins-official": [
@@ -70,9 +76,9 @@
         "scope": "user",
         "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
         "version": "1.0.0",
-        "installedAt": "2026-01-17T02:37:14.483Z",
-        "lastUpdated": "2026-01-17T02:37:14.483Z",
-        "gitCommitSha": "96276205880a60fd66bbae981f5ab568e70c4cbf"
+        "installedAt": "2026-01-27T23:02:28.539Z",
+        "lastUpdated": "2026-01-27T23:02:28.539Z",
+        "gitCommitSha": "e30768372b4150ca1bc0839d93283e8edc30d60d"
       }
     ]
   }
