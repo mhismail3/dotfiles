@@ -214,7 +214,8 @@
     "github@claude-plugins-official": true,
     "plugin-dev@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
-    "greptile@claude-plugins-official": true
+    "greptile@claude-plugins-official": true,
+    "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
   "model": "opus"

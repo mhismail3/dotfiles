@@ -144,3 +144,13 @@ bindkey '^I' autosuggest-accept-or-complete
 # non-interactive shells (Claude Code, scripts, etc.)
 # To profile startup time, run: time zsh -i -c exit
 
+
+# bun completions
+[ -s "/Users/moose/.bun/_bun" ] && source "/Users/moose/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# tron mods (things3, etc.)
+export PATH="$HOME/.tron/mods:$PATH"

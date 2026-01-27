@@ -46,13 +46,6 @@ brew "dockutil"         # CLI to manage Dock items
 brew "defaultbrowser"   # CLI to set default browser (used by .macos)
 
 ###############################################################################
-# CLI Tools - Display Management
-###############################################################################
-
-tap "smudge/smudge"
-brew "nightlight"       # CLI for Night Shift control
-
-###############################################################################
 # CLI Tools - Networking & System
 ###############################################################################
 
@@ -71,7 +64,6 @@ brew "p7zip"            # 7-Zip
 brew "xz"               # XZ compression
 brew "zstd"             # Zstandard compression
 brew "pigz"             # Parallel gzip
-# brew "unrar"            # RAR extraction - license issues, use unar or 7zip instead
 brew "unar"             # Universal archive extractor (better than unrar)
 
 ###############################################################################
@@ -108,16 +100,6 @@ brew "rustup-init"      # Rust toolchain installer
 brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
-brew "starship"         # Cross-shell prompt (optional)
-
-###############################################################################
-# Fonts
-###############################################################################
-
-cask "font-jetbrains-mono"
-cask "font-jetbrains-mono-nerd-font"
-cask "font-fira-code"
-cask "font-fira-code-nerd-font"
 
 ###############################################################################
 # Applications - Productivity
@@ -127,7 +109,6 @@ cask "raycast"          # Spotlight replacement
 cask "1password"        # Password manager
 cask "superwhisper"     # Voice-to-text with AI
 cask "claude"           # Anthropic Claude desktop app
-cask "chatgpt"          # OpenAI ChatGPT desktop app
 cask "arc"              # Browser
 cask "google-chrome"    # Browser
 cask "obsidian"         # Note-taking and knowledge management
@@ -146,7 +127,6 @@ cask "db-browser-for-sqlite"  # SQLite database browser
 ###############################################################################
 
 brew "gemini-cli"       # Google Gemini CLI
-brew "opencode"         # Open-source AI coding agent (TUI)
 cask "codex"            # OpenAI Codex CLI
 cask "claude-code"      # Anthropic Claude Code CLI
 
@@ -164,7 +144,6 @@ cask "google-drive"     # Google Drive sync
 cask "stremio"          # Open-source media center
 cask "telegram"         # Messaging app
 cask "vlc"              # Media player
-cask "shottr"           # Screenshot tool
 cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
 cask "logi-options+"    # Logitech mouse/keyboard customization
 

@@ -607,8 +607,6 @@ info "Creating symlinks..."
     symlink "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc" || ((failed++))
     symlink "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig" || ((failed++))
     symlink "$DOTFILES/git/.gitignore_global" "$HOME/.gitignore_global" || ((failed++))
-    symlink "$DOTFILES/mackup/.mackup.cfg" "$HOME/.mackup.cfg" || ((failed++))
-    symlink "$DOTFILES/mackup/.mackup" "$HOME/.mackup" || ((failed++))
     symlink "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf" || ((failed++))
 
     if [[ $failed -gt 0 ]]; then
@@ -992,7 +990,6 @@ echo ""
         echo "  ~/.dotfiles/setup/superwhisper.sh"
         echo "  ~/.dotfiles/setup/raycast.sh"
         echo "  ~/.dotfiles/setup/ssh.sh"
-        echo "  ~/.dotfiles/setup/screenshots.sh"
 echo ""
     fi
 }

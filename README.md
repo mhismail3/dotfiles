@@ -96,7 +96,6 @@ The script will print these, but here's a summary:
 2. **Display** — System Settings → Displays → "More Space"
 3. **App Sign-ins** — 1Password, Arc, Synology Drive, Google Drive, VS Code/Cursor
 4. **SSH Key** — Run `~/.dotfiles/setup/ssh.sh` then add to GitHub
-5. **Mackup** — Run `mackup restore` to restore app preferences
 
 ## File Structure
 
@@ -112,8 +111,7 @@ The script will print these, but here's a summary:
 │   ├── claude.sh         # Claude Code CLI config
 │   ├── superwhisper.sh   # SuperWhisper modes/settings
 │   ├── raycast.sh        # Raycast config import
-│   ├── ssh.sh            # SSH key generation
-│   └── screenshots.sh    # Screenshot location
+│   └── ssh.sh            # SSH key generation
 │
 ├── zsh/                  # Shell configuration
 │   ├── .zshrc
@@ -147,10 +145,6 @@ The script will print these, but here's a summary:
 │   ├── finder.sh
 │   └── bin/
 │
-├── mackup/               # Mackup backup config
-│   ├── .mackup.cfg
-│   └── .mackup/
-│
 └── tmux/                 # Tmux configuration
     └── .tmux.conf
 ```
@@ -170,7 +164,6 @@ The script will print these, but here's a summary:
 ~/.dotfiles/setup/superwhisper.sh       # Re-link SuperWhisper config
 ~/.dotfiles/setup/raycast.sh            # Import Raycast settings
 ~/.dotfiles/setup/ssh.sh                # Generate SSH key
-~/.dotfiles/setup/screenshots.sh        # Set screenshot location
 
 # Run a specific module only
 ~/.dotfiles/start.sh --module symlinks
@@ -182,12 +175,6 @@ source ~/.dotfiles/macos/.macos
 
 # Update Brewfile from current installs
 brew bundle dump --file=~/.dotfiles/Brewfile --force
-
-# Backup app preferences
-mackup backup
-
-# Restore app preferences (new Mac)
-mackup restore
 ```
 
 ## Idempotent & Safe
@@ -203,7 +190,7 @@ All scripts are designed to be:
 
 The Dock is automatically configured with these apps (left to right):
 
-> Calendar → Things 3 → Messages → Safari → Chrome → Arc → Stremio → Photos → ChatGPT → Claude → Cursor → Ghostty → Screen Sharing → iPhone Mirroring → Settings
+> Calendar → Things 3 → Messages → Safari → Chrome → Arc → Stremio → Photos → Claude → Cursor → Ghostty → Screen Sharing → iPhone Mirroring → Settings
 
 - Recent apps: disabled
 - To customize, edit the `DOCK_APPS` array in `macos/.macos`

@@ -3,7 +3,6 @@
     "cursor.windowSwitcher.sidebarHoverCollapsed": true,
     "workbench.editor.editorActionsLocation": "titleBar",
     "workbench.activityBar.orientation": "vertical",
-    "chatgpt.openOnStartup": true,
     "workbench.colorTheme": "Default Dark Modern",
     "git.confirmSync": false,
     "claudeCode.preferredLocation": "sidebar",

@@ -205,7 +205,6 @@ if command -v dockutil &>/dev/null; then
         "/Applications/Arc.app"
         "/Applications/Stremio.app"
         "/System/Applications/Photos.app"
-        "/Applications/ChatGPT.app"
         "/Applications/Claude.app"
         "/Applications/Cursor.app"
         "/Applications/Ghostty.app"
@@ -437,7 +436,6 @@ defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 # Screenshots
 ###############################################################################
 
-# TODO: Change screenshot location (currently ~/Desktop)
 defaults write com.apple.screencapture location -string "${HOME}/Desktop"
 
 # Format: PNG
@@ -463,32 +461,6 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow PowerOffDisabled 
 
 # Reveal IP/hostname when clicking clock on login window
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
-
-###############################################################################
-# Night Shift (requires nightlight CLI from Brewfile)
-###############################################################################
-
-if command -v nightlight &>/dev/null; then
-    echo "Configuring Night Shift..."
-    
-    # Turn on Night Shift first (required to set temperature)
-    nightlight on 2>/dev/null
-    
-    # Temperature: 70% (0-100 scale, must be set while Night Shift is on)
-    nightlight temp 70 2>/dev/null || {
-        # I think this might happen for Mac Minis if you're doing Screen Sharing - otherwise works fine
-        echo "⚠️  Could not set Night Shift temperature."
-    }
-    
-    # Schedule: Sunset to Sunrise (will manage on/off automatically)
-    nightlight schedule start 2>/dev/null || {
-        echo "⚠️  Could not set Night Shift schedule."
-    }
-    
-    echo "✓ Night Shift configured: Sunset to Sunrise, 70% warmth"
-else
-    echo "⚠️  nightlight not found. Install via Brewfile to configure Night Shift."
-fi
 
 ###############################################################################
 # Menu Bar Clock
@@ -781,14 +753,6 @@ echo "  □ Private Internet Access → Sign in with account"
 echo ""
 echo "DEVICES:"
 echo "  □ System Settings → Bluetooth → Pair devices (keyboard, mouse, etc.)"
-echo ""
-echo "SCREENSHOTS:"
-echo "  □ TODO: Change screenshot location if needed (currently ~/Desktop)"
-echo ""
-echo "MACKUP (restore app preferences after signing in):"
-echo "  □ First time setup: mackup backup"
-echo "  □ Restore on new Mac: mackup restore"
-echo "  □ Apps backed up: Raycast, VLC, qBittorrent, Synology Drive, Google Drive"
 echo ""
 echo "FINAL:"
 echo "  □ Logout/restart to apply all changes"

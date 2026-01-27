@@ -23,46 +23,56 @@
     "frontend-design@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/frontend-design/96276205880a",
-        "version": "96276205880a",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/frontend-design/e30768372b41",
+        "version": "e30768372b41",
         "installedAt": "2025-12-22T21:20:44.895Z",
-        "lastUpdated": "2026-01-16T07:37:38.793Z"
+        "lastUpdated": "2026-01-21T06:44:41.308Z"
       }
     ],
     "github@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/github/96276205880a",
-        "version": "96276205880a",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/github/e30768372b41",
+        "version": "e30768372b41",
         "installedAt": "2025-12-22T21:20:57.933Z",
-        "lastUpdated": "2026-01-16T07:37:38.791Z"
+        "lastUpdated": "2026-01-21T06:44:41.305Z"
       }
     ],
     "plugin-dev@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/plugin-dev/96276205880a",
-        "version": "96276205880a",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/plugin-dev/e30768372b41",
+        "version": "e30768372b41",
         "installedAt": "2025-12-22T21:21:51.171Z",
-        "lastUpdated": "2026-01-16T07:37:38.815Z"
+        "lastUpdated": "2026-01-21T06:44:41.330Z"
       }
     ],
     "playwright@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/playwright/96276205880a",
-        "version": "96276205880a",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/playwright/e30768372b41",
+        "version": "e30768372b41",
         "installedAt": "2025-12-22T21:22:05.600Z",
-        "lastUpdated": "2026-01-16T07:37:38.794Z"
+        "lastUpdated": "2026-01-21T06:44:41.331Z"
       }
     ],
     "greptile@claude-plugins-official": [
       {
         "scope": "user",
-        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/greptile/96276205880a",
-        "version": "96276205880a",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/greptile/e30768372b41",
+        "version": "e30768372b41",
         "installedAt": "2025-12-22T21:22:50.960Z",
-        "lastUpdated": "2026-01-16T07:37:38.817Z"
+        "lastUpdated": "2026-01-21T06:44:41.333Z"
+      }
+    ],
+    "swift-lsp@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/moose/.claude/plugins/cache/claude-plugins-official/swift-lsp/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-01-17T02:37:14.483Z",
+        "lastUpdated": "2026-01-17T02:37:14.483Z",
+        "gitCommitSha": "96276205880a60fd66bbae981f5ab568e70c4cbf"
       }
     ]
   }
