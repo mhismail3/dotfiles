@@ -1,53 +1,28 @@
 #!/usr/bin/env bash
 
-# ~/.macos — macOS preferences for moose-home-server
-# Run LAST by fresh.sh (restarts system processes at the end)
+# ~/.macos — macOS preferences for agent-focused Mac Mini
+# Run by start.sh or standalone: source ~/.dotfiles/macos/.macos
 
 ###############################################################################
 # Preamble
 ###############################################################################
 
-# Close System Settings to prevent it from overriding settings
 osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
-# Ask for the administrator password upfront
-# Use /dev/tty to ensure password prompt works even when stdin is piped
 sudo -v < /dev/tty
 
-# Keep-alive: update existing `sudo` timestamp until script has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
-# Note: Some settings may require Full Disk Access for Terminal.app in:
-# System Settings → Privacy & Security → Full Disk Access
-
-###############################################################################
-# Computer Identity
-###############################################################################
-
-# Use environment variable from start.sh, or default
-COMPUTER_NAME="${COMPUTER_NAME:-$(scutil --get ComputerName 2>/dev/null || echo 'My-Mac')}"
-MACOS_USER="${MACOS_USER:-$(whoami)}"
-
-# LocalHostName must be a valid DNS name (no spaces, apostrophes, or special chars)
-# Convert "Moose's Mac mini" -> "Mooses-Mac-mini"
-LOCAL_HOST_NAME=$(echo "$COMPUTER_NAME" | sed "s/'//g" | sed 's/ /-/g' | sed 's/[^a-zA-Z0-9-]//g')
-
-echo "Setting computer name to: $COMPUTER_NAME"
-echo "Setting local hostname to: $LOCAL_HOST_NAME"
-
-sudo scutil --set ComputerName "$COMPUTER_NAME"
-sudo scutil --set HostName "$LOCAL_HOST_NAME"
-sudo scutil --set LocalHostName "$LOCAL_HOST_NAME"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "$LOCAL_HOST_NAME"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing)
 ###############################################################################
 
+MACOS_USER="${MACOS_USER:-$(whoami)}"
+
+echo "Enabling Remote Access..."
+
 # Enable Remote Login (SSH)
-# Note: On newer macOS, this may require enabling in System Settings manually
-# or granting Full Disk Access to Terminal
 sudo systemsetup -setremotelogin on 2>/dev/null || {
     echo "⚠️  Could not enable SSH via systemsetup."
     echo "   Please enable manually: System Settings → General → Sharing → Remote Login"
@@ -58,14 +33,12 @@ sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
 sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
 
 # Enable Screen Sharing
-# Note: Modern macOS requires enabling this in System Settings
 sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || {
     echo "⚠️  Could not enable Screen Sharing via launchctl."
     echo "   Please enable manually: System Settings → General → Sharing → Screen Sharing"
 }
 
 # Enable Remote Management (ARD)
-# Note: kickstart may require SIP disabled or MDM on newer macOS
 if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
     sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
         -activate -configure -access -on \
@@ -79,64 +52,24 @@ fi
 # Power Management (always-on server)
 ###############################################################################
 
-# Prevent system sleep (0 = never)
+echo "Configuring Power Management..."
+
 sudo pmset -a sleep 0
-
-# Display sleep after 10 minutes (set to 0 for never)
 sudo pmset -a displaysleep 10
-
-# Prevent disk sleep
 sudo pmset -a disksleep 0
-
-# Wake on network access (Magic Packet)
 sudo pmset -a womp 1
-
-# Auto restart after power failure
 sudo pmset -a autorestart 1
-
-# Disable hibernation (speeds up sleep/wake for desktop)
 sudo pmset -a hibernatemode 0
-
-# Restart automatically if the computer freezes
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
-# Note: On Apple Silicon Macs, some power settings behave differently
-# Check current settings with: pmset -g
+###############################################################################
+# General UI/UX (simplified)
+###############################################################################
 
-###############################################################################
-# General UI/UX
-###############################################################################
+echo "Configuring UI preferences..."
 
 # Dark mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
-
-# Accent color: Multicolor (auto)
-defaults delete NSGlobalDomain AppleAccentColor 2>/dev/null
-defaults delete NSGlobalDomain AppleHighlightColor 2>/dev/null
-
-# UI sound effects on
-defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -bool true
-
-# Volume change feedback sound on
-defaults write NSGlobalDomain com.apple.sound.beep.feedback -bool true
-
-# Natural scrolling (trackpad-style)
-defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
-
-# Scrollbar click: jump to clicked spot
-defaults write NSGlobalDomain AppleScrollerPagingBehavior -bool true
-
-# Prefer tabs: always
-defaults write NSGlobalDomain AppleWindowTabbingMode -string "always"
-
-# Don't close windows when quitting apps (restore on reopen)
-defaults write NSGlobalDomain NSQuitAlwaysKeepsWindows -bool true
-
-# Expand save/print panels by default
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
 # Save to disk (not iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
@@ -152,171 +85,10 @@ defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 ###############################################################################
-# Dock
-###############################################################################
-
-# Position: bottom
-defaults write com.apple.dock orientation -string "bottom"
-
-# Size: 50% (~48 pixels)
-defaults write com.apple.dock tilesize -int 80
-
-# Magnification: on, ~120 pixels
-defaults write com.apple.dock magnification -bool true
-defaults write com.apple.dock largesize -int 100
-
-# Auto-hide: on
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.3
-
-# Minimize effect: Genie
-defaults write com.apple.dock mineffect -string "genie"
-
-# Minimize to application icon: off
-defaults write com.apple.dock minimize-to-application -bool false
-
-# Animate opening applications: on
-defaults write com.apple.dock launchanim -bool true
-
-# Show indicators for open apps: on
-defaults write com.apple.dock show-process-indicators -bool true
-
-# Show recent apps: off
-defaults write com.apple.dock show-recents -bool false
-
-# Window title bar double-click: Zoom
-defaults write NSGlobalDomain AppleActionOnDoubleClick -string "Maximize"
-
-###############################################################################
-# Dock Layout (requires dockutil from Brewfile)
-###############################################################################
-
-if command -v dockutil &>/dev/null; then
-    echo "Configuring Dock layout..."
-    
-    # Apps in order (left to right)
-    DOCK_APPS=(
-        "/System/Applications/Calendar.app"
-        "/Applications/Things3.app"
-        "/System/Applications/Messages.app"
-        "/System/Applications/Safari.app"
-        "/Applications/Google Chrome.app"
-        "/Applications/Arc.app"
-        "/Applications/Stremio.app"
-        "/System/Applications/Photos.app"
-        "/Applications/Claude.app"
-        "/Applications/Cursor.app"
-        "/Applications/Ghostty.app"
-        "/System/Applications/Utilities/Screen Sharing.app"
-        "/System/Applications/iPhone Mirroring.app"
-        "/System/Applications/System Settings.app"
-    )
-    
-    DOCKUTIL_TIMEOUT_CMD="$(command -v gtimeout || command -v timeout || true)"
-    DOCKUTIL_TIMEOUT_SECS="${DOCKUTIL_TIMEOUT_SECS:-10}"
-    DOCKUTIL_TRACE="${DOCKUTIL_TRACE:-0}"
-
-    # run_dockutil wraps each call with a hard timeout guard.
-    # Priority: gtimeout/timeout if present; otherwise a polling-based timeout.
-    run_dockutil() {
-        if [[ -n "$DOCKUTIL_TIMEOUT_CMD" ]]; then
-            "$DOCKUTIL_TIMEOUT_CMD" "$DOCKUTIL_TIMEOUT_SECS" "$@"
-            return $?
-        fi
-
-        # Polling-based timeout (more reliable than background wait on macOS)
-        local start pid status elapsed
-        start=$(date +%s)
-
-        "$@" &
-        pid=$!
-
-        # Poll for completion with timeout
-        while kill -0 "$pid" 2>/dev/null; do
-            elapsed=$(( $(date +%s) - start ))
-            if (( elapsed >= DOCKUTIL_TIMEOUT_SECS )); then
-                echo "WARN: dockutil timed out after ${elapsed}s; killing pid $pid ($*)" >&2
-                kill -TERM "$pid" 2>/dev/null || true
-                sleep 0.5
-                kill -KILL "$pid" 2>/dev/null || true
-                wait "$pid" 2>/dev/null
-                return 124  # timeout exit code
-            fi
-            sleep 0.2
-        done
-
-        wait "$pid"
-        status=$?
-
-        if [[ "$DOCKUTIL_TRACE" == "1" ]]; then
-            elapsed=$(( $(date +%s) - start ))
-            echo "INFO: dockutil finished in ${elapsed}s (exit ${status}): $*"
-        fi
-        return $status
-    }
-
-    # Clear existing Dock items (with timeout guard to avoid hangs)
-    run_dockutil dockutil --remove all --no-restart 2>/dev/null || true
-    sleep 0.5
-    
-    # Add apps in order (with timeout guard to prevent hangs on stuck dockutil)
-    for app in "${DOCK_APPS[@]}"; do
-        if [[ -d "$app" ]]; then
-            app_name=$(basename "$app" .app)
-            run_dockutil dockutil --remove "$app_name" --no-restart 2>/dev/null || true
-            run_dockutil dockutil --add "$app" --no-restart || echo "⚠️  dockutil add may have stalled for $app_name; continuing."
-        fi
-    done
-    
-    # Restart Dock now to apply all changes and reset state
-    # This prevents hangs in subsequent defaults write commands
-    echo "Restarting Dock to apply layout changes..."
-    killall Dock 2>/dev/null || true
-    sleep 1
-else
-    echo "⚠️  dockutil not found. Install via Brewfile to configure Dock layout."
-fi
-
-###############################################################################
-# Mission Control & Spaces
-###############################################################################
-echo "Configuring Mission Control & Spaces..."
-
-# Auto-rearrange Spaces by most recent use: on
-defaults write com.apple.dock mru-spaces -bool true
-
-# When switching apps, switch to Space with open windows: on
-defaults write NSGlobalDomain AppleSpacesSwitchOnActivate -bool true
-
-# Group windows by application: off
-defaults write com.apple.dock expose-group-by-app -bool false
-
-# Displays have separate Spaces: on
-defaults write com.apple.spaces spans-displays -bool false
-
-# Speed up Mission Control animations
-defaults write com.apple.dock expose-animation-duration -float 0.1
-
-###############################################################################
-# Window Tiling (Sequoia+)
-###############################################################################
-
-# Drag to edges to tile: on
-defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
-
-# Drag to menu bar to fill screen: on
-defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
-
-# Hold Option while dragging to tile: on
-defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
-
-# Tiled windows have margins: off
-defaults write com.apple.WindowManager EnableTiledWindowMargins -bool false
-
-###############################################################################
 # Desktop & Stage Manager
 ###############################################################################
+
+echo "Configuring Desktop..."
 
 # Stage Manager: off
 defaults write com.apple.WindowManager GloballyEnabled -bool false
@@ -324,181 +96,69 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false
 # Click wallpaper to show desktop: always
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
 
-# Hide widgets on desktop: on (no widgets cluttering desktop)
+# Hide widgets on desktop
 defaults write com.apple.WindowManager StandardHideWidgets -int 1
-
-# Hide widgets in Stage Manager: on
 defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
 
-# Apply widget hiding immediately by restarting WindowManager
-# Without this, the setting only takes effect after logout/restart
 killall WindowManager 2>/dev/null || true
-
-###############################################################################
-# Hot Corners
-###############################################################################
-# Values: 0=none, 2=Mission Control, 3=App Windows, 4=Desktop,
-#         5=Screen Saver, 6=Disable SS, 10=Sleep Display, 11=Launchpad,
-#         12=Notification Center, 13=Lock Screen, 14=Quick Note
-#
-# Modifier values: 0=none, 131072=Shift, 262144=Control, 524288=Option, 1048576=Command
-#
-# Note: These settings may not persist on newer macOS versions.
-# Apple increasingly expects hot corners to be set via System Settings or MDM.
-
-# Top-left: Launchpad (11)
-defaults write com.apple.dock wvous-tl-corner -int 11
-defaults write com.apple.dock wvous-tl-modifier -int 0
-
-# Top-right: Mission Control (2)
-defaults write com.apple.dock wvous-tr-corner -int 2
-defaults write com.apple.dock wvous-tr-modifier -int 0
-
-# Bottom-left: Start Screen Saver (5)
-defaults write com.apple.dock wvous-bl-corner -int 5
-defaults write com.apple.dock wvous-bl-modifier -int 0
-
-# Bottom-right: Desktop (4)
-defaults write com.apple.dock wvous-br-corner -int 4
-defaults write com.apple.dock wvous-br-modifier -int 0
 
 ###############################################################################
 # Finder
 ###############################################################################
+
 echo "Configuring Finder..."
 
-# Show all file extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
-# Show hidden files
 defaults write com.apple.finder AppleShowAllFiles -bool true
-
-# Show path bar and status bar
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
-
-# Default view: Columns (Nlsv=List, icnv=Icon, clmv=Column, glyv=Gallery)
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
-
-# New Finder window: Downloads
 defaults write com.apple.finder NewWindowTarget -string "PfLo"
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Downloads/"
-
-# Search scope: entire Mac
 defaults write com.apple.finder FXDefaultSearchScope -string "SCev"
-
-# Keep folders on top: in windows yes, on Desktop no
 defaults write com.apple.finder _FXSortFoldersFirst -bool true
 defaults write com.apple.finder _FXSortFoldersFirstOnDesktop -bool false
-
-# Warnings
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true
 defaults write com.apple.finder WarnOnEmptyTrash -bool true
-
-# Don't auto-remove Trash items after 30 days
 defaults write com.apple.finder FXRemoveOldTrashItems -bool false
-
-# Open folders in tabs (not new windows)
 defaults write com.apple.finder FinderSpawnTab -bool true
-
-# Desktop: hide all icons
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
-
-# Delete all tags
 defaults write com.apple.finder FavoriteTagNames -array
-
-# Avoid .DS_Store on network/USB
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-
-# Show ~/Library
 chflags nohidden ~/Library 2>/dev/null
 
 ###############################################################################
 # Keyboard & Input
 ###############################################################################
-echo "Configuring Keyboard & Input..."
 
-# Fast key repeat
+echo "Configuring Keyboard..."
+
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
-
-# Disable press-and-hold for accents (enable key repeat)
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-
-# Full keyboard access for all controls (Tab through all UI)
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-
-###############################################################################
-# Screenshots
-###############################################################################
-
-defaults write com.apple.screencapture location -string "${HOME}/Desktop"
-
-# Format: PNG
-defaults write com.apple.screencapture type -string "png"
-
-# Disable shadow
-defaults write com.apple.screencapture disable-shadow -bool true
 
 ###############################################################################
 # Lock Screen & Security
 ###############################################################################
-echo "Configuring Lock Screen & Security..."
 
-# Require password immediately after sleep/screensaver
+echo "Configuring Security..."
+
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
-
-# Login window: show name and password fields (not user list)
 sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME -bool true
-
-# Show Sleep, Restart, Shut Down buttons
 sudo defaults write /Library/Preferences/com.apple.loginwindow PowerOffDisabled -bool false
-
-# Reveal IP/hostname when clicking clock on login window
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
-
-###############################################################################
-# Menu Bar Clock
-###############################################################################
-
-# Show date and time
-defaults write com.apple.menuextra.clock ShowDate -int 1
-defaults write com.apple.menuextra.clock ShowDayOfWeek -bool true
-defaults write com.apple.menuextra.clock ShowSeconds -bool false
-
-###############################################################################
-# Menu Bar Battery
-###############################################################################
-
-# Show battery percentage in menu bar (modern macOS uses controlcenter domain)
-defaults -currentHost write com.apple.controlcenter.plist BatteryShowPercentage -bool true
-
-###############################################################################
-# Activity Monitor
-###############################################################################
-
-defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
-defaults write com.apple.ActivityMonitor IconType -int 5
-defaults write com.apple.ActivityMonitor ShowCategory -int 0
-defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
-defaults write com.apple.ActivityMonitor SortDirection -int 0
-
-###############################################################################
-# TextEdit
-###############################################################################
-
-defaults write com.apple.TextEdit RichText -int 0
-defaults write com.apple.TextEdit PlainTextEncoding -int 4
-defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 ###############################################################################
 # Software Updates
 ###############################################################################
+
+echo "Configuring Software Updates..."
 
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
@@ -506,49 +166,14 @@ defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
 defaults write com.apple.commerce AutoUpdate -bool true
 
 ###############################################################################
-# Time Machine
+# Disable Spotlight Shortcuts (free Cmd+Space for Raycast)
 ###############################################################################
 
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-
-###############################################################################
-# Custom Keyboard Shortcuts
-###############################################################################
-echo "Configuring custom keyboard shortcuts..."
-
-# NSUserKeyEquivalents allows setting custom keyboard shortcuts for menu items.
-# Modifier key symbols: @ = Cmd, ~ = Option, ^ = Control, $ = Shift
-# Note: Case matters for the letter (lowercase = just modifier, uppercase = Shift+modifier)
-
-# Lock Screen shortcut: Option+L
-# This adds a keyboard shortcut for the "Lock Screen" menu item in the Apple menu.
-# Works on macOS Tahoe 26.x (tested).
-# Note: May require logout/login or app restart to take effect in some apps.
-defaults write -g NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
-# Force cfprefsd to re-read the preferences
-killall cfprefsd 2>/dev/null || true
-echo "✓ Lock Screen shortcut set to Option+L"
-
-# Add any other custom app shortcuts here using:
-# defaults write -g NSUserKeyEquivalents -dict-add "Menu Item Name" "shortcut"
-
-###############################################################################
-# Disable Spotlight Keyboard Shortcuts (Cmd+Space)
-# Note: Frees up Cmd+Space for Raycast or other launchers
-###############################################################################
-
-# Spotlight shortcuts are in com.apple.symbolichotkeys:
-#   Key 64 = "Show Spotlight search" (Cmd+Space)
-#   Key 65 = "Show Finder search window" (Cmd+Option+Space)
-#
-# On fresh macOS installs, these entries may not exist until the user interacts
-# with System Settings, so we use PlistBuddy to create/set them idempotently.
+echo "Disabling Spotlight shortcuts..."
 
 SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
 
 disable_spotlight_shortcuts() {
-    # Disable "Show Spotlight search" (Cmd+Space) - key 64
-    # Structure: enabled=false, value.parameters=[65535, 49, 1048576], type=standard
     /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
         -c "Delete :AppleSymbolicHotKeys:64" \
         -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
@@ -557,7 +182,6 @@ disable_spotlight_shortcuts() {
         -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
         -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
         -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || {
-        # Entry might not exist yet on fresh install; try Add without Delete
         /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
             -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
             -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
@@ -567,7 +191,6 @@ disable_spotlight_shortcuts() {
             -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || true
     }
 
-    # Disable "Show Finder search window" (Cmd+Option+Space) - key 65
     /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
         -c "Delete :AppleSymbolicHotKeys:65" \
         -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
@@ -588,22 +211,19 @@ disable_spotlight_shortcuts() {
 
 if disable_spotlight_shortcuts; then
     echo "✓ Spotlight shortcuts disabled (Cmd+Space freed for Raycast)"
-    # Apply changes immediately without requiring logout/restart
-    # This private utility reads com.apple.symbolichotkeys and binds all shortcuts
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null && \
         echo "✓ Keyboard shortcut changes applied immediately" || \
         echo "⚠️  Could not apply immediately. Changes will take effect after logout."
 else
-    echo "⚠️  Could not disable Spotlight shortcuts. May require logout/restart."
+    echo "⚠️  Could not disable Spotlight shortcuts."
 fi
 
 ###############################################################################
-# Caps Lock → Command (requires LaunchDaemon for persistence)
+# Caps Lock → Command
 ###############################################################################
+
 echo "Configuring Caps Lock → Command remap..."
 
-# Create hidutil LaunchDaemon for Caps Lock → Command remap
-# Caps Lock = 0x700000039, Left Command = 0x7000000E3
 PLIST_PATH="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
 
 sudo tee "$PLIST_PATH" > /dev/null << 'EOF'
@@ -629,31 +249,7 @@ EOF
 sudo chown root:wheel "$PLIST_PATH"
 sudo chmod 644 "$PLIST_PATH"
 sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
-
-# Apply immediately for current session
 sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
-
-###############################################################################
-# Default Browser (Arc)
-###############################################################################
-
-# Set Arc as default browser (requires defaultbrowser from Brewfile)
-# Note: This will show a system confirmation dialog that must be clicked
-if command -v defaultbrowser &>/dev/null; then
-    if [[ -d "/Applications/Arc.app" ]]; then
-        echo "Setting Arc as default browser..."
-        # defaultbrowser will trigger a macOS confirmation dialog
-        # The user must click "Use Arc" to confirm
-        defaultbrowser arc 2>/dev/null && echo "✓ Arc set as default browser (confirm dialog if shown)" || {
-            echo "⚠️  Could not set default browser automatically."
-            echo "   Set manually: System Settings → Desktop & Dock → Default web browser → Arc"
-        }
-    else
-        echo "⚠️  Arc not installed. Skipping default browser configuration."
-    fi
-else
-    echo "⚠️  defaultbrowser not found. Install via Brewfile to set default browser."
-fi
 
 ###############################################################################
 # Synology Drive Client
@@ -664,97 +260,34 @@ SYNOLOGY_DB="$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
 if [[ -f "$SYNOLOGY_DB" ]]; then
     echo "Configuring Synology Drive Client..."
 
-    # Verify the database has the expected structure before modifying
     TABLES=$(sqlite3 "$SYNOLOGY_DB" ".tables" 2>/dev/null)
     if [[ "$TABLES" != *"system_table"* ]]; then
-        echo "⚠️  Synology Drive database structure unexpected (no system_table). Skipping."
+        echo "⚠️  Synology Drive database structure unexpected. Skipping."
     else
-        # Verify the keys we want to modify actually exist
         NOTIF_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'enable_desktop_notification';" 2>/dev/null)
         ICON_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'use_black_white_icon';" 2>/dev/null)
 
-        if [[ "$NOTIF_EXISTS" != "1" ]]; then
-            echo "⚠️  Synology Drive: 'enable_desktop_notification' key not found. Skipping."
-        elif [[ "$ICON_EXISTS" != "1" ]]; then
-            echo "⚠️  Synology Drive: 'use_black_white_icon' key not found. Skipping."
-        else
-            # Read current values
-            NOTIF_CURRENT=$(sqlite3 "$SYNOLOGY_DB" "SELECT value FROM system_table WHERE key = 'enable_desktop_notification';")
-            ICON_CURRENT=$(sqlite3 "$SYNOLOGY_DB" "SELECT value FROM system_table WHERE key = 'use_black_white_icon';")
-
-            # Disable desktop notifications for file events (0 = OFF)
-            if [[ "$NOTIF_CURRENT" == "0" ]]; then
-                echo "  - Desktop notifications: already OFF"
-            else
-                sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '0' WHERE key = 'enable_desktop_notification';"
-                echo "  - Desktop notifications: OFF (was: $NOTIF_CURRENT)"
-            fi
-
-            # Enable minimalist (black & white) system tray icon (1 = ON)
-            if [[ "$ICON_CURRENT" == "1" ]]; then
-                echo "  - Minimalist tray icon: already ON"
-            else
-                sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '1' WHERE key = 'use_black_white_icon';"
-                echo "  - Minimalist tray icon: ON (was: $ICON_CURRENT)"
-            fi
-
+        if [[ "$NOTIF_EXISTS" == "1" ]] && [[ "$ICON_EXISTS" == "1" ]]; then
+            sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '0' WHERE key = 'enable_desktop_notification';"
+            sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '1' WHERE key = 'use_black_white_icon';"
             echo "✓ Synology Drive Client configured"
-            echo "  Note: Restart Synology Drive Client if it's running for changes to take effect"
         fi
     fi
 else
-    echo "⚠️  Synology Drive Client not installed or not configured yet. Skipping."
+    echo "⚠️  Synology Drive Client not installed yet. Skipping."
 fi
 
 ###############################################################################
 # Restart affected apps
 ###############################################################################
+
 echo "Restarting affected apps..."
 
-for app in "Dock" "Finder" "SystemUIServer" "ControlCenter" "WindowManager"; do
-    killall "${app}" &> /dev/null
+for app in "Finder" "SystemUIServer" "ControlCenter" "WindowManager"; do
+    killall "${app}" &> /dev/null || true
 done
 
 echo ""
 echo "✅ .macos complete!"
 echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "⚠️  MANUAL STEPS REQUIRED"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "iCLOUD:"
-echo "  □ System Settings → [Your Name] → iCloud → iCloud Drive → Options..."
-echo "    - Turn on 'Desktop & Documents Folders'"
-echo "    - This syncs ~/Desktop and ~/Documents to iCloud Drive"
-echo ""
-echo "DISPLAY:"
-echo "  □ System Settings → Displays → Select 'More Space' resolution"
-echo ""
-echo "NETWORK SHARES (manual connection required):"
-echo "  □ Finder → Go → Connect to Server → smb://MooseStation → Add to Favorites (⌘T)"
-echo ""
-echo "KEYBOARD:"
-echo "  □ System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys"
-echo "    - Set Caps Lock → Command"
-echo ""
-echo "APP SIGN-INS & CONFIGURATION:"
-echo "  □ 1Password → Sign in with account"
-echo "  □ Arc → Sign in with account"
-echo "  □ Claude Desktop → Sign in, then configure Quick Entry:"
-echo "      - Claude menu → Settings → Desktop App"
-echo "      - Quick access shortcut: Custom → ⌥⌘Space (Option+Cmd+Space)"
-echo "      - Grant required permissions (Accessibility, Speech Recognition)"
-echo "  □ Synology Drive → Connect to NAS, then:"
-echo "      - Set sync folder location to: /Users/\$(whoami)/"
-echo "      - Set task name to: SynologyDrive"
-echo "      - This creates ~/SynologyDrive automatically"
-echo "  □ Google Drive → Sign in with Google account"
-echo "  □ Private Internet Access → Sign in with account"
-echo ""
-echo "DEVICES:"
-echo "  □ System Settings → Bluetooth → Pair devices (keyboard, mouse, etc.)"
-echo ""
-echo "FINAL:"
-echo "  □ Logout/restart to apply all changes"
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "Note: Some settings may require logout/restart to take effect."

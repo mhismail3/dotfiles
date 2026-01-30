@@ -71,17 +71,16 @@ OPTIONS:
   --help, -h        Show this help message
 
 MODULES:
-  core              Xcode CLI Tools, Homebrew, Oh My Zsh
+  core              Xcode CLI Tools, Homebrew
   packages          Install Brewfile packages
   symlinks          Create dotfile symlinks
   ssh               SSH key setup
-  shell             Set Zsh as default, configure plugins
+  shell             Set Zsh as default
   version-managers  Set up nvm, rustup, etc.
   cursor            Cursor IDE configuration
   claude            Claude Code CLI configuration
-  superwhisper      SuperWhisper configuration
   raycast           Raycast configuration
-  arc-extensions    Arc browser extensions (1Password, Raindrop.io)
+  chrome-extensions Chrome browser extensions
   macos             macOS system preferences
 
 EXAMPLES:
@@ -99,7 +98,7 @@ list_modules() {
     echo ""
     echo "Available modules:"
     echo ""
-    echo "  core              Xcode CLI Tools, Homebrew, Oh My Zsh"
+    echo "  core              Xcode CLI Tools, Homebrew"
     echo "  packages          Install Brewfile packages"
     echo "  symlinks          Create dotfile symlinks"
     echo "  ssh               SSH key setup"
@@ -107,9 +106,8 @@ list_modules() {
     echo "  version-managers  Set up nvm, Node, Rust, etc."
     echo "  cursor            Cursor IDE configuration"
     echo "  claude            Claude Code CLI configuration"
-    echo "  superwhisper      SuperWhisper configuration"
     echo "  raycast           Raycast configuration"
-    echo "  arc-extensions    Arc browser extensions (1Password, Raindrop.io)"
+    echo "  chrome-extensions Chrome browser extensions"
     echo "  macos             macOS system preferences"
     echo ""
     echo "Run a specific module with: ./start.sh --module <name>"
@@ -512,21 +510,6 @@ else
 fi
 
     cd "$DOTFILES" 2>/dev/null || true
-
-# Oh My Zsh
-info "Checking Oh My Zsh..."
-
-if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-        if [[ "$DRY_RUN" == "true" ]]; then
-            echo "[dry-run] Would install Oh My Zsh"
-        else
-    info "Installing Oh My Zsh..."
-            RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    success "Oh My Zsh installed"
-        fi
-else
-    success "Oh My Zsh already installed"
-fi
 }
 
 ###############################################################################
@@ -838,18 +821,6 @@ run_claude() {
 }
 
 ###############################################################################
-# Module: SuperWhisper
-###############################################################################
-
-run_superwhisper() {
-    if [[ -f "$DOTFILES/setup/superwhisper.sh" ]]; then
-        _DOTFILES_SOURCING=1 source "$DOTFILES/setup/superwhisper.sh"
-    else
-        warn "SuperWhisper setup script not found"
-    fi
-}
-
-###############################################################################
 # Module: Raycast
 ###############################################################################
 
@@ -862,30 +833,30 @@ run_raycast() {
 }
 
 ###############################################################################
-# Module: Arc Browser Extensions
+# Module: Chrome Browser Extensions
 ###############################################################################
 
-run_arc_extensions() {
-    info "Arc browser extensions..."
+run_chrome_extensions() {
+    info "Chrome browser extensions..."
 
-    if [[ ! -d "/Applications/Arc.app" ]]; then
-        echo "  Arc not installed, skipping extensions"
+    if [[ ! -d "/Applications/Google Chrome.app" ]]; then
+        echo "  Chrome not installed, skipping extensions"
         return 0
     fi
 
-    if [[ ! -d "$HOME/Library/Application Support/Arc/User Data" ]]; then
-        warn "Arc hasn't been launched yet. Launch Arc first to set up extensions."
+    if [[ ! -d "$HOME/Library/Application Support/Google/Chrome" ]]; then
+        warn "Chrome hasn't been launched yet. Launch Chrome first to set up extensions."
         return 0
     fi
 
-    if [[ -f "$DOTFILES/setup/arc-extensions.sh" ]]; then
+    if [[ -f "$DOTFILES/setup/chrome-extensions.sh" ]]; then
         if [[ "$DRY_RUN" == "true" ]]; then
-            "$DOTFILES/setup/arc-extensions.sh" --dry-run
+            "$DOTFILES/setup/chrome-extensions.sh" --dry-run
         else
-            "$DOTFILES/setup/arc-extensions.sh"
+            "$DOTFILES/setup/chrome-extensions.sh"
         fi
     else
-        warn "Arc extensions script not found"
+        warn "Chrome extensions script not found"
     fi
 }
 
@@ -935,18 +906,17 @@ main() {
     # Execute modules based on mode
     if [[ "$MODE" == "module" ]]; then
         case "$TARGET_MODULE" in
-            core)             run_core ;;
-            packages)         run_packages ;;
-            symlinks)         run_symlinks ;;
-            ssh)              run_ssh ;;
-            shell)            run_shell ;;
-            version-managers) run_version_managers ;;
-            cursor)           run_cursor ;;
-            claude)           run_claude ;;
-            superwhisper)     run_superwhisper ;;
-            raycast)          run_raycast ;;
-            arc-extensions)   run_arc_extensions ;;
-            macos)            run_macos ;;
+            core)              run_core ;;
+            packages)          run_packages ;;
+            symlinks)          run_symlinks ;;
+            ssh)               run_ssh ;;
+            shell)             run_shell ;;
+            version-managers)  run_version_managers ;;
+            cursor)            run_cursor ;;
+            claude)            run_claude ;;
+            raycast)           run_raycast ;;
+            chrome-extensions) run_chrome_extensions ;;
+            macos)             run_macos ;;
             *)
                 die "Unknown module: $TARGET_MODULE (use --list to see available modules)"
                 ;;
@@ -961,9 +931,8 @@ main() {
         should_run_step "version-managers" && run_version_managers
         should_run_step "cursor" && run_cursor
         should_run_step "claude" && run_claude
-        should_run_step "superwhisper" && run_superwhisper
         should_run_step "raycast" && run_raycast
-        should_run_step "arc-extensions" && run_arc_extensions
+        should_run_step "chrome-extensions" && run_chrome_extensions
         should_run_step "macos" && run_macos
     fi
 
@@ -987,8 +956,8 @@ echo ""
         echo "Standalone scripts:"
         echo "  ~/.dotfiles/setup/cursor.sh"
         echo "  ~/.dotfiles/setup/claude.sh"
-        echo "  ~/.dotfiles/setup/superwhisper.sh"
         echo "  ~/.dotfiles/setup/raycast.sh"
+        echo "  ~/.dotfiles/setup/chrome-extensions.sh"
         echo "  ~/.dotfiles/setup/ssh.sh"
 echo ""
     fi

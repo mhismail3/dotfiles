@@ -11,8 +11,6 @@ set -eo pipefail
 # Extension IDs (from Chrome Web Store)
 # Format: "extension_id:Extension Name"
 EXTENSIONS=(
-    "aeblfdkhhhdcdjpifhhbdiojplfjncoa:1Password"
-    "ldgfbffkinooeloadekpmfoklnobpien:Raindrop.io"
     "fcoeoabgfenejglbffodgkkbkcdhcgfn:Claude"
 )
 

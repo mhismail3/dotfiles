@@ -1,23 +1,4 @@
-# ~/.zshrc — Zsh configuration
-
-###############################################################################
-# Oh My Zsh
-###############################################################################
-
-export ZSH="$HOME/.oh-my-zsh"
-
-ZSH_THEME="robbyrussell"
-
-plugins=(
-    git
-    macos
-    docker
-    # npm plugin removed - conflicts with nvm lazy loading
-    python
-    brew
-)
-
-source $ZSH/oh-my-zsh.sh
+# ~/.zshrc — Minimal Zsh configuration for agent-focused machine
 
 ###############################################################################
 # Homebrew
@@ -42,7 +23,7 @@ source "$HOME/.dotfiles/zsh/path.zsh"
 source "$HOME/.dotfiles/zsh/aliases.zsh"
 
 ###############################################################################
-# API Keys (Secure Storage)
+# API Keys
 ###############################################################################
 
 source "$HOME/.dotfiles/zsh/api-keys.zsh"
@@ -58,38 +39,37 @@ export PATH="$GOPATH/bin:$PATH"
 # Rust
 [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
 
-# pyenv - Initialize properly for both interactive and non-interactive shells
+# pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv &>/dev/null; then
     eval "$(pyenv init -)"
 fi
 
-# nvm - Initialize properly for both interactive and non-interactive shells
+# nvm
 export NVM_DIR="$HOME/.nvm"
 if [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]; then
     source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
 fi
-# Bash completion only for interactive shells
 if [ -n "$PS1" ] && [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ]; then
     source "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 fi
 
-# rbenv - Initialize properly for both interactive and non-interactive shells
+# rbenv
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
 if command -v rbenv &>/dev/null; then
     eval "$(rbenv init - zsh)"
 fi
 
+# Bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
 ###############################################################################
 # Zsh Plugins (from Homebrew)
 ###############################################################################
-
-# Syntax highlighting
-if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
-    source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-fi
 
 # Autosuggestions
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
@@ -122,7 +102,7 @@ SAVEHIST=50000
 HISTFILE=~/.zsh_history
 
 ###############################################################################
-# Key Bindings (must be after compinit and plugins)
+# Key Bindings
 ###############################################################################
 
 # Tab: accept autosuggestion if present, otherwise normal completion
@@ -135,22 +115,3 @@ autosuggest-accept-or-complete() {
 }
 zle -N autosuggest-accept-or-complete
 bindkey '^I' autosuggest-accept-or-complete
-
-###############################################################################
-# Performance Note
-###############################################################################
-# Version managers are initialized immediately for reliability.
-# This adds ~100-200ms to shell startup but ensures compatibility with
-# non-interactive shells (Claude Code, scripts, etc.)
-# To profile startup time, run: time zsh -i -c exit
-
-
-# bun completions
-[ -s "/Users/moose/.bun/_bun" ] && source "/Users/moose/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
-# tron mods (things3, etc.)
-export PATH="$HOME/.tron/mods:$PATH"

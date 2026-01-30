@@ -1,4 +1,4 @@
-# Brewfile for moose-home-server
+# Brewfile for agent-focused Mac Mini
 # Install: brew bundle --file=~/.dotfiles/Brewfile
 
 ###############################################################################
@@ -15,73 +15,35 @@ brew "curl"             # Transfer data (newer than system)
 brew "openssh"          # SSH (newer than system)
 
 ###############################################################################
-# CLI Tools - Development & Productivity
+# CLI Tools - Development
 ###############################################################################
 
 brew "git"              # Version control
 brew "git-lfs"          # Git Large File Storage
-brew "git-delta"        # Better git diff pager (used in .gitconfig)
 brew "gh"               # GitHub CLI
 brew "jq"               # JSON processor
 brew "yq"               # YAML processor
-brew "httpie"           # Better curl for APIs
-brew "tree"             # Directory tree
-brew "watch"            # Execute command periodically
 brew "tmux"             # Terminal multiplexer
-brew "neovim"           # Modern vim
 brew "shellcheck"       # Shell script linter
 brew "shfmt"            # Shell script formatter
 brew "exiftool"         # Read/write image metadata
-
-###############################################################################
-# CLI Tools - Dock Management
-###############################################################################
-
-brew "dockutil"         # CLI to manage Dock items
-
-###############################################################################
-# CLI Tools - Browser Management
-###############################################################################
-
-brew "defaultbrowser"   # CLI to set default browser (used by .macos)
-
-###############################################################################
-# CLI Tools - Networking & System
-###############################################################################
-
-brew "nmap"             # Network scanner
-brew "mtr"              # Network diagnostic (traceroute + ping)
-brew "iperf3"           # Network performance
-brew "rsync"            # File sync (newer than system)
-brew "ssh-copy-id"      # Copy SSH keys to servers
 brew "mas"              # Mac App Store CLI
 
 ###############################################################################
-# CLI Tools - Compression & Archives
-###############################################################################
-
-brew "p7zip"            # 7-Zip
-brew "xz"               # XZ compression
-brew "zstd"             # Zstandard compression
-brew "pigz"             # Parallel gzip
-brew "unar"             # Universal archive extractor (better than unrar)
-
-###############################################################################
 # Languages & Version Managers
-# (Use version managers to avoid conflicts with system)
 ###############################################################################
 
 # Python
 brew "pyenv"            # Python version manager
 brew "pyenv-virtualenv" # Virtualenv plugin for pyenv
 brew "pipx"             # Install Python apps in isolated envs
-brew "uv"               # Fast Python package/project manager (Astral)
+brew "uv"               # Fast Python package/project manager
 
 # Node.js
-brew "nvm"              # Node version manager (start.sh installs latest LTS via nvm)
-# Node runtime is installed by start.sh using: nvm install --lts --latest-npm
-# Note: yarn is best installed via corepack (comes with Node.js) or npm
-# brew "yarn"             # Package manager - prefer corepack enable && corepack prepare yarn@stable
+brew "nvm"              # Node version manager
+
+# Bun
+brew "oven-sh/bun/bun"  # Fast JavaScript runtime/bundler
 
 # Ruby
 brew "rbenv"            # Ruby version manager
@@ -97,7 +59,6 @@ brew "rustup-init"      # Rust toolchain installer
 # Shell Enhancements
 ###############################################################################
 
-brew "zsh-syntax-highlighting"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 
@@ -106,10 +67,6 @@ brew "zsh-completions"
 ###############################################################################
 
 cask "raycast"          # Spotlight replacement
-cask "1password"        # Password manager
-cask "superwhisper"     # Voice-to-text with AI
-cask "claude"           # Anthropic Claude desktop app
-cask "arc"              # Browser
 cask "google-chrome"    # Browser
 cask "obsidian"         # Note-taking and knowledge management
 
@@ -118,8 +75,7 @@ cask "obsidian"         # Note-taking and knowledge management
 ###############################################################################
 
 cask "cursor"           # AI code editor
-cask "visual-studio-code"
-cask "ghostty"          # GPU-accelerated terminal (fast + configurable)
+cask "ghostty"          # GPU-accelerated terminal
 cask "db-browser-for-sqlite"  # SQLite database browser
 
 ###############################################################################
@@ -138,13 +94,9 @@ cask "synology-drive"   # Synology NAS sync
 cask "google-drive"     # Google Drive sync
 
 ###############################################################################
-# Applications - Media & Utilities
+# Applications - Utilities
 ###############################################################################
 
-cask "stremio"          # Open-source media center
-cask "telegram"         # Messaging app
-cask "vlc"              # Media player
-cask "qbittorrent"      # Torrent client (cleaner than uTorrent)
 cask "logi-options+"    # Logitech mouse/keyboard customization
 
 ###############################################################################
@@ -152,13 +104,11 @@ cask "logi-options+"    # Logitech mouse/keyboard customization
 ###############################################################################
 
 cask "tailscale"                 # Mesh VPN for secure networking
-cask "private-internet-access"   # PIA VPN (requires sudo, handled by brew bundle)
+cask "private-internet-access"   # PIA VPN
 
 ###############################################################################
 # Mac App Store Apps
 ###############################################################################
 
 mas "Things 3", id: 904280696
-mas "Hand Mirror", id: 1502839586  # Quick camera check from menu bar
 mas "Folder Peek", id: 1615988943  # Menu bar folder access
-

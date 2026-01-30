@@ -1,101 +1,21 @@
-# aliases.zsh — Shell aliases
+# aliases.zsh — Minimal aliases for agent-focused machine
 
 ###############################################################################
-# Navigation
+# Python
 ###############################################################################
 
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias ~="cd ~"
-alias dl="cd ~/Downloads"
-alias dt="cd ~/Desktop"
-alias dot="cd ~/.dotfiles"
-alias proj="cd ~/Downloads/projects"
+alias py="python3"
+alias python="python3"
+alias pip="pip3"
 
 ###############################################################################
-# Listing
+# Development
 ###############################################################################
 
-alias ll="ls -la"
-alias la="ls -a"
-alias l="ls -l"
+alias json="jq ."
 
 ###############################################################################
-# Git
-###############################################################################
-
-alias g="git"
-alias gs="git status"
-alias ga="git add"
-alias gaa="git add --all"
-alias gc="git commit"
-alias gcm="git commit -m"
-alias gp="git push"
-alias gpl="git pull"
-alias gco="git checkout"
-alias gcb="git checkout -b"
-alias gb="git branch"
-alias gd="git diff"
-alias gl="git log --oneline -20"
-alias glog="git log --graph --oneline --decorate"
-alias uncommit="git reset --soft HEAD~1"
-
-# Clone repo from my GitHub (usage: ghc repo-name)
-ghc() {
-    if [[ -z "$1" ]]; then
-        echo "Usage: ghc <repo-name>"
-        return 1
-    fi
-    git clone "git@github.com:mhismail3/$1.git"
-}
-
-# Pull all repos in ~/projects/
-pullall() {
-    local projects_dir="${HOME}/projects"
-    if [[ ! -d "$projects_dir" ]]; then
-        echo "Projects directory not found: $projects_dir"
-        return 1
-    fi
-
-    local count=0
-    local failed=0
-
-    for dir in "$projects_dir"/*/; do
-        [[ -d "${dir}.git" ]] || continue
-        local repo_name=$(basename "$dir")
-        echo "→ Pulling $repo_name..."
-        if git -C "$dir" pull --quiet 2>/dev/null; then
-            ((count++))
-        else
-            echo "  ✗ Failed to pull $repo_name"
-            ((failed++))
-        fi
-    done
-
-    echo ""
-    echo "Pulled $count repo(s)${failed:+, $failed failed}"
-}
-
-###############################################################################
-# Shortcuts
-###############################################################################
-
-alias c="clear"
-alias h="history"
-alias q="exit"
-alias v="nvim"
-alias vim="nvim"
-
-###############################################################################
-# Homebrew
-###############################################################################
-
-alias brewup="brew update && brew upgrade && brew cleanup"
-alias brewdump="brew bundle dump --file=~/.dotfiles/Brewfile --force"
-
-###############################################################################
-# System
+# System Diagnostics
 ###############################################################################
 
 alias ip="curl -s ipinfo.io/ip"
@@ -104,58 +24,8 @@ alias ports="lsof -i -P -n | grep LISTEN"
 alias cpu="top -l 1 | head -n 10"
 alias mem="top -l 1 | head -n 10 | grep PhysMem"
 
-# Empty trash safely
-alias emptytrash="rm -rf ~/.Trash/*"
-
 ###############################################################################
-# Development
+# Homebrew
 ###############################################################################
 
-alias py="python3"
-alias python="python3"
-alias pip="pip3"
-alias serve="python3 -m http.server 8000"
-alias json="jq ."
-
-
-###############################################################################
-# Network
-###############################################################################
-
-alias ping="ping -c 5"
-alias wget="wget -c"
-
-###############################################################################
-# macOS
-###############################################################################
-
-alias finder="open -a Finder"
-alias preview="open -a Preview"
-
-# Flush DNS cache
-alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
-
-# Show/hide hidden files (Finder)
-alias showfiles="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias hidefiles="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
-
-# Lock screen / Start screensaver
-alias afk="open -a ScreenSaverEngine"
-alias lock="pmset displaysleepnow"
-
-###############################################################################
-# Safety nets (confirm before overwriting)
-###############################################################################
-
-alias cp="cp -iv"
-alias mv="mv -iv"
-alias rm="rm -iv"
-alias mkdir="mkdir -pv"
-
-###############################################################################
-# Quick edits
-###############################################################################
-
-alias zshrc="${EDITOR:-nvim} ~/.zshrc"
-alias reload="exec zsh"  # Better than source - starts fresh shell
-
+alias brewup="brew update && brew upgrade && brew cleanup"
