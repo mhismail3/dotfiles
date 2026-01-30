@@ -100,10 +100,11 @@ cask "google-drive"     # Google Drive sync
 cask "logi-options+"    # Logitech mouse/keyboard customization
 
 ###############################################################################
-# Applications - Privacy & Security
+# Applications - Remote Access & Security
 ###############################################################################
 
 cask "tailscale"                 # Mesh VPN for secure networking
+cask "rustdesk"                  # Open-source remote desktop
 cask "private-internet-access"   # PIA VPN
 
 ###############################################################################
