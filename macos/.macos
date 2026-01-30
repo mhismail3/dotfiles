@@ -62,6 +62,11 @@ sudo pmset -a autorestart 1
 sudo pmset -a hibernatemode 0
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
+# Automatic login (requires FileVault to be disabled)
+# Get current username for auto-login
+CURRENT_USER=$(whoami)
+sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$CURRENT_USER"
+
 ###############################################################################
 # General UI/UX (simplified)
 ###############################################################################
