@@ -716,7 +716,7 @@ fi
     # Create common directories
     info "Creating directories..."
     
-    local dirs=("$HOME/Downloads/projects" "$HOME/.ssh")
+    local dirs=("$HOME/Workspace" "$HOME/.ssh")
     for dir in "${dirs[@]}"; do
         if [[ "$DRY_RUN" == "true" ]]; then
             [[ ! -d "$dir" ]] && echo "[dry-run] Would create: $dir"
