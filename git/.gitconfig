@@ -48,6 +48,3 @@
 
 [branch]
     sort = -committerdate
-
-[url "git@github.com:"]
-    insteadOf = https://github.com/

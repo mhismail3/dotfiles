@@ -1,111 +1,84 @@
 #!/usr/bin/env bash
 
-# ~/.macos — macOS preferences for agent-focused Mac Mini
-# Run by start.sh or standalone: source ~/.dotfiles/macos/.macos
+# .macos — System preferences for mac-server (M5 Max MacBook Pro)
+# Run: source ~/.dotfiles/macos/.macos
 
-###############################################################################
-# Preamble
-###############################################################################
-
-osascript -e 'tell application "System Preferences" to quit' 2>/dev/null || true
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
 sudo -v < /dev/tty
-
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+MACOS_USER="${MACOS_USER:-$(whoami)}"
+
+###############################################################################
+# Computer Name
+###############################################################################
+
+echo "Setting computer name to mac-server..."
+sudo scutil --set ComputerName "mac-server"
+sudo scutil --set HostName "mac-server"
+sudo scutil --set LocalHostName "mac-server"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "mac-server"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing)
 ###############################################################################
 
-MACOS_USER="${MACOS_USER:-$(whoami)}"
+echo "Enabling remote access..."
 
-echo "Enabling Remote Access..."
+sudo systemsetup -setremotelogin on 2>/dev/null || \
+    echo "  Enable manually: System Settings > General > Sharing > Remote Login"
 
-# Enable Remote Login (SSH)
-sudo systemsetup -setremotelogin on 2>/dev/null || {
-    echo "⚠️  Could not enable SSH via systemsetup."
-    echo "   Please enable manually: System Settings → General → Sharing → Remote Login"
-}
-
-# Restrict SSH to specific user
 sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
 sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
 
-# Enable Screen Sharing
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || {
-    echo "⚠️  Could not enable Screen Sharing via launchctl."
-    echo "   Please enable manually: System Settings → General → Sharing → Screen Sharing"
-}
-
-# Enable Remote Management (ARD)
-if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
-    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
-        -activate -configure -access -on \
-        -restart -agent -privs -all 2>/dev/null || {
-        echo "⚠️  Could not configure Remote Management."
-        echo "   Please enable manually: System Settings → General → Sharing → Remote Management"
-    }
-fi
+sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
+    echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
 
 ###############################################################################
 # Power Management (always-on server)
 ###############################################################################
 
-echo "Configuring Power Management..."
+echo "Configuring power management..."
 
-sudo pmset -a sleep 0
-sudo pmset -a displaysleep 10
-sudo pmset -a disksleep 0
-sudo pmset -a womp 1
-sudo pmset -a autorestart 1
-sudo pmset -a hibernatemode 0
+sudo pmset -a sleep 0           # Never sleep
+sudo pmset -a displaysleep 10   # Display off after 10 min
+sudo pmset -a disksleep 0       # Never spin down disks
+sudo pmset -a womp 1            # Wake on LAN
+sudo pmset -a autorestart 1     # Restart after power failure
+sudo pmset -a hibernatemode 0   # No hibernation
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
-# Automatic login (requires FileVault to be disabled)
-# Get current username for auto-login
-CURRENT_USER=$(whoami)
-sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$CURRENT_USER"
+# Auto-login
+sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$MACOS_USER"
 
 ###############################################################################
-# General UI/UX (simplified)
+# UI/UX
 ###############################################################################
 
-echo "Configuring UI preferences..."
+echo "Configuring UI..."
 
-# Dark mode
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
-
-# Save to disk (not iCloud) by default
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Disable auto-correct, smart quotes/dashes (for coding)
+# Disable autocorrect/smart text (for coding)
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
-# Disable "Are you sure you want to open?" dialog
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
 ###############################################################################
-# Desktop & Stage Manager
+# Desktop
 ###############################################################################
 
-echo "Configuring Desktop..."
+echo "Configuring desktop..."
 
-# Stage Manager: off
 defaults write com.apple.WindowManager GloballyEnabled -bool false
-
-# Click wallpaper to show desktop: always
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
-
-# Hide widgets on desktop
 defaults write com.apple.WindowManager StandardHideWidgets -int 1
 defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
-
-killall WindowManager 2>/dev/null || true
 
 ###############################################################################
 # Finder
@@ -122,25 +95,21 @@ defaults write com.apple.finder NewWindowTarget -string "PfLo"
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Downloads/"
 defaults write com.apple.finder FXDefaultSearchScope -string "SCev"
 defaults write com.apple.finder _FXSortFoldersFirst -bool true
-defaults write com.apple.finder _FXSortFoldersFirstOnDesktop -bool false
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true
-defaults write com.apple.finder WarnOnEmptyTrash -bool true
-defaults write com.apple.finder FXRemoveOldTrashItems -bool false
 defaults write com.apple.finder FinderSpawnTab -bool true
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
-defaults write com.apple.finder FavoriteTagNames -array
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 chflags nohidden ~/Library 2>/dev/null
 
 ###############################################################################
-# Keyboard & Input
+# Keyboard
 ###############################################################################
 
-echo "Configuring Keyboard..."
+echo "Configuring keyboard..."
 
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
@@ -148,22 +117,19 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 ###############################################################################
-# Lock Screen & Security
+# Security
 ###############################################################################
 
-echo "Configuring Security..."
+echo "Configuring security..."
 
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
-sudo defaults write /Library/Preferences/com.apple.loginwindow SHOWFULLNAME -bool true
-sudo defaults write /Library/Preferences/com.apple.loginwindow PowerOffDisabled -bool false
-sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 ###############################################################################
 # Software Updates
 ###############################################################################
 
-echo "Configuring Software Updates..."
+echo "Configuring software updates..."
 
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
@@ -171,63 +137,10 @@ defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
 defaults write com.apple.commerce AutoUpdate -bool true
 
 ###############################################################################
-# Disable Spotlight Shortcuts (free Cmd+Space for Raycast)
+# Caps Lock -> Command
 ###############################################################################
 
-echo "Disabling Spotlight shortcuts..."
-
-SPOTLIGHT_PLIST="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
-
-disable_spotlight_shortcuts() {
-    /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
-        -c "Delete :AppleSymbolicHotKeys:64" \
-        -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
-        -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
-        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
-        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
-        -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
-        -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || {
-        /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
-            -c "Add :AppleSymbolicHotKeys:64:enabled bool false" \
-            -c "Add :AppleSymbolicHotKeys:64:value:parameters array" \
-            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 65535" \
-            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 49" \
-            -c "Add :AppleSymbolicHotKeys:64:value:parameters: integer 1048576" \
-            -c "Add :AppleSymbolicHotKeys:64:value:type string standard" 2>/dev/null || true
-    }
-
-    /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
-        -c "Delete :AppleSymbolicHotKeys:65" \
-        -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
-        -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
-        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
-        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
-        -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 1572864" \
-        -c "Add :AppleSymbolicHotKeys:65:value:type string standard" 2>/dev/null || {
-        /usr/libexec/PlistBuddy "$SPOTLIGHT_PLIST" \
-            -c "Add :AppleSymbolicHotKeys:65:enabled bool false" \
-            -c "Add :AppleSymbolicHotKeys:65:value:parameters array" \
-            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 65535" \
-            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 49" \
-            -c "Add :AppleSymbolicHotKeys:65:value:parameters: integer 1572864" \
-            -c "Add :AppleSymbolicHotKeys:65:value:type string standard" 2>/dev/null || true
-    }
-}
-
-if disable_spotlight_shortcuts; then
-    echo "✓ Spotlight shortcuts disabled (Cmd+Space freed for Raycast)"
-    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u 2>/dev/null && \
-        echo "✓ Keyboard shortcut changes applied immediately" || \
-        echo "⚠️  Could not apply immediately. Changes will take effect after logout."
-else
-    echo "⚠️  Could not disable Spotlight shortcuts."
-fi
-
-###############################################################################
-# Caps Lock → Command
-###############################################################################
-
-echo "Configuring Caps Lock → Command remap..."
+echo "Remapping Caps Lock to Command..."
 
 PLIST_PATH="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
 
@@ -257,42 +170,14 @@ sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
 sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
 
 ###############################################################################
-# Synology Drive Client
-###############################################################################
-
-SYNOLOGY_DB="$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
-
-if [[ -f "$SYNOLOGY_DB" ]]; then
-    echo "Configuring Synology Drive Client..."
-
-    TABLES=$(sqlite3 "$SYNOLOGY_DB" ".tables" 2>/dev/null)
-    if [[ "$TABLES" != *"system_table"* ]]; then
-        echo "⚠️  Synology Drive database structure unexpected. Skipping."
-    else
-        NOTIF_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'enable_desktop_notification';" 2>/dev/null)
-        ICON_EXISTS=$(sqlite3 "$SYNOLOGY_DB" "SELECT COUNT(*) FROM system_table WHERE key = 'use_black_white_icon';" 2>/dev/null)
-
-        if [[ "$NOTIF_EXISTS" == "1" ]] && [[ "$ICON_EXISTS" == "1" ]]; then
-            sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '0' WHERE key = 'enable_desktop_notification';"
-            sqlite3 "$SYNOLOGY_DB" "UPDATE system_table SET value = '1' WHERE key = 'use_black_white_icon';"
-            echo "✓ Synology Drive Client configured"
-        fi
-    fi
-else
-    echo "⚠️  Synology Drive Client not installed yet. Skipping."
-fi
-
-###############################################################################
 # Restart affected apps
 ###############################################################################
 
 echo "Restarting affected apps..."
 
 for app in "Finder" "SystemUIServer" "ControlCenter" "WindowManager"; do
-    killall "${app}" &> /dev/null || true
+    killall "${app}" &>/dev/null || true
 done
 
 echo ""
-echo "✅ .macos complete!"
-echo ""
-echo "Note: Some settings may require logout/restart to take effect."
+echo "Done! Some settings require logout/restart to take effect."

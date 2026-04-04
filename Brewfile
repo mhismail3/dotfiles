@@ -1,115 +1,80 @@
-# Brewfile for agent-focused Mac Mini
+# Brewfile — mac-server (M5 Max MacBook Pro)
 # Install: brew bundle --file=~/.dotfiles/Brewfile
 
 ###############################################################################
-# CLI Tools - Core Utilities
+# CLI — Core
 ###############################################################################
 
-brew "coreutils"        # GNU core utilities (gls, gcp, etc.)
-brew "findutils"        # GNU find, xargs, locate
-brew "gnu-sed"          # GNU sed
-brew "gawk"             # GNU awk
-brew "grep"             # GNU grep
-brew "wget"             # Download files
-brew "curl"             # Transfer data (newer than system)
-brew "openssh"          # SSH (newer than system)
+brew "coreutils"
+brew "findutils"
+brew "gnu-sed"
+brew "gawk"
+brew "grep"
+brew "wget"
+brew "curl"
+brew "openssh"
 
 ###############################################################################
-# CLI Tools - Development
+# CLI — Development
 ###############################################################################
 
-brew "git"              # Version control
-brew "git-lfs"          # Git Large File Storage
-brew "gh"               # GitHub CLI
-brew "jq"               # JSON processor
-brew "yq"               # YAML processor
-brew "tmux"             # Terminal multiplexer
-brew "shellcheck"       # Shell script linter
-brew "shfmt"            # Shell script formatter
-brew "exiftool"         # Read/write image metadata
-brew "mas"              # Mac App Store CLI
+brew "git"
+brew "git-lfs"
+brew "gh"
+brew "jq"
+brew "yq"
+brew "tmux"
+brew "shellcheck"
+brew "shfmt"
+brew "mas"
 
 ###############################################################################
-# Languages & Version Managers
+# CLI — Shell
 ###############################################################################
 
-# Python
-brew "pyenv"            # Python version manager
-brew "pyenv-virtualenv" # Virtualenv plugin for pyenv
-brew "pipx"             # Install Python apps in isolated envs
-brew "uv"               # Fast Python package/project manager
-
-# Node.js
-brew "nvm"              # Node version manager
-
-# Bun
-brew "oven-sh/bun/bun"  # Fast JavaScript runtime/bundler
-
-# Ruby
-brew "rbenv"            # Ruby version manager
-brew "ruby-build"       # Install Ruby versions
-
-# Go
-brew "go"               # Go language
-
-# Rust
-brew "rustup-init"      # Rust toolchain installer
-
-###############################################################################
-# Shell Enhancements
-###############################################################################
-
+brew "starship"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 
 ###############################################################################
-# Applications - Productivity
+# Languages & Runtimes
 ###############################################################################
 
-cask "raycast"          # Spotlight replacement
-cask "google-chrome"    # Browser
-cask "obsidian"         # Note-taking and knowledge management
+brew "uv"                   # Python (primary — manages interpreters + venvs)
+brew "rustup-init"          # Rust toolchain
+brew "oven-sh/bun/bun"      # Bun (fast JS runtime)
+brew "nvm"                  # Node version manager
+brew "rbenv"                # Ruby version manager
+brew "ruby-build"           # rbenv plugin to install Ruby versions
 
 ###############################################################################
-# Applications - Development
+# Apps — Development
 ###############################################################################
 
-cask "cursor"           # AI code editor
-cask "ghostty"          # GPU-accelerated terminal
-cask "db-browser-for-sqlite"  # SQLite database browser
+cask "cursor"
+cask "ghostty"
+cask "google-chrome"
+cask "db-browser-for-sqlite"
+cask "docker"
 
 ###############################################################################
-# AI Coding CLIs
+# Apps — AI
 ###############################################################################
 
-brew "gemini-cli"       # Google Gemini CLI
-cask "codex"            # OpenAI Codex CLI
-cask "claude-code"      # Anthropic Claude Code CLI
+cask "claude-code"
+brew "ollama"
 
 ###############################################################################
-# Applications - Cloud Storage
+# Apps — Remote Access & Networking
 ###############################################################################
 
-cask "synology-drive"   # Synology NAS sync
-cask "google-drive"     # Google Drive sync
+cask "tailscale"
+cask "rustdesk"
+cask "private-internet-access"
 
 ###############################################################################
-# Applications - Utilities
+# Apps — Cloud Storage
 ###############################################################################
 
-cask "logi-options+"    # Logitech mouse/keyboard customization
-
-###############################################################################
-# Applications - Remote Access & Security
-###############################################################################
-
-cask "tailscale"                 # Mesh VPN for secure networking
-cask "rustdesk"                  # Open-source remote desktop
-cask "private-internet-access"   # PIA VPN
-
-###############################################################################
-# Mac App Store Apps
-###############################################################################
-
-mas "Things 3", id: 904280696
-mas "Folder Peek", id: 1615988943  # Menu bar folder access
+cask "synology-drive"
+cask "google-drive"
