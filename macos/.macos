@@ -36,20 +36,93 @@ sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.pli
     echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
 
 ###############################################################################
-# Power Management (always-on server)
+# Power Management — AC (plugged in: always-on server)
 ###############################################################################
 
-echo "Configuring power management..."
+echo "Configuring power management (AC/charger)..."
 
-sudo pmset -a sleep 0           # Never sleep
-sudo pmset -a displaysleep 10   # Display off after 10 min
-sudo pmset -a disksleep 0       # Never spin down disks
-sudo pmset -a womp 1            # Wake on LAN
-sudo pmset -a autorestart 1     # Restart after power failure
-sudo pmset -a hibernatemode 0   # No hibernation
+sudo pmset -c sleep 0              # Never sleep
+sudo pmset -c displaysleep 10      # Display off after 10 min
+sudo pmset -c disksleep 0          # Never spin down disks
+sudo pmset -c hibernatemode 0      # No hibernation (fast wake, no disk image)
+sudo pmset -c standby 0            # No deep sleep after idle
+sudo pmset -c womp 1               # Wake on LAN (requires Ethernet adapter)
+sudo pmset -c acwake 1             # Wake when power source changes
+sudo pmset -c lidwake 1            # Wake when lid opens
+sudo pmset -c tcpkeepalive 1       # Keep TCP connections alive
+sudo pmset -c ttyskeepawake 1      # SSH sessions prevent sleep
+sudo pmset -c powernap 1           # Background tasks during sleep (safety net)
+sudo pmset -c proximitywake 0      # No random wakes from iPhone nearby
+sudo pmset -c autorestart 1        # Restart after power failure (best-effort on laptops)
+
+###############################################################################
+# Power Management — Battery (unplugged: laptop mode)
+###############################################################################
+
+echo "Configuring power management (battery)..."
+
+sudo pmset -b sleep 30             # Sleep after 30 min idle
+sudo pmset -b displaysleep 10      # Display off after 10 min
+sudo pmset -b disksleep 0          # Never spin down disks (SSD anyway)
+sudo pmset -b hibernatemode 3      # RAM + disk image (safe if battery dies)
+sudo pmset -b standby 1            # Enter deep sleep eventually
+sudo pmset -b standbydelayhigh 900 # 15 min before deep sleep (battery > 50%)
+sudo pmset -b standbydelaylow 300  # 5 min before deep sleep (battery < 50%)
+sudo pmset -b womp 0               # No WoL on battery (WiFi can't do it anyway)
+sudo pmset -b acwake 1             # Wake when plugged back in
+sudo pmset -b lidwake 1            # Wake when lid opens
+sudo pmset -b tcpkeepalive 1       # Keep connections alive
+sudo pmset -b ttyskeepawake 1      # SSH sessions prevent sleep
+sudo pmset -b powernap 1           # Background tasks during sleep
+sudo pmset -b proximitywake 0      # No random wakes from iPhone
+sudo pmset -b autorestart 1        # Restart after power failure (best-effort)
+
+###############################################################################
+# Lid-Closed Operation (disablesleep)
+###############################################################################
+
+echo "Configuring lid-closed operation..."
+
+# Disable sleep entirely when on AC — allows running with lid closed, no external display
+sudo pmset -c disablesleep 1
+
+# LaunchDaemon to re-apply disablesleep on every boot (it may not persist across restarts)
+DISABLESLEEP_PLIST="/Library/LaunchDaemons/com.local.disablesleep.plist"
+sudo tee "$DISABLESLEEP_PLIST" > /dev/null << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.disablesleep</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/pmset</string>
+        <string>-c</string>
+        <string>disablesleep</string>
+        <string>1</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+EOF
+sudo chown root:wheel "$DISABLESLEEP_PLIST"
+sudo chmod 644 "$DISABLESLEEP_PLIST"
+sudo launchctl bootstrap system "$DISABLESLEEP_PLIST" 2>/dev/null || true
+
+###############################################################################
+# Auto-Restart on Freeze
+###############################################################################
+
+echo "Enabling auto-restart on freeze..."
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
-# Auto-login
+###############################################################################
+# Auto-Login
+###############################################################################
+
+echo "Configuring auto-login for $MACOS_USER..."
 sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$MACOS_USER"
 
 ###############################################################################
@@ -142,9 +215,9 @@ defaults write com.apple.commerce AutoUpdate -bool true
 
 echo "Remapping Caps Lock to Command..."
 
-PLIST_PATH="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
+KEYREMAP_PLIST="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
 
-sudo tee "$PLIST_PATH" > /dev/null << 'EOF'
+sudo tee "$KEYREMAP_PLIST" > /dev/null << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -164,9 +237,9 @@ sudo tee "$PLIST_PATH" > /dev/null << 'EOF'
 </plist>
 EOF
 
-sudo chown root:wheel "$PLIST_PATH"
-sudo chmod 644 "$PLIST_PATH"
-sudo launchctl bootstrap system "$PLIST_PATH" 2>/dev/null || true
+sudo chown root:wheel "$KEYREMAP_PLIST"
+sudo chmod 644 "$KEYREMAP_PLIST"
+sudo launchctl bootstrap system "$KEYREMAP_PLIST" 2>/dev/null || true
 sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
 
 ###############################################################################
@@ -179,5 +252,67 @@ for app in "Finder" "SystemUIServer" "ControlCenter" "WindowManager"; do
     killall "${app}" &>/dev/null || true
 done
 
+###############################################################################
+# MANUAL STEPS REQUIRED
+###############################################################################
+
 echo ""
-echo "Done! Some settings require logout/restart to take effect."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  MANUAL STEPS REQUIRED"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "  The following cannot be fully automated and need manual action:"
+echo ""
+echo "  1. DISABLE FILEVAULT (required for auto-login)"
+echo "     System Settings > Privacy & Security > FileVault > Turn Off"
+echo "     This may take a while to decrypt the disk."
+echo ""
+echo "  2. ENABLE AUTO-LOGIN (the defaults write above may not be enough)"
+echo "     System Settings > Users & Groups > Login Options"
+echo "     Set 'Automatic Login' to your user account."
+echo "     (This option only appears after FileVault is disabled.)"
+echo ""
+echo "  3. VERIFY REMOTE LOGIN (SSH)"
+echo "     System Settings > General > Sharing > Remote Login"
+echo "     Ensure it's ON and your user is in the allowed list."
+echo ""
+echo "  4. VERIFY SCREEN SHARING"
+echo "     System Settings > General > Sharing > Screen Sharing"
+echo "     Ensure it's ON."
+echo ""
+echo "  5. ENERGY SETTINGS (belt-and-suspenders with pmset)"
+echo "     System Settings > Battery > Options (when plugged in)"
+echo "     Turn ON 'Prevent automatic sleeping when the display is off'"
+echo ""
+echo "  6. LOCK SCREEN"
+echo "     System Settings > Lock Screen"
+echo "     Set 'Turn display off on battery when inactive' to your preference"
+echo "     Set 'Turn display off on power adapter when inactive' to 10 min"
+echo ""
+echo "  7. FIREWALL"
+echo "     System Settings > Network > Firewall"
+echo "     Consider enabling and allowing incoming connections for:"
+echo "       - SSH (Remote Login)"
+echo "       - Screen Sharing"
+echo "       - RustDesk"
+echo "       - Tailscale"
+echo "       - Ollama (port 11434)"
+echo "       - Any Docker services you expose"
+echo ""
+echo "  8. TEST LID-CLOSED OPERATION"
+echo "     After completing all steps above and restarting:"
+echo "     a. Close the MacBook lid"
+echo "     b. From another device, try: ssh $MACOS_USER@mac-server.local"
+echo "     c. If SSH works, the server is running with lid closed"
+echo "     d. If it doesn't respond, open the lid and check pmset:"
+echo "        pmset -g    (verify disablesleep = 1)"
+echo "        pmset -g assertions   (check for sleep assertions)"
+echo ""
+echo "  9. THERMAL NOTE"
+echo "     Running with lid closed reduces airflow. The M5 Max is efficient"
+echo "     but under sustained load (local LLMs, heavy agents), monitor temps:"
+echo "       sudo powermetrics --samplers smc -i 5000 -n 1 | grep -i temp"
+echo "     Consider propping the lid slightly open if thermals are an issue."
+echo ""
+echo "  After completing these steps, RESTART the machine to apply everything."
+echo ""

@@ -2,6 +2,12 @@
 # Install: brew bundle --file=~/.dotfiles/Brewfile
 
 ###############################################################################
+# Taps
+###############################################################################
+
+tap "mhismail3/tools"
+
+###############################################################################
 # CLI — Core
 ###############################################################################
 
@@ -10,9 +16,9 @@ brew "findutils"
 brew "gnu-sed"
 brew "gawk"
 brew "grep"
-brew "wget"
 brew "curl"
 brew "openssh"
+brew "websocat"
 
 ###############################################################################
 # CLI — Development
@@ -24,9 +30,9 @@ brew "gh"
 brew "jq"
 brew "yq"
 brew "tmux"
-brew "shellcheck"
-brew "shfmt"
+brew "ast-grep"
 brew "mas"
+brew "xcodegen"
 
 ###############################################################################
 # CLI — Shell
@@ -56,25 +62,29 @@ cask "ghostty"
 cask "google-chrome"
 cask "db-browser-for-sqlite"
 cask "docker"
+cask "container"
 
 ###############################################################################
 # Apps — AI
 ###############################################################################
 
 cask "claude-code"
+cask "agent-browser"
 brew "ollama"
 
 ###############################################################################
 # Apps — Remote Access & Networking
 ###############################################################################
 
-cask "tailscale"
+cask "tailscale-app"
 cask "rustdesk"
 cask "private-internet-access"
 
 ###############################################################################
-# Apps — Cloud Storage
+# Apps — Cloud Storage & Services
 ###############################################################################
 
 cask "synology-drive"
 cask "google-drive"
+brew "googleworkspace-cli"
+brew "mhismail3/tools/tron-twitter"
