@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# .macos — System preferences for mac-server (M5 Max MacBook Pro)
+# .macos — System preferences for server-laptop (M5 Max MacBook Pro)
 # Run: source ~/.dotfiles/macos/.macos
 
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
@@ -14,11 +14,11 @@ MACOS_USER="${MACOS_USER:-$(whoami)}"
 # Computer Name
 ###############################################################################
 
-echo "Setting computer name to mac-server..."
-sudo scutil --set ComputerName "mac-server"
-sudo scutil --set HostName "mac-server"
-sudo scutil --set LocalHostName "mac-server"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "mac-server"
+echo "Setting computer name to server-laptop..."
+sudo scutil --set ComputerName "server-laptop"
+sudo scutil --set HostName "server-laptop"
+sudo scutil --set LocalHostName "server-laptop"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "server-laptop"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing + Remote Management)
@@ -426,7 +426,7 @@ echo "      System Settings > Privacy & Security > Full Disk Access"
 echo "      Add Terminal.app and/or Ghostty."
 echo ""
 echo "  13. STATIC IP / DHCP RESERVATION"
-echo "      On your router, assign a fixed IP to mac-server's MAC address."
+echo "      On your router, assign a fixed IP to server-laptop's MAC address."
 echo ""
 echo "  14. DISABLE TRUE TONE (verify)"
 echo "      System Settings > Displays > True Tone"
@@ -435,7 +435,7 @@ echo ""
 echo "  15. TEST LID-CLOSED OPERATION"
 echo "      After completing all steps and restarting:"
 echo "      a. Close the MacBook lid"
-echo "      b. From another device: ssh $MACOS_USER@mac-server.local"
+echo "      b. From another device: ssh $MACOS_USER@server-laptop.local"
 echo "      c. Or: connect via RustDesk over Tailscale"
 echo "      d. If not responding, open lid and check: pmset -g (verify disablesleep = 1)"
 echo ""

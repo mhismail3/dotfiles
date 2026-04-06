@@ -1,6 +1,6 @@
 # dotfiles
 
-Setup for **mac-server** — an M5 Max MacBook Pro running as an always-on home server, primarily for AI agents, local LLMs (Ollama), Docker services, and remote development.
+Setup for **server-laptop** — an M5 Max MacBook Pro running as an always-on home server, primarily for AI agents, local LLMs (Ollama), Docker services, and remote development.
 
 The MacBook runs with the lid closed, accessed via SSH, RustDesk, or Screen Sharing over Tailscale. When unplugged, it behaves as a normal laptop.
 
@@ -9,7 +9,7 @@ The MacBook runs with the lid closed, accessed via SSH, RustDesk, or Screen Shar
 ```bash
 # Fresh Mac:
 git clone https://github.com/mhismail3/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles && git checkout mac-server
+cd ~/.dotfiles && git checkout server-laptop
 ./setup.sh
 
 # Re-run safely (skips what's done):
@@ -67,7 +67,7 @@ The `.macos` script automates these System Settings:
 
 | Category | What it sets |
 |---|---|
-| Computer Name | `mac-server` on all interfaces (Bonjour, SMB, etc.) |
+| Computer Name | `server-laptop` on all interfaces (Bonjour, SMB, etc.) |
 | Remote Access | SSH + Screen Sharing + Remote Management (ARD) |
 | Power (AC) | Never sleep, no hibernation, no standby, WoL, TCP keepalive |
 | Power (Battery) | Sleep 30min, hibernate mode 3, deep sleep after 15min |
