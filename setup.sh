@@ -1,12 +1,30 @@
 #!/usr/bin/env zsh
 
 # setup.sh — Bootstrap mac-server from scratch
-# Run: ~/.dotfiles/setup.sh
+# Run: ~/.dotfiles/setup.sh [--reset]
+#
+# Default mode: skip what's already done (safe to re-run)
+# --reset mode: force re-apply everything to match dotfiles
 
 set -o pipefail
 
 DOTFILES="$HOME/.dotfiles"
 GITHUB_USER="mhismail3"
+RESET=false
+
+# Parse args
+for arg in "$@"; do
+    case "$arg" in
+        --reset) RESET=true ;;
+        --help|-h)
+            echo "Usage: ./setup.sh [--reset]"
+            echo ""
+            echo "  Default: skip what's already done (idempotent)"
+            echo "  --reset: force re-apply everything to match dotfiles"
+            exit 0
+            ;;
+    esac
+done
 
 ###############################################################################
 # Helpers
@@ -33,6 +51,15 @@ symlink() {
     local src="$1" dst="$2"
     [[ ! -e "$src" ]] && { warn "Source not found: $src"; return 1; }
     mkdir -p "$(dirname "$dst")"
+
+    if [[ "$RESET" == "true" ]]; then
+        # Force: remove whatever's there and re-link
+        [[ -L "$dst" ]] && rm "$dst"
+        [[ -e "$dst" ]] && mv "$dst" "$dst.bak.$(date +%s)"
+        ln -s "$src" "$dst" && echo "  Linked: $dst -> $src"
+        return 0
+    fi
+
     if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
         echo "  Already linked: $dst"
         return 0
@@ -107,7 +134,12 @@ step_packages() {
     (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) &
     local keepalive=$!
 
-    brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
+    if [[ "$RESET" == "true" ]]; then
+        # Force reinstall/upgrade everything
+        brew bundle --file="$DOTFILES/Brewfile" --force
+    else
+        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
+    fi
     kill "$keepalive" 2>/dev/null || true
 
     # Fix zsh compinit permissions
@@ -142,8 +174,13 @@ step_ssh() {
     local key="$HOME/.ssh/id_ed25519"
     mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
 
-    if [[ -f "$key" ]]; then
+    if [[ -f "$key" ]] && [[ "$RESET" != "true" ]]; then
         success "Key already exists"
+        return 0
+    fi
+
+    if [[ -f "$key" ]] && [[ "$RESET" == "true" ]]; then
+        success "Key already exists (keeping existing key)"
         return 0
     fi
 
@@ -156,7 +193,7 @@ step_ssh() {
     eval "$(ssh-agent -s)" > /dev/null
     ssh-add --apple-use-keychain "$key" 2>/dev/null || ssh-add "$key"
 
-    if [[ ! -f "$HOME/.ssh/config" ]]; then
+    if [[ ! -f "$HOME/.ssh/config" ]] || [[ "$RESET" == "true" ]]; then
         cat > "$HOME/.ssh/config" << 'EOF'
 Host *
     IgnoreUnknown UseKeychain,AddKeysToAgent
@@ -190,7 +227,7 @@ EOF
 
 step_gh_auth() {
     info "GitHub CLI authentication"
-    if gh auth status &>/dev/null; then
+    if gh auth status &>/dev/null && [[ "$RESET" != "true" ]]; then
         success "Already authenticated"
     else
         echo "  This sets up git credential helper for HTTPS."
@@ -198,7 +235,7 @@ step_gh_auth() {
         success "Authenticated"
     fi
 
-    # Configure Git LFS
+    # Git LFS (always safe to re-run)
     if command -v git-lfs &>/dev/null; then
         git lfs install --system 2>/dev/null || git lfs install
         success "Git LFS configured"
@@ -234,7 +271,12 @@ step_languages() {
         rustup-init -y --no-modify-path || warn "Rust install failed"
         success "Rust installed"
     elif [[ -d "$HOME/.rustup" ]]; then
-        success "Rust already installed"
+        if [[ "$RESET" == "true" ]]; then
+            rustup update 2>/dev/null || true
+            success "Rust updated"
+        else
+            success "Rust already installed"
+        fi
     fi
 
     # Node (via nvm)
@@ -246,6 +288,10 @@ step_languages() {
             nvm install --lts --latest-npm 2>/dev/null && \
                 nvm alias default "lts/*" >/dev/null 2>&1
             success "Node LTS installed"
+        elif [[ "$RESET" == "true" ]]; then
+            nvm install --lts --latest-npm --reinstall-packages-from=current 2>/dev/null && \
+                nvm alias default "lts/*" >/dev/null 2>&1
+            success "Node LTS updated"
         else
             success "Node already installed ($(node -v))"
         fi
@@ -256,7 +302,7 @@ step_languages() {
         success "rbenv available"
     fi
 
-    # Python — uv handles everything, no pyenv needed
+    # Python
     if command -v uv &>/dev/null; then
         success "uv available (Python managed via uv)"
     fi
@@ -277,15 +323,19 @@ step_claude() {
 
     local src="$DOTFILES/claude"
     local dst="$HOME/.claude"
-    mkdir -p "$dst" "$dst/skills"
+    mkdir -p "$dst"
 
     [[ -f "$src/CLAUDE.md" ]]     && symlink "$src/CLAUDE.md"     "$dst/CLAUDE.md"
     [[ -f "$src/settings.json" ]] && symlink "$src/settings.json" "$dst/settings.json"
     [[ -f "$src/LEDGER.jsonl" ]]  && symlink "$src/LEDGER.jsonl"  "$dst/LEDGER.jsonl"
     [[ -d "$src/skills" ]]        && {
-        [[ -L "$dst/skills" ]] && rm "$dst/skills"
-        [[ -d "$dst/skills" ]] && rm -rf "$dst/skills"
-        ln -s "$src/skills" "$dst/skills" && echo "  Linked: skills/"
+        if [[ "$RESET" == "true" ]] || [[ ! -L "$dst/skills" ]]; then
+            [[ -L "$dst/skills" ]] && rm "$dst/skills"
+            [[ -d "$dst/skills" ]] && rm -rf "$dst/skills"
+            ln -s "$src/skills" "$dst/skills" && echo "  Linked: skills/"
+        else
+            echo "  Already linked: skills/"
+        fi
     }
 
     success "Claude Code configured"
@@ -316,11 +366,16 @@ step_macos() {
         return 1
     fi
 
-    echo "  This will set system preferences and restart Finder/Dock."
-    if confirm "Apply macOS preferences?" "n"; then
+    if [[ "$RESET" == "true" ]]; then
+        echo "  Reset mode: re-applying all macOS preferences."
         source "$DOTFILES/macos/.macos"
     else
-        echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
+        echo "  This will set system preferences and restart Finder/Dock."
+        if confirm "Apply macOS preferences?" "n"; then
+            source "$DOTFILES/macos/.macos"
+        else
+            echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
+        fi
     fi
 }
 
@@ -330,11 +385,15 @@ step_macos() {
 
 main() {
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "  mac-server setup"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "  This will set up a fresh macOS install."
+    if [[ "$RESET" == "true" ]]; then
+        echo "  MODE: RESET — force re-apply everything to match dotfiles"
+    else
+        echo "  MODE: Normal — skip what's already done"
+    fi
     echo "  You'll be prompted before each step."
     echo ""
 
