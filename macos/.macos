@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# .macos — System preferences for mac-server (M5 Max MacBook Pro)
+# .macos — System preferences for server-desktop (Mac Mini / Mac Studio)
 # Run: source ~/.dotfiles/macos/.macos
 
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
@@ -14,11 +14,11 @@ MACOS_USER="${MACOS_USER:-$(whoami)}"
 # Computer Name
 ###############################################################################
 
-echo "Setting computer name to mac-server..."
-sudo scutil --set ComputerName "mac-server"
-sudo scutil --set HostName "mac-server"
-sudo scutil --set LocalHostName "mac-server"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "mac-server"
+echo "Setting computer name to server-desktop..."
+sudo scutil --set ComputerName "server-desktop"
+sudo scutil --set HostName "server-desktop"
+sudo scutil --set LocalHostName "server-desktop"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "server-desktop"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing + Remote Management)
@@ -43,78 +43,22 @@ if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Re
 fi
 
 ###############################################################################
-# Power Management — AC (plugged in: always-on server)
+# Power Management (always-on headless server)
 ###############################################################################
 
-echo "Configuring power management (AC/charger)..."
+echo "Configuring power management..."
 
-sudo pmset -c sleep 0              # Never sleep
-sudo pmset -c displaysleep 10      # Display off after 10 min
-sudo pmset -c disksleep 0          # Never spin down disks
-sudo pmset -c hibernatemode 0      # No hibernation (fast wake, no disk image)
-sudo pmset -c standby 0            # No deep sleep after idle
-sudo pmset -c womp 1               # Wake on LAN (requires Ethernet adapter)
-sudo pmset -c acwake 1             # Wake when power source changes
-sudo pmset -c lidwake 1            # Wake when lid opens
-sudo pmset -c tcpkeepalive 1       # Keep TCP connections alive
-sudo pmset -c ttyskeepawake 1      # SSH sessions prevent sleep
-sudo pmset -c powernap 1           # Background tasks during sleep (safety net)
-sudo pmset -c proximitywake 0      # No random wakes from iPhone nearby
-sudo pmset -c autorestart 1        # Restart after power failure (best-effort on laptops)
-
-###############################################################################
-# Power Management — Battery (unplugged: laptop mode)
-###############################################################################
-
-echo "Configuring power management (battery)..."
-
-sudo pmset -b sleep 30             # Sleep after 30 min idle
-sudo pmset -b displaysleep 10      # Display off after 10 min
-sudo pmset -b disksleep 0          # Never spin down disks (SSD anyway)
-sudo pmset -b hibernatemode 3      # RAM + disk image (safe if battery dies)
-sudo pmset -b standby 1            # Enter deep sleep eventually
-sudo pmset -b standbydelayhigh 900 # 15 min before deep sleep (battery > 50%)
-sudo pmset -b standbydelaylow 300  # 5 min before deep sleep (battery < 50%)
-sudo pmset -b womp 0               # No WoL on battery (WiFi can't do it anyway)
-sudo pmset -b acwake 1             # Wake when plugged back in
-sudo pmset -b lidwake 1            # Wake when lid opens
-sudo pmset -b tcpkeepalive 1       # Keep connections alive
-sudo pmset -b ttyskeepawake 1      # SSH sessions prevent sleep
-sudo pmset -b powernap 1           # Background tasks during sleep
-sudo pmset -b proximitywake 0      # No random wakes from iPhone
-sudo pmset -b autorestart 1        # Restart after power failure (best-effort)
-
-###############################################################################
-# Lid-Closed Operation (disablesleep)
-###############################################################################
-
-echo "Configuring lid-closed operation..."
-
-sudo pmset -c disablesleep 1
-
-DISABLESLEEP_PLIST="/Library/LaunchDaemons/com.local.disablesleep.plist"
-sudo tee "$DISABLESLEEP_PLIST" > /dev/null << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.local.disablesleep</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/pmset</string>
-        <string>-c</string>
-        <string>disablesleep</string>
-        <string>1</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-EOF
-sudo chown root:wheel "$DISABLESLEEP_PLIST"
-sudo chmod 644 "$DISABLESLEEP_PLIST"
-sudo launchctl bootstrap system "$DISABLESLEEP_PLIST" 2>/dev/null || true
+sudo pmset -a sleep 0              # Never sleep
+sudo pmset -a displaysleep 0       # Never turn off display (headless, no display)
+sudo pmset -a disksleep 0          # Never spin down disks
+sudo pmset -a hibernatemode 0      # No hibernation
+sudo pmset -a standby 0            # No deep sleep
+sudo pmset -a womp 1               # Wake on LAN
+sudo pmset -a tcpkeepalive 1       # Keep TCP connections alive
+sudo pmset -a ttyskeepawake 1      # SSH sessions prevent sleep
+sudo pmset -a powernap 1           # Background tasks during sleep (safety net)
+sudo pmset -a proximitywake 0      # No random wakes from iPhone nearby
+sudo pmset -a autorestart 1        # Restart after power failure
 
 ###############################################################################
 # Auto-Restart on Freeze
@@ -194,17 +138,6 @@ defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
 defaults write com.apple.menuextra.clock Show24Hour -bool true
 defaults write com.apple.menuextra.clock ShowDate -int 1
 defaults write com.apple.menuextra.clock ShowSeconds -bool true
-
-###############################################################################
-# Display
-###############################################################################
-
-echo "Configuring display..."
-
-# Disable Night Shift
-defaults write com.apple.CoreBrightness CBBlueReductionStatus -dict AutoBlueReductionEnabled -bool false
-# Disable True Tone (may not persist via defaults on all machines)
-defaults write com.apple.CoreBrightness AutoBrightnessEnable -bool false 2>/dev/null || true
 
 ###############################################################################
 # Finder
@@ -377,28 +310,24 @@ echo "     System Settings > Users & Groups > Login Options"
 echo "     Set 'Automatic Login' to your user."
 echo "     (Only appears after FileVault is off.)"
 echo ""
-echo "  3. BATTERY CHARGE LIMIT"
-echo "     System Settings > Battery > Charging > Charge Limit"
-echo "     Set to 80%."
-echo ""
-echo "  4. VERIFY REMOTE LOGIN (SSH)"
+echo "  3. VERIFY REMOTE LOGIN (SSH)"
 echo "     System Settings > General > Sharing > Remote Login"
 echo "     Ensure ON and your user is allowed."
 echo ""
-echo "  5. VERIFY SCREEN SHARING"
+echo "  4. VERIFY SCREEN SHARING"
 echo "     System Settings > General > Sharing > Screen Sharing"
 echo "     Ensure ON."
 echo ""
-echo "  6. ENERGY SETTINGS"
-echo "     System Settings > Battery > Options (when plugged in)"
-echo "     Turn ON 'Prevent automatic sleeping when the display is off'"
+echo "  5. ENERGY SETTINGS"
+echo "     System Settings > Energy Saver"
+echo "     Turn ON 'Start up automatically after a power failure'"
+echo "     Turn ON 'Prevent your Mac from automatically sleeping when the display is off'"
 echo ""
-echo "  7. LOCK SCREEN"
+echo "  6. LOCK SCREEN"
 echo "     System Settings > Lock Screen"
-echo "     'Turn display off on battery when inactive': 10 min"
-echo "     'Turn display off on power adapter when inactive': 10 min"
+echo "     'Turn display off when inactive': Never (headless)"
 echo ""
-echo "  8. FIREWALL"
+echo "  7. FIREWALL"
 echo "     System Settings > Network > Firewall"
 echo "     Enable and allow connections for:"
 echo "       - SSH (Remote Login)"
@@ -408,36 +337,30 @@ echo "       - Tailscale"
 echo "       - Ollama (port 11434)"
 echo "       - Docker services"
 echo ""
-echo "  9. WI-FI"
+echo "  8. WI-FI / ETHERNET"
 echo "     System Settings > Wi-Fi"
 echo "     Join your home network and enable auto-join."
 echo ""
-echo "  10. FOCUS MODE (optional)"
+echo "  9. FOCUS MODE (optional)"
 echo "      System Settings > Focus"
 echo "      Create a 'Server' focus mode that suppresses non-critical"
 echo "      notifications. Set it to activate automatically."
 echo ""
-echo "  11. LOCATION SERVICES"
+echo "  10. LOCATION SERVICES"
 echo "      System Settings > Privacy & Security > Location Services"
 echo "      Disable or limit to only system services (Find My Mac)."
 echo ""
-echo "  12. FULL DISK ACCESS FOR AUTOMATION"
+echo "  11. FULL DISK ACCESS FOR AUTOMATION"
 echo "      System Settings > Privacy & Security > Full Disk Access"
 echo "      Add Terminal.app and/or Ghostty."
 echo ""
-echo "  13. STATIC IP / DHCP RESERVATION"
-echo "      On your router, assign a fixed IP to mac-server's MAC address."
+echo "  12. STATIC IP / DHCP RESERVATION"
+echo "      On your router, assign a fixed IP to server-desktop's MAC address."
 echo ""
-echo "  14. DISABLE TRUE TONE (verify)"
-echo "      System Settings > Displays > True Tone"
-echo "      Turn OFF (the defaults write may not stick on all machines)."
-echo ""
-echo "  15. TEST LID-CLOSED OPERATION"
+echo "  13. TEST REMOTE ACCESS"
 echo "      After completing all steps and restarting:"
-echo "      a. Close the MacBook lid"
-echo "      b. From another device: ssh $MACOS_USER@mac-server.local"
-echo "      c. Or: connect via RustDesk over Tailscale"
-echo "      d. If not responding, open lid and check: pmset -g (verify disablesleep = 1)"
+echo "      a. From another device: ssh $MACOS_USER@server-desktop.local"
+echo "      b. Or: connect via RustDesk / Screen Sharing over Tailscale"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  FUTURE ENHANCEMENTS — DO LATER"

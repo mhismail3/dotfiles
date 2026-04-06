@@ -1,15 +1,15 @@
 # dotfiles
 
-Setup for **mac-server** — an M5 Max MacBook Pro running as an always-on home server, primarily for AI agents, local LLMs (Ollama), Docker services, and remote development.
+Setup for **server-desktop** — a headless Mac Mini or Mac Studio running as an always-on home server, primarily for AI agents, local LLMs (Ollama), Docker services, and remote development.
 
-The MacBook runs with the lid closed, accessed via SSH, RustDesk, or Screen Sharing over Tailscale. When unplugged, it behaves as a normal laptop.
+Accessed via SSH, RustDesk, or Screen Sharing over Tailscale. No display attached.
 
 ## Quick Start
 
 ```bash
 # Fresh Mac:
 git clone https://github.com/mhismail3/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles && git checkout mac-server
+cd ~/.dotfiles && git checkout server-desktop
 ./setup.sh
 
 # Re-run safely (skips what's done):
@@ -67,11 +67,9 @@ The `.macos` script automates these System Settings:
 
 | Category | What it sets |
 |---|---|
-| Computer Name | `mac-server` on all interfaces (Bonjour, SMB, etc.) |
+| Computer Name | `server-desktop` on all interfaces (Bonjour, SMB, etc.) |
 | Remote Access | SSH + Screen Sharing + Remote Management (ARD) |
-| Power (AC) | Never sleep, no hibernation, no standby, WoL, TCP keepalive |
-| Power (Battery) | Sleep 30min, hibernate mode 3, deep sleep after 15min |
-| Lid-Closed | `disablesleep 1` + LaunchDaemon to persist across reboots |
+| Power | Never sleep, no hibernation, no standby, WoL, auto-restart on power failure |
 | Auto-restart | On kernel panic |
 | Auto-login | For current user (requires FileVault off) |
 | UI | Dark mode, no iCloud save default, no quarantine dialog |
@@ -89,7 +87,7 @@ The `.macos` script automates these System Settings:
 | Updates | Auto-download, no auto-install (prevents surprise reboots) |
 | Caps Lock | Remapped to Command via LaunchDaemon |
 
-After running, a checklist of **15 manual steps** is printed (FileVault, auto-login, charge limit, Wi-Fi, firewall, etc.).
+After running, a checklist of **13 manual steps** is printed (FileVault, auto-login, Wi-Fi, firewall, etc.).
 
 ## Language Environment Philosophy
 
@@ -106,7 +104,7 @@ After running, a checklist of **15 manual steps** is printed (FileVault, auto-lo
 - **Git editor set to `true`** — prevents editors from blocking automated git operations (agent-friendly).
 - **No Raycast/Obsidian/Things** — server doesn't need productivity GUI apps.
 - **No pyenv** — `uv` replaces it entirely for Python version + venv management.
-- **Apple native charge limit** — no third-party bclm; use System Settings > Battery > Charging > 80%.
+- **No battery management** — desktop Macs don't have batteries.
 - **`brewdiff` alias** — `brew bundle cleanup` shows drift from Brewfile.
 
 ## Updating
