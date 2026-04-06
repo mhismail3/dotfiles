@@ -21,7 +21,7 @@ sudo scutil --set LocalHostName "mac-server"
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "mac-server"
 
 ###############################################################################
-# Remote Access (SSH + Screen Sharing)
+# Remote Access (SSH + Screen Sharing + Remote Management)
 ###############################################################################
 
 echo "Enabling remote access..."
@@ -35,7 +35,6 @@ sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/nu
 sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
     echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
 
-# Enable Remote Management (ARD — full remote control)
 if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
     sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
         -activate -configure -access -on \
@@ -91,10 +90,8 @@ sudo pmset -b autorestart 1        # Restart after power failure (best-effort)
 
 echo "Configuring lid-closed operation..."
 
-# Disable sleep entirely when on AC — allows running with lid closed, no external display
 sudo pmset -c disablesleep 1
 
-# LaunchDaemon to re-apply disablesleep on every boot (it may not persist across restarts)
 DISABLESLEEP_PLIST="/Library/LaunchDaemons/com.local.disablesleep.plist"
 sudo tee "$DISABLESLEEP_PLIST" > /dev/null << 'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -127,19 +124,6 @@ echo "Enabling auto-restart on freeze..."
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
 ###############################################################################
-# Battery Charge Limit (preserve long-term battery health)
-###############################################################################
-
-echo "Setting battery charge limit to 80%..."
-if command -v bclm &>/dev/null; then
-    sudo bclm write 80
-    sudo bclm persist
-    echo "  Battery charge limit set to 80% (persists across reboots)"
-else
-    echo "  bclm not installed. Install via: brew install bclm"
-fi
-
-###############################################################################
 # Auto-Login
 ###############################################################################
 
@@ -156,7 +140,7 @@ defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
-# Disable autocorrect/smart text (for coding)
+# Disable autocorrect/smart text
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
@@ -164,7 +148,17 @@ defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
 ###############################################################################
-# Desktop
+# Dock
+###############################################################################
+
+echo "Configuring Dock..."
+
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.3
+
+###############################################################################
+# Desktop & Window Manager
 ###############################################################################
 
 echo "Configuring desktop..."
@@ -173,6 +167,44 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
 defaults write com.apple.WindowManager StandardHideWidgets -int 1
 defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
+
+###############################################################################
+# Siri
+###############################################################################
+
+echo "Disabling Siri..."
+
+defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+defaults write com.apple.Siri StatusMenuVisible -bool false
+defaults write com.apple.Siri UserHasDeclinedEnable -bool true
+launchctl disable "user/$UID/com.apple.assistantd" 2>/dev/null || true
+launchctl disable "user/$UID/com.apple.Siri.agent" 2>/dev/null || true
+
+###############################################################################
+# Menu Bar
+###############################################################################
+
+echo "Configuring menu bar..."
+
+# Hide Spotlight icon from menu bar
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+
+# Clock: 24-hour, show date, show seconds
+defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
+defaults write com.apple.menuextra.clock Show24Hour -bool true
+defaults write com.apple.menuextra.clock ShowDate -int 1
+defaults write com.apple.menuextra.clock ShowSeconds -bool true
+
+###############################################################################
+# Display
+###############################################################################
+
+echo "Configuring display..."
+
+# Disable Night Shift
+defaults write com.apple.CoreBrightness CBBlueReductionStatus -dict AutoBlueReductionEnabled -bool false
+# Disable True Tone (may not persist via defaults on all machines)
+defaults write com.apple.CoreBrightness AutoBrightnessEnable -bool false 2>/dev/null || true
 
 ###############################################################################
 # Finder
@@ -209,6 +241,59 @@ defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+###############################################################################
+# Spotlight (only index useful categories)
+###############################################################################
+
+echo "Configuring Spotlight..."
+
+defaults write com.apple.spotlight orderedItems -array \
+    '{"enabled" = 1;"name" = "APPLICATIONS";}' \
+    '{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
+    '{"enabled" = 1;"name" = "DIRECTORIES";}' \
+    '{"enabled" = 1;"name" = "DOCUMENTS";}' \
+    '{"enabled" = 0;"name" = "FONTS";}' \
+    '{"enabled" = 0;"name" = "MESSAGES";}' \
+    '{"enabled" = 0;"name" = "CONTACT";}' \
+    '{"enabled" = 0;"name" = "EVENT_TODO";}' \
+    '{"enabled" = 0;"name" = "IMAGES";}' \
+    '{"enabled" = 0;"name" = "BOOKMARKS";}' \
+    '{"enabled" = 0;"name" = "MUSIC";}' \
+    '{"enabled" = 0;"name" = "MOVIES";}' \
+    '{"enabled" = 0;"name" = "PRESENTATIONS";}' \
+    '{"enabled" = 0;"name" = "SPREADSHEETS";}' \
+    '{"enabled" = 0;"name" = "SOURCE";}' \
+    '{"enabled" = 0;"name" = "MENU_DEFINITION";}' \
+    '{"enabled" = 0;"name" = "MENU_OTHER";}' \
+    '{"enabled" = 0;"name" = "MENU_CONVERSION";}' \
+    '{"enabled" = 0;"name" = "MENU_EXPRESSION";}' \
+    '{"enabled" = 0;"name" = "PDF";}' \
+    '{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
+    '{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
+
+###############################################################################
+# Screen Time
+###############################################################################
+
+echo "Disabling Screen Time..."
+
+defaults write com.apple.ScreenTime Enabled -bool false 2>/dev/null || true
+
+###############################################################################
+# Privacy — Minimize data sharing
+###############################################################################
+
+echo "Minimizing analytics and tracking..."
+
+# Disable analytics
+defaults write com.apple.CrashReporter DialogType -string "none"
+defaults write com.apple.appleseed.FeedbackAssistant Autogather -bool false
+sudo defaults write /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist AutoSubmit -bool false 2>/dev/null || true
+
+# Disable personalized ads
+defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
+defaults write com.apple.AdLib allowIdentifierForAdvertising -bool false
 
 ###############################################################################
 # Security
@@ -270,12 +355,12 @@ sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc"
 
 echo "Restarting affected apps..."
 
-for app in "Finder" "SystemUIServer" "ControlCenter" "WindowManager"; do
+for app in "Finder" "Dock" "SystemUIServer" "ControlCenter" "WindowManager"; do
     killall "${app}" &>/dev/null || true
 done
 
 ###############################################################################
-# MANUAL STEPS REQUIRED
+# MANUAL STEPS — DO THESE NOW
 ###############################################################################
 
 echo ""
@@ -292,21 +377,21 @@ echo "     System Settings > Users & Groups > Login Options"
 echo "     Set 'Automatic Login' to your user."
 echo "     (Only appears after FileVault is off.)"
 echo ""
-echo "  3. VERIFY REMOTE LOGIN (SSH)"
+echo "  3. BATTERY CHARGE LIMIT"
+echo "     System Settings > Battery > Charging > Charge Limit"
+echo "     Set to 80%."
+echo ""
+echo "  4. VERIFY REMOTE LOGIN (SSH)"
 echo "     System Settings > General > Sharing > Remote Login"
 echo "     Ensure ON and your user is allowed."
 echo ""
-echo "  4. VERIFY SCREEN SHARING"
+echo "  5. VERIFY SCREEN SHARING"
 echo "     System Settings > General > Sharing > Screen Sharing"
 echo "     Ensure ON."
 echo ""
-echo "  5. ENERGY SETTINGS"
+echo "  6. ENERGY SETTINGS"
 echo "     System Settings > Battery > Options (when plugged in)"
 echo "     Turn ON 'Prevent automatic sleeping when the display is off'"
-echo ""
-echo "  6. BATTERY CHARGE LIMIT"
-echo "     System Settings > Battery > Charging > Charge Limit"
-echo "     Set to 80% (should already be set by bclm, verify here)."
 echo ""
 echo "  7. LOCK SCREEN"
 echo "     System Settings > Lock Screen"
@@ -323,21 +408,36 @@ echo "       - Tailscale"
 echo "       - Ollama (port 11434)"
 echo "       - Docker services"
 echo ""
-echo "  9. FULL DISK ACCESS FOR AUTOMATION"
-echo "     System Settings > Privacy & Security > Full Disk Access"
-echo "     Add Terminal.app and/or Ghostty (needed for LaunchAgent scripts"
-echo "     that access files outside your home directory)."
+echo "  9. WI-FI"
+echo "     System Settings > Wi-Fi"
+echo "     Join your home network and enable auto-join."
 echo ""
-echo "  10. STATIC IP / DHCP RESERVATION"
+echo "  10. FOCUS MODE (optional)"
+echo "      System Settings > Focus"
+echo "      Create a 'Server' focus mode that suppresses non-critical"
+echo "      notifications. Set it to activate automatically."
+echo ""
+echo "  11. LOCATION SERVICES"
+echo "      System Settings > Privacy & Security > Location Services"
+echo "      Disable or limit to only system services (Find My Mac)."
+echo ""
+echo "  12. FULL DISK ACCESS FOR AUTOMATION"
+echo "      System Settings > Privacy & Security > Full Disk Access"
+echo "      Add Terminal.app and/or Ghostty."
+echo ""
+echo "  13. STATIC IP / DHCP RESERVATION"
 echo "      On your router, assign a fixed IP to mac-server's MAC address."
-echo "      This ensures mac-server.local always resolves reliably."
 echo ""
-echo "  11. TEST LID-CLOSED OPERATION"
+echo "  14. DISABLE TRUE TONE (verify)"
+echo "      System Settings > Displays > True Tone"
+echo "      Turn OFF (the defaults write may not stick on all machines)."
+echo ""
+echo "  15. TEST LID-CLOSED OPERATION"
 echo "      After completing all steps and restarting:"
 echo "      a. Close the MacBook lid"
 echo "      b. From another device: ssh $MACOS_USER@mac-server.local"
-echo "      c. If SSH works, the server is running with lid closed"
-echo "      d. If not, open lid and check: pmset -g (verify disablesleep = 1)"
+echo "      c. Or: connect via RustDesk over Tailscale"
+echo "      d. If not responding, open lid and check: pmset -g (verify disablesleep = 1)"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  FUTURE ENHANCEMENTS — DO LATER"
