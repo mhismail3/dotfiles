@@ -35,6 +35,14 @@ sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/nu
 sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
     echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
 
+# Enable Remote Management (ARD — full remote control)
+if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
+    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
+        -activate -configure -access -on \
+        -restart -agent -privs -all 2>/dev/null || \
+        echo "  Enable manually: System Settings > General > Sharing > Remote Management"
+fi
+
 ###############################################################################
 # Power Management — AC (plugged in: always-on server)
 ###############################################################################
