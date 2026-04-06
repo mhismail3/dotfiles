@@ -129,6 +129,7 @@ step_symlinks() {
     symlink "$DOTFILES/git/.gitignore_global"  "$HOME/.gitignore_global"
     symlink "$DOTFILES/tmux/.tmux.conf"        "$HOME/.tmux.conf"
     symlink "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
+    symlink "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"
     success "Symlinks created"
 }
 

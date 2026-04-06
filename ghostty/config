@@ -1,0 +1,22 @@
+# Ghostty config — mac-server
+# Symlinked to ~/.config/ghostty/config
+
+# Performance
+window-vsync = true
+
+# Window
+window-padding-x = 8
+window-padding-y = 4
+window-decoration = true
+macos-titlebar-style = tabs
+confirm-close-surface = false
+
+# Scrollback
+scrollback-limit = 50000
+
+# Mouse
+copy-on-select = clipboard
+mouse-hide-while-typing = true
+
+# Shell integration
+shell-integration = zsh
