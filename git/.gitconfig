@@ -3,7 +3,7 @@
     email = mhismail3@gmail.com
 
 [core]
-    editor = nano
+    editor = true
     excludesfile = ~/.gitignore_global
     autocrlf = input
     preloadindex = true

@@ -297,10 +297,8 @@ step_claude() {
 step_ollama() {
     info "Ollama"
     if command -v ollama &>/dev/null; then
-        success "Ollama installed"
-        if confirm "Pull a default model? (llama3.2 recommended)" "n"; then
-            ollama pull llama3.2
-        fi
+        brew services start ollama 2>/dev/null || true
+        success "Ollama installed and set to auto-start"
     else
         warn "Ollama not found"
     fi
@@ -378,7 +376,8 @@ main() {
     echo "  [ ] Cursor — sign in for AI features / settings sync"
     echo "  [ ] RustDesk — set up password and ID for remote access"
     echo "  [ ] Claude Code — run 'claude' to authenticate (browser-based)"
-    echo "  [ ] Docker Desktop — optional Docker Hub login"
+    echo "  [ ] Docker Desktop — enable 'Start Docker Desktop when you sign in'"
+    echo "      in Docker Desktop > Settings > General, then optionally log in"
     echo ""
 }
 
