@@ -52,6 +52,10 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]
     source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
 
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+    source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 if type brew &>/dev/null; then
     FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
     FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"

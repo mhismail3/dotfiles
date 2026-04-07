@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# setup.sh — Bootstrap mac-server from scratch
+# setup.sh — Bootstrap personal MacBook from scratch
 # Run: ~/.dotfiles/setup.sh [--reset]
 #
 # Default mode: skip what's already done (safe to re-run)
@@ -386,7 +386,7 @@ step_macos() {
 main() {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  mac-server setup"
+    echo "  personal MacBook setup"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     if [[ "$RESET" == "true" ]]; then

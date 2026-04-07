@@ -1,11 +1,5 @@
-# Brewfile — mac-server (M5 Max MacBook Pro)
+# Brewfile — Personal MacBook
 # Install: brew bundle --file=~/.dotfiles/Brewfile
-
-###############################################################################
-# Taps
-###############################################################################
-
-tap "mhismail3/tools"
 
 ###############################################################################
 # CLI — Core
@@ -18,7 +12,6 @@ brew "gawk"
 brew "grep"
 brew "curl"
 brew "openssh"
-brew "websocat"
 
 ###############################################################################
 # CLI — Development
@@ -32,7 +25,7 @@ brew "yq"
 brew "tmux"
 brew "ast-grep"
 brew "mas"
-brew "xcodegen"
+brew "dockutil"
 
 ###############################################################################
 # CLI — Shell
@@ -41,50 +34,76 @@ brew "xcodegen"
 brew "starship"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
+brew "zsh-syntax-highlighting"
 
 ###############################################################################
 # Languages & Runtimes
 ###############################################################################
 
-brew "uv"                   # Python (primary — manages interpreters + venvs)
-brew "rustup-init"          # Rust toolchain
-brew "oven-sh/bun/bun"      # Bun (fast JS runtime)
-brew "nvm"                  # Node version manager
-brew "rbenv"                # Ruby version manager
-brew "ruby-build"           # rbenv plugin to install Ruby versions
+brew "uv"
+brew "rustup-init"
+brew "oven-sh/bun/bun"
+brew "nvm"
+brew "rbenv"
+brew "ruby-build"
+
+###############################################################################
+# Apps — Productivity
+###############################################################################
+
+cask "raycast"
+cask "1password"
+cask "superwhisper"
+cask "claude"
+cask "arc"
+cask "obsidian"
 
 ###############################################################################
 # Apps — Development
 ###############################################################################
 
 cask "cursor"
+cask "visual-studio-code"
 cask "ghostty"
 cask "google-chrome"
 cask "db-browser-for-sqlite"
 cask "docker"
-cask "container"
 
 ###############################################################################
 # Apps — AI
 ###############################################################################
 
 cask "claude-code"
-cask "agent-browser"
 brew "ollama"
 
 ###############################################################################
-# Apps — Remote Access & Networking
+# Apps — Media & Utilities
+###############################################################################
+
+cask "stremio"
+cask "vlc"
+cask "telegram"
+cask "qbittorrent"
+cask "logi-options+"
+
+###############################################################################
+# Apps — Networking
 ###############################################################################
 
 cask "tailscale-app"
-cask "rustdesk"
 cask "private-internet-access"
 
 ###############################################################################
-# Apps — Cloud Storage & Services
+# Apps — Cloud Storage
 ###############################################################################
 
 cask "synology-drive"
 cask "google-drive"
-brew "googleworkspace-cli"
-brew "mhismail3/tools/tron-twitter"
+
+###############################################################################
+# Mac App Store
+###############################################################################
+
+mas "Things 3", id: 904280696
+mas "Hand Mirror", id: 1502839586
+mas "Folder Peek", id: 1615988943
