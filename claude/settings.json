@@ -218,5 +218,5 @@
     "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "model": "opus"
+  "skipDangerousModePermissionPrompt": true
 }
