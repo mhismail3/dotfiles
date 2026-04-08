@@ -14,11 +14,15 @@ MACOS_USER="${MACOS_USER:-$(whoami)}"
 # Computer Name
 ###############################################################################
 
-echo "Setting computer name to server-laptop..."
-sudo scutil --set ComputerName "server-laptop"
-sudo scutil --set HostName "server-laptop"
-sudo scutil --set LocalHostName "server-laptop"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "server-laptop"
+echo -n "Enter device name [server-laptop]: "
+read DEVICE_NAME </dev/tty 2>/dev/null || DEVICE_NAME=""
+DEVICE_NAME="${DEVICE_NAME:-server-laptop}"
+
+echo "Setting computer name to $DEVICE_NAME..."
+sudo scutil --set ComputerName "$DEVICE_NAME"
+sudo scutil --set HostName "$DEVICE_NAME"
+sudo scutil --set LocalHostName "$DEVICE_NAME"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "$DEVICE_NAME"
 
 ###############################################################################
 # Remote Access (SSH + Screen Sharing + Remote Management)
@@ -27,19 +31,33 @@ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plis
 echo "Enabling remote access..."
 
 sudo systemsetup -setremotelogin on 2>/dev/null || \
+    sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist 2>/dev/null || \
     echo "  Enable manually: System Settings > General > Sharing > Remote Login"
 
 sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
 sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
 
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
-    echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
 
 if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
     sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
         -activate -configure -access -on \
+        -allowAccessFor -allUsers \
         -restart -agent -privs -all 2>/dev/null || \
         echo "  Enable manually: System Settings > General > Sharing > Remote Management"
+
+    # Allow anyone to request permission to control screen
+    sudo defaults write /Library/Preferences/com.apple.RemoteManagement VNCAlwaysStartOnConsole -bool true
+
+    # Enable VNC with password
+    echo -n "Set VNC password (leave blank to skip): "
+    read -s VNC_PASSWORD </dev/tty 2>/dev/null || VNC_PASSWORD=""
+    echo ""
+    if [[ -n "$VNC_PASSWORD" ]]; then
+        sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
+            -configure -clientopts -setvnclegacy -vnclegacy yes \
+            -setvncpw -vncpw "$VNC_PASSWORD" 2>/dev/null || \
+            echo "  Set VNC password manually: System Settings > General > Sharing > Remote Management"
+    fi
 fi
 
 ###############################################################################
@@ -70,7 +88,7 @@ echo "Configuring power management (battery)..."
 
 sudo pmset -b sleep 30             # Sleep after 30 min idle
 sudo pmset -b displaysleep 10      # Display off after 10 min
-sudo pmset -b disksleep 0          # Never spin down disks (SSD anyway)
+sudo pmset -b disksleep 10          # Spin down before sleep (SSD, minimal impact)
 sudo pmset -b hibernatemode 3      # RAM + disk image (safe if battery dies)
 sudo pmset -b standby 1            # Enter deep sleep eventually
 sudo pmset -b standbydelayhigh 900 # 15 min before deep sleep (battery > 50%)
@@ -140,6 +158,9 @@ defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
+# Default browser to Chrome
+open -a "Google Chrome" --args --make-default-browser 2>/dev/null || true
+
 # Disable autocorrect/smart text
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
@@ -156,6 +177,25 @@ echo "Configuring Dock..."
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-delay -float 0
 defaults write com.apple.dock autohide-time-modifier -float 0.3
+defaults write com.apple.dock tilesize -int 80
+defaults write com.apple.dock magnification -bool true
+defaults write com.apple.dock largesize -int 100
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock show-recent-count -int 0
+defaults write com.apple.dock orientation -string "bottom"
+
+# Dock app layout
+if command -v dockutil &>/dev/null; then
+    echo "Setting Dock layout..."
+    dockutil --remove all --no-restart
+    dockutil --add "/Applications/Google Chrome.app" --no-restart
+    dockutil --add /Applications/Cursor.app --no-restart
+    dockutil --add /Applications/Ghostty.app --no-restart
+    dockutil --add /Applications/Xcode.app --no-restart
+    dockutil --add /Applications/Tailscale.app --no-restart
+    dockutil --add "/Applications/1Password.app" --no-restart
+    dockutil --add "/System/Applications/System Settings.app" --no-restart
+fi
 
 ###############################################################################
 # Desktop & Window Manager
@@ -194,6 +234,16 @@ defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
 defaults write com.apple.menuextra.clock Show24Hour -bool true
 defaults write com.apple.menuextra.clock ShowDate -int 1
 defaults write com.apple.menuextra.clock ShowSeconds -bool true
+
+# Show battery percentage
+defaults write com.apple.controlcenter "NSStatusItem Visible Battery" -bool true
+defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
+
+# Hide WiFi from menu bar (still accessible in Control Center)
+defaults write com.apple.controlcenter "NSStatusItem Visible WiFi" -bool false
+
+# Hide Focus from menu bar
+defaults write com.apple.controlcenter "NSStatusItem Visible FocusModes" -bool false
 
 ###############################################################################
 # Display
@@ -368,37 +418,41 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  MANUAL STEPS — DO THESE NOW"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "  1. DISABLE FILEVAULT (required for auto-login)"
+echo "  1. INSTALL XCODE"
+echo "     Open the App Store and install Xcode, then run:"
+echo "     sudo xcodebuild -license accept"
+echo ""
+echo "  2. DISABLE FILEVAULT (required for auto-login)"
 echo "     System Settings > Privacy & Security > FileVault > Turn Off"
 echo "     This may take a while to decrypt. Wait for it to complete."
 echo ""
-echo "  2. ENABLE AUTO-LOGIN"
+echo "  3. ENABLE AUTO-LOGIN"
 echo "     System Settings > Users & Groups > Login Options"
 echo "     Set 'Automatic Login' to your user."
 echo "     (Only appears after FileVault is off.)"
 echo ""
-echo "  3. BATTERY CHARGE LIMIT"
+echo "  4. BATTERY CHARGE LIMIT"
 echo "     System Settings > Battery > Charging > Charge Limit"
 echo "     Set to 80%."
 echo ""
-echo "  4. VERIFY REMOTE LOGIN (SSH)"
+echo "  5. VERIFY REMOTE LOGIN (SSH)"
 echo "     System Settings > General > Sharing > Remote Login"
 echo "     Ensure ON and your user is allowed."
 echo ""
-echo "  5. VERIFY SCREEN SHARING"
+echo "  6. VERIFY SCREEN SHARING"
 echo "     System Settings > General > Sharing > Screen Sharing"
 echo "     Ensure ON."
 echo ""
-echo "  6. ENERGY SETTINGS"
+echo "  7. ENERGY SETTINGS"
 echo "     System Settings > Battery > Options (when plugged in)"
 echo "     Turn ON 'Prevent automatic sleeping when the display is off'"
 echo ""
-echo "  7. LOCK SCREEN"
+echo "  8. LOCK SCREEN"
 echo "     System Settings > Lock Screen"
 echo "     'Turn display off on battery when inactive': 10 min"
 echo "     'Turn display off on power adapter when inactive': 10 min"
 echo ""
-echo "  8. FIREWALL"
+echo "  9. FIREWALL"
 echo "     System Settings > Network > Firewall"
 echo "     Enable and allow connections for:"
 echo "       - SSH (Remote Login)"
@@ -408,34 +462,34 @@ echo "       - Tailscale"
 echo "       - Ollama (port 11434)"
 echo "       - Docker services"
 echo ""
-echo "  9. WI-FI"
+echo "  10. WI-FI"
 echo "     System Settings > Wi-Fi"
 echo "     Join your home network and enable auto-join."
 echo ""
-echo "  10. FOCUS MODE (optional)"
+echo "  11. FOCUS MODE (optional)"
 echo "      System Settings > Focus"
 echo "      Create a 'Server' focus mode that suppresses non-critical"
 echo "      notifications. Set it to activate automatically."
 echo ""
-echo "  11. LOCATION SERVICES"
+echo "  12. LOCATION SERVICES"
 echo "      System Settings > Privacy & Security > Location Services"
 echo "      Disable or limit to only system services (Find My Mac)."
 echo ""
-echo "  12. FULL DISK ACCESS FOR AUTOMATION"
+echo "  13. FULL DISK ACCESS FOR AUTOMATION"
 echo "      System Settings > Privacy & Security > Full Disk Access"
 echo "      Add Terminal.app and/or Ghostty."
 echo ""
-echo "  13. STATIC IP / DHCP RESERVATION"
-echo "      On your router, assign a fixed IP to server-laptop's MAC address."
+echo "  14. STATIC IP / DHCP RESERVATION"
+echo "      On your router, assign a fixed IP to $DEVICE_NAME's MAC address."
 echo ""
-echo "  14. DISABLE TRUE TONE (verify)"
+echo "  15. DISABLE TRUE TONE (verify)"
 echo "      System Settings > Displays > True Tone"
 echo "      Turn OFF (the defaults write may not stick on all machines)."
 echo ""
-echo "  15. TEST LID-CLOSED OPERATION"
+echo "  16. TEST LID-CLOSED OPERATION"
 echo "      After completing all steps and restarting:"
 echo "      a. Close the MacBook lid"
-echo "      b. From another device: ssh $MACOS_USER@server-laptop.local"
+echo "      b. From another device: ssh $MACOS_USER@$DEVICE_NAME.local"
 echo "      c. Or: connect via RustDesk over Tailscale"
 echo "      d. If not responding, open lid and check: pmset -g (verify disablesleep = 1)"
 echo ""

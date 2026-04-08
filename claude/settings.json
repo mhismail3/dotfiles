@@ -203,6 +203,7 @@
     ],
     "defaultMode": "default"
   },
+  "model": "opus[1m]",
   "statusLine": {
     "type": "command",
     "command": "~/.dotfiles/claude/statusline.sh"
@@ -218,5 +219,5 @@
     "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
-  "model": "opus"
+  "skipDangerousModePermissionPrompt": true
 }

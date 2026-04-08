@@ -33,6 +33,7 @@ brew "tmux"
 brew "ast-grep"
 brew "mas"
 brew "xcodegen"
+brew "dockutil"
 
 ###############################################################################
 # CLI — Shell
@@ -59,6 +60,7 @@ brew "ruby-build"           # rbenv plugin to install Ruby versions
 
 cask "cursor"
 cask "ghostty"
+cask "1password"
 cask "google-chrome"
 cask "db-browser-for-sqlite"
 cask "docker"
