@@ -190,6 +190,8 @@ if command -v dockutil &>/dev/null; then
     dockutil --remove all --no-restart
     dockutil --add "/Applications/Google Chrome.app" --no-restart
     dockutil --add /Applications/Cursor.app --no-restart
+    dockutil --add /Applications/Claude.app --no-restart
+    dockutil --add /Applications/Codex.app --no-restart
     dockutil --add /Applications/Ghostty.app --no-restart
     dockutil --add /Applications/Xcode.app --no-restart
     dockutil --add /Applications/Tailscale.app --no-restart

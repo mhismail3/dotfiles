@@ -31,6 +31,7 @@ brew "jq"
 brew "yq"
 brew "tmux"
 brew "ast-grep"
+brew "ffmpeg"
 brew "mas"
 brew "xcodegen"
 brew "dockutil"
@@ -70,9 +71,12 @@ cask "container"
 # Apps — AI
 ###############################################################################
 
+cask "claude"
 cask "claude-code"
+cask "codex-app"
 cask "agent-browser"
 brew "ollama"
+brew "huggingface-cli"
 
 ###############################################################################
 # Apps — Remote Access & Networking
