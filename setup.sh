@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# setup.sh — Bootstrap mac-server from scratch
+# setup.sh — Bootstrap mac-mini from scratch
 # Run: ~/.dotfiles/setup.sh [--reset]
 #
 # Default mode: skip what's already done (safe to re-run)
@@ -142,6 +142,17 @@ step_packages() {
         brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
     fi
     kill "$keepalive" 2>/dev/null || true
+
+    if [[ -f "$DOTFILES/Brewfile.optional" ]]; then
+        echo ""
+        echo "  Optional apps are login-heavy or task-specific and are skipped by default."
+        if confirm "Install optional apps from Brewfile.optional?" "n"; then
+            brew bundle --file="$DOTFILES/Brewfile.optional" --no-upgrade
+        else
+            echo "  Skipped optional apps. Install later with:"
+            echo "    brew bundle --file=~/.dotfiles/Brewfile.optional"
+        fi
+    fi
 
     # Fix zsh compinit permissions
     local dirs=("$HOMEBREW_PREFIX/share" "$HOMEBREW_PREFIX/share/zsh" "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions")
@@ -430,7 +441,21 @@ step_codex() {
 }
 
 ###############################################################################
-# Step 12: Ollama
+# Step 12: Syncthing
+###############################################################################
+
+step_syncthing() {
+    info "Syncthing"
+    if command -v syncthing &>/dev/null; then
+        brew services start syncthing 2>/dev/null || true
+        success "Syncthing installed and set to auto-start"
+    else
+        warn "Syncthing not found"
+    fi
+}
+
+###############################################################################
+# Step 13: Ollama
 ###############################################################################
 
 step_ollama() {
@@ -444,7 +469,7 @@ step_ollama() {
 }
 
 ###############################################################################
-# Step 13: macOS preferences
+# Step 14: macOS preferences
 ###############################################################################
 
 step_macos() {
@@ -474,7 +499,7 @@ step_macos() {
 main() {
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  mac-server setup"
+    echo "  mac-mini setup"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
     if [[ "$RESET" == "true" ]]; then
@@ -501,6 +526,7 @@ main() {
     step_languages
     step_claude
     step_codex
+    step_syncthing
     step_ollama
     step_macos
 
@@ -517,18 +543,13 @@ main() {
     echo "  APP LOGINS — Sign in to these manually"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo ""
-    echo "  [ ] Google Chrome — sign in to sync bookmarks/extensions/passwords"
     echo "  [ ] Tailscale — sign in to link this machine to your tailnet"
-    echo "  [ ] Synology Drive — connect to NAS (server address + credentials)"
-    echo "  [ ] Google Drive — sign in to Google account"
-    echo "  [ ] Private Internet Access — sign in with PIA credentials"
-    echo "  [ ] Cursor — sign in for AI features / settings sync"
-    echo "  [ ] RustDesk — set up password and ID for remote access"
+    echo "  [ ] Syncthing — open http://127.0.0.1:8384 and configure device/folder sync"
+    echo "  [ ] NAS — mount personal storage read/write only on this Mac Mini"
     echo "  [ ] Claude Code — run 'claude' to authenticate (browser-based)"
     echo "  [ ] Codex — open Codex.app or run 'codex' to authenticate"
     echo "  [ ] Codex Portable — pull/push with ~/.codex/portable/codex_portable.py"
-    echo "  [ ] Docker Desktop — enable 'Start Docker Desktop when you sign in'"
-    echo "      in Docker Desktop > Settings > General, then optionally log in"
+    echo "  [ ] Optional apps — install with brew bundle --file=~/.dotfiles/Brewfile.optional"
     echo ""
 }
 

@@ -1,0 +1,40 @@
+# Brewfile.optional — login-heavy or task-specific apps
+# Install only when needed:
+#   brew bundle --file=~/.dotfiles/Brewfile.optional
+
+tap "mhismail3/tools"
+
+###############################################################################
+# Apps — Development
+###############################################################################
+
+cask "cursor"
+cask "ghostty"
+cask "google-chrome"
+cask "db-browser-for-sqlite"
+cask "docker"
+cask "container"
+brew "xcodegen"
+
+###############################################################################
+# Apps — AI and Browser Automation
+###############################################################################
+
+cask "agent-browser"
+
+###############################################################################
+# Apps — Remote Access & Networking
+###############################################################################
+
+cask "rustdesk"
+cask "private-internet-access"
+
+###############################################################################
+# Apps — Cloud Storage & Services
+###############################################################################
+
+cask "synology-drive"
+cask "google-drive"
+brew "googleworkspace-cli"
+brew "mas"
+brew "mhismail3/tools/tron-twitter"

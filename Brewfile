@@ -1,11 +1,5 @@
-# Brewfile — mac-server (M5 Max MacBook Pro)
+# Brewfile — mac-mini stable baseline
 # Install: brew bundle --file=~/.dotfiles/Brewfile
-
-###############################################################################
-# Taps
-###############################################################################
-
-tap "mhismail3/tools"
 
 ###############################################################################
 # CLI — Core
@@ -31,8 +25,6 @@ brew "jq"
 brew "yq"
 brew "tmux"
 brew "ast-grep"
-brew "mas"
-brew "xcodegen"
 
 ###############################################################################
 # CLI — Shell
@@ -55,15 +47,10 @@ brew "rbenv"                # Ruby version manager
 brew "ruby-build"           # rbenv plugin to install Ruby versions
 
 ###############################################################################
-# Apps — Development
+# Services
 ###############################################################################
 
-cask "cursor"
-cask "ghostty"
-cask "google-chrome"
-cask "db-browser-for-sqlite"
-cask "docker"
-cask "container"
+brew "syncthing"
 
 ###############################################################################
 # Apps — AI
@@ -71,7 +58,6 @@ cask "container"
 
 cask "claude-code"
 cask "codex"
-cask "agent-browser"
 brew "ollama"
 
 ###############################################################################
@@ -79,14 +65,3 @@ brew "ollama"
 ###############################################################################
 
 cask "tailscale-app"
-cask "rustdesk"
-cask "private-internet-access"
-
-###############################################################################
-# Apps — Cloud Storage & Services
-###############################################################################
-
-cask "synology-drive"
-cask "google-drive"
-brew "googleworkspace-cli"
-brew "mhismail3/tools/tron-twitter"

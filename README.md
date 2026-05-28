@@ -2,7 +2,7 @@
 
 Setup for **mac-mini** — a headless Mac Mini or Mac Studio running as an always-on personal server, primarily for personal-file coordination, sync services, AI agent support, local LLMs (Ollama), Docker services, and remote development.
 
-Accessed via SSH, RustDesk, or Screen Sharing over Tailscale. No display attached.
+Accessed via SSH or Screen Sharing over Tailscale. No display attached.
 
 ## Quick Start
 
@@ -33,8 +33,9 @@ cd ~/.dotfiles && git checkout mac-mini
 
 | File | Purpose |
 |---|---|
-| `setup.sh` | Main bootstrap script (13 steps, interactive) |
-| `Brewfile` | All Homebrew packages and casks |
+| `setup.sh` | Main bootstrap script (14 steps, interactive) |
+| `Brewfile` | Stable baseline Homebrew packages and casks |
+| `Brewfile.optional` | Login-heavy or task-specific apps, installed manually when needed |
 | `zsh/.zshrc` | Shell config (Homebrew, languages, plugins, starship) |
 | `zsh/path.zsh` | PATH: GNU tools override BSD, user bins |
 | `zsh/aliases.zsh` | Aliases + guardrails (pip warns to use uv, npm warns on -g) |
@@ -46,6 +47,7 @@ cd ~/.dotfiles && git checkout mac-mini
 | `macos/.macos` | macOS system preferences (see below) |
 | `claude/` | Claude Code: CLAUDE.md, settings.json, skills/, LEDGER.jsonl |
 | `codex/` | Codex portable backup/sync tooling, excluding auth and runtime state |
+| `docs/stability-audit.md` | Criteria for keeping the branch lean and low-volatility |
 
 ## Setup Steps (in order)
 
@@ -60,8 +62,9 @@ cd ~/.dotfiles && git checkout mac-mini
 9. **Language runtimes** — Rust (rustup), Node (nvm LTS), rbenv, uv
 10. **Claude Code** — symlink config to ~/.claude/
 11. **Codex** — install portable sync tooling to ~/.codex/portable/
-12. **Ollama** — start as brew service (auto-starts on boot)
-13. **macOS preferences** — apply .macos script
+12. **Syncthing** — start as brew service (auto-starts on boot)
+13. **Ollama** — start as brew service (auto-starts on boot)
+14. **macOS preferences** — apply .macos script
 
 ## macOS Preferences (.macos)
 
@@ -69,12 +72,11 @@ The `.macos` script automates these System Settings:
 
 | Category | What it sets |
 |---|---|
-| Computer Name | `server-desktop` on all interfaces (Bonjour, SMB, etc.) |
-| Remote Access | SSH + Screen Sharing + Remote Management (ARD) |
+| Computer Name | `mac-mini` on all interfaces (Bonjour, SMB, etc.) |
+| Remote Access | SSH + Screen Sharing |
 | Power | Never sleep, no hibernation, no standby, WoL, auto-restart on power failure |
 | Auto-restart | On kernel panic |
-| Auto-login | For current user (requires FileVault off) |
-| UI | Dark mode, no iCloud save default, no quarantine dialog |
+| UI | Dark mode, no iCloud save default |
 | Autocorrect | All disabled (spelling, quotes, dashes, caps, period) |
 | Dock | Auto-hide, no delay |
 | Siri | Disabled entirely, icon hidden |
@@ -86,10 +88,9 @@ The `.macos` script automates these System Settings:
 | Screen Time | Disabled |
 | Privacy | Analytics off, ad tracking off, crash reports off |
 | Security | Password required immediately on wake |
-| Updates | Auto-download, no auto-install (prevents surprise reboots) |
-| Caps Lock | Remapped to Command via LaunchDaemon |
+| Updates | Auto-download, install critical data/security updates, no automatic macOS upgrades |
 
-After running, a checklist of **13 manual steps** is printed (FileVault, auto-login, Wi-Fi, firewall, etc.).
+After running, a checklist of manual steps is printed for FileVault/boot policy, networking, firewall, Tailscale, Syncthing, and remote access verification.
 
 ## Language Environment Philosophy
 
@@ -109,6 +110,18 @@ After running, a checklist of **13 manual steps** is printed (FileVault, auto-lo
 - **No battery management** — desktop Macs don't have batteries.
 - **`brewdiff` alias** — `brew bundle cleanup` shows drift from Brewfile.
 - **Codex Portable** — `.codex` config sync is handled by `~/.codex/portable/codex_portable.py`; auth, cookies, runtime DBs, plugin caches, worktrees, temp files, and secrets are excluded.
+- **Lean default Brewfile** — stable server primitives install by default; login-heavy GUI apps live in `Brewfile.optional`.
+- **Stability audit** — see [docs/stability-audit.md](docs/stability-audit.md) before adding anything to the default path.
+
+## Optional Apps
+
+The default setup intentionally skips apps that are login-heavy, task-specific, or likely to drift between deploys. Install them only when the Mac Mini actually needs them:
+
+```bash
+brew bundle --file=~/.dotfiles/Brewfile.optional
+```
+
+This includes Cursor, Ghostty, Chrome, Docker Desktop, RustDesk, PIA, Synology Drive, Google Drive, and other task-specific tools.
 
 ## Codex Backup And Sync
 

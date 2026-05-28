@@ -19,7 +19,7 @@ Start by getting your bearings:
 
 Then implement and verify in small steps:
 1. Run `./setup.sh` from `~/.dotfiles` and follow the prompts.
-2. Authenticate the required apps manually when prompted: Tailscale, Codex, GitHub CLI, Synology Drive or NAS access, Docker Desktop if needed.
+2. Authenticate the required apps manually when prompted: Tailscale, Codex, GitHub CLI, and NAS access. Install optional apps only when needed.
 3. Run `~/.codex/portable/codex_portable.py sync-pull --yes` if a CodexPortable backup exists, then run `~/.codex/portable/codex_portable.py doctor --verify-remote`.
 4. Verify Tailscale identifies this device as the Mac Mini and can reach the other tailnet devices.
 5. Update dotfiles as needed for the Mac Mini personal-server role. Preserve existing Claude setup; do not remove or rewrite it.
