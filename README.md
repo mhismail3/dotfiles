@@ -1,6 +1,6 @@
 # dotfiles
 
-Setup for **server-desktop** — a headless Mac Mini or Mac Studio running as an always-on home server, primarily for AI agents, local LLMs (Ollama), Docker services, and remote development.
+Setup for **mac-mini** — a headless Mac Mini or Mac Studio running as an always-on personal server, primarily for personal-file coordination, sync services, AI agent support, local LLMs (Ollama), Docker services, and remote development.
 
 Accessed via SSH, RustDesk, or Screen Sharing over Tailscale. No display attached.
 
@@ -9,7 +9,7 @@ Accessed via SSH, RustDesk, or Screen Sharing over Tailscale. No display attache
 ```bash
 # Fresh Mac:
 git clone https://github.com/mhismail3/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles && git checkout server-desktop
+cd ~/.dotfiles && git checkout mac-mini
 ./setup.sh
 
 # Re-run safely (skips what's done):
@@ -33,7 +33,7 @@ cd ~/.dotfiles && git checkout server-desktop
 
 | File | Purpose |
 |---|---|
-| `setup.sh` | Main bootstrap script (12 steps, interactive) |
+| `setup.sh` | Main bootstrap script (13 steps, interactive) |
 | `Brewfile` | All Homebrew packages and casks |
 | `zsh/.zshrc` | Shell config (Homebrew, languages, plugins, starship) |
 | `zsh/path.zsh` | PATH: GNU tools override BSD, user bins |
@@ -45,6 +45,7 @@ cd ~/.dotfiles && git checkout server-desktop
 | `ghostty/config` | Ghostty terminal: performance defaults, 50k scrollback |
 | `macos/.macos` | macOS system preferences (see below) |
 | `claude/` | Claude Code: CLAUDE.md, settings.json, skills/, LEDGER.jsonl |
+| `codex/` | Codex portable backup/sync tooling, excluding auth and runtime state |
 
 ## Setup Steps (in order)
 
@@ -58,8 +59,9 @@ cd ~/.dotfiles && git checkout server-desktop
 8. **Shell** — set zsh as default, create ~/Workspace and ~/.local/bin
 9. **Language runtimes** — Rust (rustup), Node (nvm LTS), rbenv, uv
 10. **Claude Code** — symlink config to ~/.claude/
-11. **Ollama** — start as brew service (auto-starts on boot)
-12. **macOS preferences** — apply .macos script
+11. **Codex** — install portable sync tooling to ~/.codex/portable/
+12. **Ollama** — start as brew service (auto-starts on boot)
+13. **macOS preferences** — apply .macos script
 
 ## macOS Preferences (.macos)
 
@@ -106,6 +108,26 @@ After running, a checklist of **13 manual steps** is printed (FileVault, auto-lo
 - **No pyenv** — `uv` replaces it entirely for Python version + venv management.
 - **No battery management** — desktop Macs don't have batteries.
 - **`brewdiff` alias** — `brew bundle cleanup` shows drift from Brewfile.
+- **Codex Portable** — `.codex` config sync is handled by `~/.codex/portable/codex_portable.py`; auth, cookies, runtime DBs, plugin caches, worktrees, temp files, and secrets are excluded.
+
+## Codex Backup And Sync
+
+This branch vendors the Codex portable sync tool under `codex/portable/`. Running `./setup.sh` copies it to `~/.codex/portable/`, configures a `CodexPortable` remote, and offers to pull the latest backup when available.
+
+After Codex is installed on the Mac Mini, use [codex/mac-mini-handoff-prompt.md](codex/mac-mini-handoff-prompt.md) to continue the personal-server setup from that machine.
+
+Normal workflow:
+
+```bash
+# Before using Codex on this Mac:
+~/.codex/portable/codex_portable.py sync-pull --yes
+~/.codex/portable/codex_portable.py doctor --verify-remote
+
+# After durable Codex setup changes:
+~/.codex/portable/codex_portable.py sync-push
+```
+
+Codex login is intentionally manual per machine. Do not copy `~/.codex/auth.json`.
 
 ## Updating
 

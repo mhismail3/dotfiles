@@ -12,6 +12,11 @@ alias ports="lsof -i -P -n | grep LISTEN"
 alias brewup="brew update && brew upgrade && brew cleanup"
 alias brewdiff="brew bundle cleanup --file=~/.dotfiles/Brewfile"
 
+# Codex portable sync
+alias codexsync="~/.codex/portable/codex_portable.py sync-push"
+alias codexpull="~/.codex/portable/codex_portable.py sync-pull --yes"
+alias codexdoctor="~/.codex/portable/codex_portable.py doctor --verify-remote"
+
 # Guardrails — keep the system clean
 # Python: use uv, not pip/pip3 globally
 pip() {

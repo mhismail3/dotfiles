@@ -47,6 +47,7 @@ brew "zsh-completions"
 ###############################################################################
 
 brew "uv"                   # Python (primary — manages interpreters + venvs)
+brew "python@3.12"          # Python for Codex portable tooling (tomllib)
 brew "rustup-init"          # Rust toolchain
 brew "oven-sh/bun/bun"      # Bun (fast JS runtime)
 brew "nvm"                  # Node version manager
@@ -69,6 +70,7 @@ cask "container"
 ###############################################################################
 
 cask "claude-code"
+cask "codex"
 cask "agent-browser"
 brew "ollama"
 

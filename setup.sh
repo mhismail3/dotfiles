@@ -10,6 +10,7 @@ set -o pipefail
 
 DOTFILES="$HOME/.dotfiles"
 GITHUB_USER="mhismail3"
+DOTFILES_BRANCH="${DOTFILES_BRANCH:-mac-mini}"
 RESET=false
 
 # Parse args
@@ -116,9 +117,9 @@ step_dotfiles() {
     info "Dotfiles"
     if [[ -d "$DOTFILES" ]]; then
         success "Already at $DOTFILES"
-        (cd "$DOTFILES" && git pull --rebase 2>/dev/null) || true
+        (cd "$DOTFILES" && git fetch origin "$DOTFILES_BRANCH" && git checkout "$DOTFILES_BRANCH" && git pull --rebase 2>/dev/null) || true
     else
-        git clone https://github.com/$GITHUB_USER/dotfiles.git "$DOTFILES" || \
+        git clone --branch "$DOTFILES_BRANCH" https://github.com/$GITHUB_USER/dotfiles.git "$DOTFILES" || \
             { err "Failed to clone"; return 1; }
         success "Cloned"
     fi
@@ -342,7 +343,94 @@ step_claude() {
 }
 
 ###############################################################################
-# Step 11: Ollama
+# Step 11: Codex
+###############################################################################
+
+codex_python() {
+    local candidates=(
+        "$HOMEBREW_PREFIX/bin/python3.12"
+        "$HOMEBREW_PREFIX/bin/python3"
+        "/opt/homebrew/bin/python3.12"
+        "/opt/homebrew/bin/python3"
+        "/usr/local/bin/python3"
+        "/usr/bin/python3"
+    )
+    local py
+    for py in "${candidates[@]}"; do
+        if [[ -x "$py" ]] && "$py" -c 'import tomllib' >/dev/null 2>&1; then
+            echo "$py"
+            return 0
+        fi
+    done
+    return 1
+}
+
+codex_portable_remote() {
+    local icloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents"
+    if [[ -d "$icloud" ]]; then
+        echo "$icloud/CodexPortable"
+    else
+        echo "$HOME/Documents/CodexPortable"
+    fi
+}
+
+step_codex() {
+    info "Codex"
+
+    if command -v codex &>/dev/null; then
+        success "Codex CLI available"
+    else
+        warn "Codex CLI not found yet (should be installed by Brewfile)"
+    fi
+
+    local src="$DOTFILES/codex/portable"
+    local dst="$HOME/.codex/portable"
+    mkdir -p "$dst"
+
+    if [[ -f "$src/codex_portable.py" ]]; then
+        cp "$src/codex_portable.py" "$dst/codex_portable.py"
+        chmod +x "$dst/codex_portable.py"
+        echo "  Installed: $dst/codex_portable.py"
+    else
+        warn "Missing $src/codex_portable.py"
+        return 0
+    fi
+
+    [[ -f "$src/README.md" ]] && cp "$src/README.md" "$dst/README.md"
+
+    local py
+    if ! py="$(codex_python)"; then
+        warn "No Python with tomllib found; install python@3.12 and re-run setup"
+        return 0
+    fi
+
+    local remote
+    remote="$(codex_portable_remote)"
+    "$py" "$dst/codex_portable.py" configure --remote "$remote" --create
+
+    if [[ -d "$remote/current" ]]; then
+        echo ""
+        echo "  Codex portable backup found at:"
+        echo "    $remote/current"
+        echo ""
+        if confirm "Pull Codex config from this backup now?" "n"; then
+            "$py" "$dst/codex_portable.py" sync-pull --yes
+            "$py" "$dst/codex_portable.py" doctor --verify-remote || true
+        else
+            echo "  Skipped. Pull later with:"
+            echo "    ~/.codex/portable/codex_portable.py sync-pull --yes"
+        fi
+    else
+        warn "No Codex portable backup found yet at $remote/current"
+        echo "  After configuring Codex on one machine, push a backup with:"
+        echo "    ~/.codex/portable/codex_portable.py sync-push"
+    fi
+
+    success "Codex portable tooling configured"
+}
+
+###############################################################################
+# Step 12: Ollama
 ###############################################################################
 
 step_ollama() {
@@ -356,7 +444,7 @@ step_ollama() {
 }
 
 ###############################################################################
-# Step 12: macOS preferences
+# Step 13: macOS preferences
 ###############################################################################
 
 step_macos() {
@@ -412,6 +500,7 @@ main() {
     step_shell
     step_languages
     step_claude
+    step_codex
     step_ollama
     step_macos
 
@@ -436,6 +525,8 @@ main() {
     echo "  [ ] Cursor — sign in for AI features / settings sync"
     echo "  [ ] RustDesk — set up password and ID for remote access"
     echo "  [ ] Claude Code — run 'claude' to authenticate (browser-based)"
+    echo "  [ ] Codex — open Codex.app or run 'codex' to authenticate"
+    echo "  [ ] Codex Portable — pull/push with ~/.codex/portable/codex_portable.py"
     echo "  [ ] Docker Desktop — enable 'Start Docker Desktop when you sign in'"
     echo "      in Docker Desktop > Settings > General, then optionally log in"
     echo ""
