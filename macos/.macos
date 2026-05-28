@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# .macos — Stable system preferences for mac-mini
+# .macos — System preferences for server-desktop (Mac Mini / Mac Studio)
 # Run: source ~/.dotfiles/macos/.macos
 
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
@@ -14,14 +14,14 @@ MACOS_USER="${MACOS_USER:-$(whoami)}"
 # Computer Name
 ###############################################################################
 
-echo "Setting computer name to mac-mini..."
-sudo scutil --set ComputerName "mac-mini"
-sudo scutil --set HostName "mac-mini"
-sudo scutil --set LocalHostName "mac-mini"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "mac-mini"
+echo "Setting computer name to server-desktop..."
+sudo scutil --set ComputerName "server-desktop"
+sudo scutil --set HostName "server-desktop"
+sudo scutil --set LocalHostName "server-desktop"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "server-desktop"
 
 ###############################################################################
-# Remote Access (SSH + Screen Sharing)
+# Remote Access (SSH + Screen Sharing + Remote Management)
 ###############################################################################
 
 echo "Enabling remote access..."
@@ -34,6 +34,13 @@ sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/nu
 
 sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
     echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
+
+if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
+    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
+        -activate -configure -access -on \
+        -restart -agent -privs -all 2>/dev/null || \
+        echo "  Enable manually: System Settings > General > Sharing > Remote Management"
+fi
 
 ###############################################################################
 # Power Management (always-on headless server)
@@ -61,6 +68,13 @@ echo "Enabling auto-restart on freeze..."
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
 ###############################################################################
+# Auto-Login
+###############################################################################
+
+echo "Configuring auto-login for $MACOS_USER..."
+sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$MACOS_USER"
+
+###############################################################################
 # UI/UX
 ###############################################################################
 
@@ -68,6 +82,7 @@ echo "Configuring UI..."
 
 defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 # Disable autocorrect/smart text
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
@@ -230,9 +245,42 @@ echo "Configuring software updates (download only, no auto-install)..."
 
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
-defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
+defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool false
 defaults write com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -bool false
 defaults write com.apple.commerce AutoUpdate -bool true
+
+###############################################################################
+# Caps Lock -> Command
+###############################################################################
+
+echo "Remapping Caps Lock to Command..."
+
+KEYREMAP_PLIST="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
+
+sudo tee "$KEYREMAP_PLIST" > /dev/null << 'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.KeyRemapping</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+</dict>
+</plist>
+EOF
+
+sudo chown root:wheel "$KEYREMAP_PLIST"
+sudo chmod 644 "$KEYREMAP_PLIST"
+sudo launchctl bootstrap system "$KEYREMAP_PLIST" 2>/dev/null || true
+sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
 
 ###############################################################################
 # Restart affected apps
@@ -253,12 +301,14 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  MANUAL STEPS — DO THESE NOW"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "  1. FILEVAULT / BOOT AVAILABILITY"
-echo "     Decide explicitly whether this server should boot unattended after power loss."
-echo "     FileVault improves at-rest security but may require login before services start."
+echo "  1. DISABLE FILEVAULT (required for auto-login)"
+echo "     System Settings > Privacy & Security > FileVault > Turn Off"
+echo "     This may take a while to decrypt. Wait for it to complete."
 echo ""
-echo "  2. LOGIN ITEMS"
-echo "     Keep login items minimal. Prefer brew services or LaunchAgents for server tasks."
+echo "  2. ENABLE AUTO-LOGIN"
+echo "     System Settings > Users & Groups > Login Options"
+echo "     Set 'Automatic Login' to your user."
+echo "     (Only appears after FileVault is off.)"
 echo ""
 echo "  3. VERIFY REMOTE LOGIN (SSH)"
 echo "     System Settings > General > Sharing > Remote Login"
@@ -282,10 +332,10 @@ echo "     System Settings > Network > Firewall"
 echo "     Enable and allow connections for:"
 echo "       - SSH (Remote Login)"
 echo "       - Screen Sharing"
+echo "       - RustDesk"
 echo "       - Tailscale"
-echo "       - Syncthing"
 echo "       - Ollama (port 11434)"
-echo "       - Docker services, if optional Docker is installed"
+echo "       - Docker services"
 echo ""
 echo "  8. WI-FI / ETHERNET"
 echo "     System Settings > Wi-Fi"
@@ -305,12 +355,12 @@ echo "      System Settings > Privacy & Security > Full Disk Access"
 echo "      Add Terminal.app and/or Ghostty."
 echo ""
 echo "  12. STATIC IP / DHCP RESERVATION"
-echo "      On your router, assign a fixed IP to mac-mini's MAC address."
+echo "      On your router, assign a fixed IP to server-desktop's MAC address."
 echo ""
 echo "  13. TEST REMOTE ACCESS"
 echo "      After completing all steps and restarting:"
-echo "      a. From another device: ssh $MACOS_USER@mac-mini.local"
-echo "      b. Or: connect via Screen Sharing over Tailscale"
+echo "      a. From another device: ssh $MACOS_USER@server-desktop.local"
+echo "      b. Or: connect via RustDesk / Screen Sharing over Tailscale"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  FUTURE ENHANCEMENTS — DO LATER"
@@ -339,7 +389,7 @@ echo ""
 echo "  SCHEDULED MAINTENANCE"
 echo "    Weekly LaunchAgent to run:"
 echo "    - brew update && brew upgrade && brew cleanup"
-echo "    - docker system prune -f, if optional Docker is installed"
+echo "    - docker system prune -f"
 echo "    - Report results via ntfy"
 echo ""
 echo "  SYSTEM AUDIT / CHANGE TRACKING"
