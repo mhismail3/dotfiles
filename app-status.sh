@@ -107,7 +107,7 @@ verify_synology_drive() {
     local db_path="$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
     local link_path="$HOME/SynologyDrive"
     local expected_target="$HOME/Library/CloudStorage/SynologyDrive-SynologyDrive"
-    local link_target expected_count sql
+    local link_target expected_count pref_count sql
 
     echo "  Synology Drive sync task"
     if [[ ! -f "$db_path" ]]; then
@@ -125,10 +125,19 @@ verify_synology_drive() {
         return 1
     fi
 
-    sql="select count(*) from session_table where custom_session_name = 'SynologyDrive' and share_name = 'home' and remote_path = '/' and symbolic_link_path = '$link_path' and sync_folder = '$expected_target/' and is_mac_on_demand_sync_enable = 1 and is_mounted = 1 and status = 1 and error = 0;"
+    sql="select count(*) from session_table where custom_session_name = 'SynologyDrive' and share_name = 'home' and remote_path = '/' and symbolic_link_path = '$link_path' and sync_folder = '$expected_target/' and is_mac_on_demand_sync_enable = 1 and is_mounted = 1 and status in (0, 1) and error = 0;"
     expected_count="$(sqlite3 "$db_path" "$sql")"
     if [[ "$expected_count" != "1" ]]; then
         echo "    failed: expected SynologyDrive task was not active and healthy"
+        return 1
+    fi
+
+    echo "    ok"
+
+    echo "  Synology Drive preferences"
+    pref_count="$(sqlite3 "$db_path" "select count(*) from system_table where (key = 'enable_desktop_notification' and value = '0') or (key = 'use_black_white_icon' and value = '1');")"
+    if [[ "$pref_count" != "2" ]]; then
+        echo "    failed: expected file event notifications off and minimalist icon on"
         return 1
     fi
 

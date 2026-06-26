@@ -76,7 +76,18 @@ Standard setup:
    `~/Library/CloudStorage/SynologyDrive-SynologyDrive`.
 
 `./app-status.sh verify synology-drive` checks the installed app, local symlink,
-and non-sensitive task columns in the Synology SQLite database.
+non-sensitive task columns, and preferred UI toggles in the Synology SQLite
+database.
+
+Safe automated preferences:
+
+- `enable_desktop_notification = 0`: disable desktop notifications for file
+  events.
+- `use_black_white_icon = 1`: enable the minimalist menu bar icon.
+
+`setup.sh` applies only those non-secret `system_table` keys after Synology Drive
+has created the database. If the database does not exist yet, setup skips this
+step and prints the re-run command.
 
 ## Commands
 

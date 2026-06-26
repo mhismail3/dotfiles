@@ -200,6 +200,8 @@ apps:
     desired_state: needs_login
     automated:
       - Installed by Brewfile.
+      - File event notifications are disabled by setup.sh after the sync database exists.
+      - Minimalist menu bar icon is enabled by setup.sh after the sync database exists.
     manual:
       - Sign in to the Synology server.
       - Create a sync task named SynologyDrive.
@@ -222,6 +224,7 @@ apps:
       - ~/SynologyDrive
     notes:
       - app-status.sh verifies the standard sync task with a redacted SQLite query against session_table.
+      - setup.sh only updates the non-secret system_table keys enable_desktop_notification and use_black_white_icon.
       - Do not copy SynologyDrive config or database files into dotfiles; they include server, account, session, private-key, and File Provider state.
       - Server address, credentials, generated sync state, and sync contents are not tracked in dotfiles.
 

@@ -114,7 +114,9 @@ Known Synology Drive boundary: sync task state is stored under
 `~/Library/Application Support/SynologyDrive`, including
 `data/db/sys.sqlite`, but those files include account/session/private-key and
 macOS File Provider state. The setup records the manual recipe and verifies the
-expected task with read-only SQLite checks instead of copying that state.
+expected task with read-only SQLite checks instead of copying that state. Stable
+non-secret UI preference keys in `system_table` are applied directly by
+`setup.sh`.
 
 Known Finder boundary: removing built-in sidebar items like Recents, AirDrop,
 Shared, and On My Mac does not currently expose a stable `defaults` setting on

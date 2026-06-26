@@ -643,7 +643,47 @@ step_ollama() {
 }
 
 ###############################################################################
-# Step 11: macOS preferences
+# Step 11: App preferences
+###############################################################################
+
+apply_synology_drive_preferences() {
+    local db_path="$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
+
+    if [[ ! -f "$db_path" ]]; then
+        warn "Synology Drive preferences skipped; sync database does not exist yet"
+        echo "  Complete Synology Drive setup, then re-run ./setup.sh."
+        return 0
+    fi
+    if ! command -v sqlite3 &>/dev/null; then
+        warn "sqlite3 not found; could not apply Synology Drive preferences"
+        return 0
+    fi
+
+    sqlite3 "$db_path" <<'SQL'
+BEGIN;
+UPDATE system_table SET value = '0' WHERE key = 'enable_desktop_notification';
+INSERT INTO system_table (key, value)
+SELECT 'enable_desktop_notification', '0'
+WHERE changes() = 0;
+
+UPDATE system_table SET value = '1' WHERE key = 'use_black_white_icon';
+INSERT INTO system_table (key, value)
+SELECT 'use_black_white_icon', '1'
+WHERE changes() = 0;
+COMMIT;
+SQL
+
+    success "Synology Drive preferences applied"
+    echo "  File event notifications disabled; minimalist menu bar icon enabled."
+}
+
+step_app_preferences() {
+    info "App preferences"
+    apply_synology_drive_preferences
+}
+
+###############################################################################
+# Step 12: macOS preferences
 ###############################################################################
 
 step_macos() {
@@ -701,6 +741,7 @@ main() {
     step_shell
     step_languages
     step_ollama
+    step_app_preferences
     step_macos
 
     echo ""
