@@ -55,6 +55,29 @@ Keep these manual unless a stable vendor-supported interface is found:
 - Sync folder choices and account-specific paths.
 - Hardware-specific mappings without export/import support.
 
+## Synology Drive
+
+Synology Drive stores local task metadata in
+`~/Library/Application Support/SynologyDrive/data/db/sys.sqlite`, with companion
+config and session state under `~/Library/Application Support/SynologyDrive`.
+That state is useful for verification, not for dotfile restore. It includes
+server, account, session, private-key, and macOS File Provider state, so the
+bootstrap should install the app and verify the task rather than copying the
+database.
+
+Standard setup:
+
+1. Sign in to the Synology server.
+2. Create a sync task named `SynologyDrive`.
+3. Select `/Users/moose` as the local parent folder.
+4. Uncheck `Create an empty "SynologyDrive" folder`.
+5. Use the Synology `home` share at remote path `/`.
+6. Confirm `~/SynologyDrive` points to
+   `~/Library/CloudStorage/SynologyDrive-SynologyDrive`.
+
+`./app-status.sh verify synology-drive` checks the installed app, local symlink,
+and non-sensitive task columns in the Synology SQLite database.
+
 ## Commands
 
 ```bash

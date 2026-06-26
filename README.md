@@ -110,6 +110,12 @@ Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or
 CLI for setting its global hotkey. Set Raycast's hotkey in the app UI.
 
+Known Synology Drive boundary: sync task state is stored under
+`~/Library/Application Support/SynologyDrive`, including
+`data/db/sys.sqlite`, but those files include account/session/private-key and
+macOS File Provider state. The setup records the manual recipe and verifies the
+expected task with read-only SQLite checks instead of copying that state.
+
 Known Finder boundary: removing built-in sidebar items like Recents, AirDrop,
 Shared, and On My Mac does not currently expose a stable `defaults` setting on
 this macOS build. `.macos` records it as a manual verification step instead of

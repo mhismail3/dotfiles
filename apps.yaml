@@ -202,18 +202,28 @@ apps:
       - Installed by Brewfile.
     manual:
       - Sign in to the Synology server.
-      - Configure sync tasks and selective sync rules.
-      - Confirm local sync paths.
+      - Create a sync task named SynologyDrive.
+      - Select the local parent folder /Users/moose.
+      - Uncheck "Create an empty SynologyDrive folder" when choosing the local folder.
+      - Use the Synology home share at remote path / unless deliberately changing the standard layout.
+      - Confirm ~/SynologyDrive exists as a symlink to ~/Library/CloudStorage/SynologyDrive-SynologyDrive.
     verify:
       commands:
         - test -d "/Applications/Synology Drive Client.app"
+        - test -f "$HOME/Library/Application Support/SynologyDrive/data/db/sys.sqlite"
+        - test -L "$HOME/SynologyDrive"
       user_checks:
         - Synology Drive status is healthy.
-        - Expected synced folders exist locally.
+        - ~/SynologyDrive opens in Finder and shows expected synced files.
     state_locations:
       - ~/Library/Application Support/SynologyDrive
+      - ~/Library/Application Support/SynologyDrive/data/db/sys.sqlite
+      - ~/Library/CloudStorage/SynologyDrive-SynologyDrive
+      - ~/SynologyDrive
     notes:
-      - Server address, credentials, and sync contents are not tracked in dotfiles.
+      - app-status.sh verifies the standard sync task with a redacted SQLite query against session_table.
+      - Do not copy SynologyDrive config or database files into dotfiles; they include server, account, session, private-key, and File Provider state.
+      - Server address, credentials, generated sync state, and sync contents are not tracked in dotfiles.
 
   - id: docker
     name: Docker Desktop
