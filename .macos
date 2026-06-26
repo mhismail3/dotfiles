@@ -109,7 +109,7 @@ if command -v dockutil &>/dev/null; then
     add_dock_app "/System/Applications/Calendar.app"
     add_dock_app "/Applications/Things3.app"
     add_dock_app "/System/Applications/Messages.app"
-    add_dock_app "/Applications/Arc.app"
+    add_dock_app "/Applications/Google Chrome.app"
     add_dock_app "/System/Applications/Photos.app"
     add_dock_app "/Applications/Codex.app"
     add_dock_app "/Applications/Xcode.app"

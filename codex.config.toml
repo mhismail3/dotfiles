@@ -98,6 +98,9 @@ mcp_oauth_credentials_store = "auto"
 # show_raw_agent_reasoning = false
 # disable_paste_burst = false
 
+[desktop]
+followUpQueueMode = "steer"
+
 [features]
 prevent_idle_sleep = true
 undo = true

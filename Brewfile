@@ -57,7 +57,6 @@ cask "raycast"
 cask "1password"
 cask "superwhisper"
 cask "claude"
-cask "arc"
 cask "obsidian"
 
 ###############################################################################
