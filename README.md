@@ -143,7 +143,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | Finder | Hidden files, extensions, path bar, column view, folders first; sidebar removals are manual |
 | Keyboard | Fast repeat, no press-and-hold, full keyboard nav |
 | Trackpad | Tap to click, three-finger drag |
-| Mission Control | Stable spaces, group by app, hot corners |
+| Mission Control | Stable spaces, group by app, hot corners: top-left app drawer, top-right Mission Control, bottom-left screen saver, bottom-right Desktop |
 | Screen Time | Disabled |
 | Privacy | Analytics off, ad tracking off |
 | Security | Password on wake |
