@@ -269,6 +269,20 @@ def emit_table(mapping, path=()):
 
 
 merged = deep_merge(baseline, live)
+
+# Older bootstrap revisions wrote app configuration keys under [desktop]. The
+# Codex app reads these as top-level configuration keys, so prune stale copies.
+desktop = merged.get("desktop")
+if isinstance(desktop, dict):
+    for key in (
+        "followUpQueueMode",
+        "conversationDetailMode",
+        "ambient-suggestions-enabled",
+    ):
+        desktop.pop(key, None)
+    if not desktop:
+        merged.pop("desktop", None)
+
 if live_path.exists():
     backup = live_path.with_name(live_path.name + f".bak.{time.strftime('%Y%m%d%H%M%S')}")
     shutil.copy2(live_path, backup)

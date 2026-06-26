@@ -57,6 +57,9 @@ wholesale; it contains auth, logs, sessions, caches, generated app state,
 plugin/app wiring, MCP runtime paths, and project trust history. On fresh Codex
 app installs, `setup.sh` merges durable defaults from `codex.config.toml` into
 the live `~/.codex/config.toml` while preserving app-managed state.
+Codex app configuration keys such as `followUpQueueMode` are top-level config
+keys, not `[desktop]` table keys; `setup.sh` prunes stale `[desktop]` copies
+from older bootstrap revisions during merge.
 
 ## Starship
 
