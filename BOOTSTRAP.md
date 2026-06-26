@@ -37,6 +37,10 @@ agent memory.
 - Display scaling is scriptable with `displayplacer`. On the built-in
   3024x1964 Liquid Retina XDR panel, "More Space" maps to
   `res:1800x1169 hz:120 scaling:on`.
+- Fresh macOS power defaults were too aggressive for agent work:
+  `sleep=1` minute on both battery and AC, and `displaysleep=2` minutes on
+  battery. `.macos` now sets screen saver to 20 minutes, battery display/system
+  sleep to 15/30 minutes, and AC display/system sleep to 30/never.
 - Dock entries should be path-checked before adding them. Missing apps become
   question marks, and Screen Sharing lives at
   `/System/Applications/Utilities/Screen Sharing.app` on this macOS build.
