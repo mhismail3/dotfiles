@@ -35,6 +35,9 @@ Config files live at the repo root unless a tool truly requires a directory.
 |---|---|---|
 | `setup.sh` | run directly | Bootstrap script for packages, symlinks, runtimes, and macOS preferences |
 | `Brewfile` | `brew bundle --file=~/Workspace/dotfiles/Brewfile` | Homebrew packages, casks, and Mac App Store apps |
+| `apps.yaml` | read by agents and `app-status.sh` | App setup registry, manual setup boundaries, and verification checks |
+| `APP_SETUP.md` | read by agents and humans | App setup workflow and operating model |
+| `app-status.sh` | run directly | Lists app setup status and runs app verification checks |
 | `.zshrc` | `~/.zshrc` | Shell config, PATH, aliases, language managers, completions, prompt |
 | `.gitconfig` | `~/.gitconfig` | Global Git defaults |
 | `.gitignore_global` | `~/.gitignore_global` | Global Git ignore file |
@@ -80,6 +83,9 @@ zsh -n .macos
 git config --file .gitconfig --list
 brew bundle check --file=Brewfile
 python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
+yq e '.' apps.yaml >/dev/null
+zsh -n app-status.sh
+./app-status.sh summary
 ```
 
 Do not source `.macos` unless the user explicitly wants macOS preferences applied;
@@ -108,6 +114,10 @@ Known Finder boundary: removing built-in sidebar items like Recents, AirDrop,
 Shared, and On My Mac does not currently expose a stable `defaults` setting on
 this macOS build. `.macos` records it as a manual verification step instead of
 using brittle GUI automation or private shared-file-list mutation.
+
+App setup is tracked in `apps.yaml` and walked with `./app-status.sh next`.
+When an installed app needs login, privacy permissions, sync configuration, or
+onboarding, record the boundary there rather than only in a thread transcript.
 
 ## macOS Preferences
 

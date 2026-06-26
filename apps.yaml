@@ -1,0 +1,651 @@
+version: 1
+last_reviewed: "2026-06-26"
+source_of_truth:
+  installs: Brewfile
+  bootstrap: setup.sh
+  macos_preferences: .macos
+status_values:
+  - ready
+  - needs_login
+  - needs_permissions
+  - needs_config
+  - optional
+  - verify
+principles:
+  - Track app setup requirements in this file before relying on memory.
+  - Automate stable install, Dock, login item, CLI, and defaults behavior.
+  - Keep credentials, tokens, account IDs, and generated app state out of git.
+  - Record privacy, auth, and vendor-onboarding boundaries as manual steps.
+  - Add a verification check whenever a setup step can be checked repeatably.
+
+apps:
+  - id: 1password
+    name: 1Password
+    source: brew_cask
+    package: 1password
+    app_path: /Applications/1Password.app
+    priority: 10
+    setup_phase: identity
+    purpose: Password manager and secret handoff for the rest of setup.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+      - Added to Dock by .macos.
+      - Added to Login Items by .macos.
+    manual:
+      - Sign in to the 1Password account.
+      - Enable unlock method preferences.
+      - Install or enable the Chrome browser extension after Chrome setup.
+    verify:
+      commands:
+        - test -d "/Applications/1Password.app"
+      user_checks:
+        - 1Password opens and can unlock the primary vault.
+        - Chrome can access the 1Password extension.
+    state_locations:
+      - ~/Library/Group Containers/2BUA8C4S2C.com.1password
+    notes:
+      - Do not store 1Password account details, recovery keys, or vault metadata in this repo.
+
+  - id: google-chrome
+    name: Google Chrome
+    source: brew_cask
+    package: google-chrome
+    app_path: /Applications/Google Chrome.app
+    priority: 20
+    setup_phase: browser
+    purpose: Standard browser for agent-visible web sessions, extensions, and account sync.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+      - Added to Dock by .macos.
+    manual:
+      - Sign in to Chrome and enable sync for bookmarks, history, extensions, and settings.
+      - Confirm 1Password extension is installed and unlocked.
+      - Decide whether Chrome should be the system default browser.
+    verify:
+      commands:
+        - test -d "/Applications/Google Chrome.app"
+      user_checks:
+        - Chrome profile is signed in and syncing.
+        - 1Password extension works in Chrome.
+    state_locations:
+      - ~/Library/Application Support/Google/Chrome
+    notes:
+      - Chrome is the standard browser; Arc is intentionally not installed.
+
+  - id: raycast
+    name: Raycast
+    source: brew_cask
+    package: raycast
+    app_path: /Applications/Raycast.app
+    priority: 30
+    setup_phase: launcher
+    purpose: Primary launcher, command palette, clipboard, snippets, and app workflow hub.
+    desired_state: needs_config
+    automated:
+      - Installed by Brewfile.
+      - Added to Login Items by .macos.
+      - Spotlight Cmd+Space shortcut is disabled by .macos.
+    manual:
+      - Complete Raycast onboarding.
+      - Set Raycast hotkey to Cmd+Space.
+      - Sign in if using Raycast sync.
+      - Review requested Accessibility, Calendar, Contacts, Reminders, and Automation permissions.
+    verify:
+      commands:
+        - test -d "/Applications/Raycast.app"
+      user_checks:
+        - Cmd+Space opens Raycast.
+        - Raycast appears in Login Items.
+    state_locations:
+      - ~/Library/Application Support/com.raycast.macos
+    notes:
+      - Raycast does not expose a stable pre-onboarding CLI or defaults key for the global hotkey on this macOS build.
+
+  - id: codex
+    name: Codex
+    source: brew_cask
+    package: codex-app
+    app_path: /Applications/Codex.app
+    command: codex
+    priority: 40
+    setup_phase: agent
+    purpose: Local agent hub for coding, computer use, browser use, and setup orchestration.
+    desired_state: verify
+    automated:
+      - Installed by Brewfile.
+      - Added to Dock by .macos.
+      - Durable defaults merged from codex.config.toml by setup.sh.
+      - Global personal AGENTS.md linked by setup.sh.
+    manual:
+      - Sign in to Codex if not already authenticated.
+      - Enable or verify Computer Use permissions in macOS Privacy and Security.
+      - Review Settings after config changes that require app restart.
+    verify:
+      commands:
+        - test -d "/Applications/Codex.app"
+        - command -v codex
+        - codex --version
+      user_checks:
+        - Codex app is signed in.
+        - Computer Use can see and control approved apps.
+    state_locations:
+      - ~/.codex/config.toml
+      - ~/.codex/AGENTS.md
+      - ~/Library/Application Support/Codex
+    notes:
+      - Do not commit Codex auth, sessions, logs, cache, plugin runtime state, or project trust history.
+
+  - id: tailscale
+    name: Tailscale
+    source: brew_cask
+    package: tailscale-app
+    app_path: /Applications/Tailscale.app
+    priority: 50
+    setup_phase: network
+    purpose: Private mesh networking and remote access.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+      - Added to Login Items by .macos.
+    manual:
+      - Sign in and link this Mac to the tailnet.
+      - Confirm device name and key expiry settings in the admin console if needed.
+    verify:
+      commands:
+        - test -d "/Applications/Tailscale.app"
+      user_checks:
+        - Tailscale menu bar icon shows connected.
+        - This Mac appears in the tailnet admin devices list.
+    state_locations:
+      - ~/Library/Containers/io.tailscale.ipn.macsys
+    notes:
+      - Tailnet identity and auth keys are not tracked in dotfiles.
+
+  - id: google-drive
+    name: Google Drive
+    source: brew_cask
+    package: google-drive
+    app_path: /Applications/Google Drive.app
+    priority: 60
+    setup_phase: storage
+    purpose: Google Drive file sync and mounted cloud files.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in to the Google account.
+      - Choose streaming or mirroring behavior.
+      - Confirm which local folders should sync, if any.
+    verify:
+      commands:
+        - test -d "/Applications/Google Drive.app"
+      user_checks:
+        - Google Drive is mounted in Finder.
+        - Expected files are visible.
+    state_locations:
+      - ~/Library/Application Support/Google/DriveFS
+    notes:
+      - Google Docs, Sheets, and Slides app stubs may appear in /Applications after Drive setup.
+
+  - id: synology-drive
+    name: Synology Drive
+    source: brew_cask
+    package: synology-drive
+    app_path: /Applications/Synology Drive Client.app
+    priority: 70
+    setup_phase: storage
+    purpose: NAS sync for personal files that live outside git.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in to the Synology server.
+      - Configure sync tasks and selective sync rules.
+      - Confirm local sync paths.
+    verify:
+      commands:
+        - test -d "/Applications/Synology Drive Client.app"
+      user_checks:
+        - Synology Drive status is healthy.
+        - Expected synced folders exist locally.
+    state_locations:
+      - ~/Library/Application Support/SynologyDrive
+    notes:
+      - Server address, credentials, and sync contents are not tracked in dotfiles.
+
+  - id: docker
+    name: Docker Desktop
+    source: brew_cask
+    package: docker-desktop
+    app_path: /Applications/Docker.app
+    command: docker
+    priority: 80
+    setup_phase: development
+    purpose: Containers for local development.
+    desired_state: needs_config
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Launch Docker Desktop once to complete onboarding.
+      - Enable or disable "Start Docker Desktop when you sign in" based on current preference.
+      - Sign in only if Docker Hub auth is needed.
+    verify:
+      commands:
+        - test -d "/Applications/Docker.app"
+        - command -v docker
+      user_checks:
+        - Docker Desktop reports "Docker is running".
+        - docker ps succeeds after launch.
+    state_locations:
+      - ~/Library/Group Containers/group.com.docker
+      - ~/.docker
+    notes:
+      - Keep Docker credentials and generated container state out of this repo.
+
+  - id: visual-studio-code
+    name: Visual Studio Code
+    source: brew_cask
+    package: visual-studio-code
+    app_path: /Applications/Visual Studio Code.app
+    command: code
+    priority: 90
+    setup_phase: development
+    purpose: Editor for code, config, and file inspection.
+    desired_state: needs_config
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in to Settings Sync if desired.
+      - Install or verify the shell command `code`.
+      - Decide which settings should move into dotfiles rather than VS Code sync.
+    verify:
+      commands:
+        - test -d "/Applications/Visual Studio Code.app"
+        - command -v code
+      user_checks:
+        - VS Code opens from Finder and from `code .`.
+    state_locations:
+      - ~/Library/Application Support/Code/User
+    notes:
+      - VS Code user settings are not tracked yet.
+
+  - id: xcode
+    name: Xcode
+    source: mas
+    package: "497799835"
+    app_path: /Applications/Xcode.app
+    command: xcodebuild
+    priority: 100
+    setup_phase: development
+    purpose: Apple development toolchain, SDKs, simulator support, and Command Line Tools.
+    desired_state: verify
+    automated:
+      - Installed by Mac App Store through Brewfile when possible.
+      - Selected by setup.sh when Xcode.app exists.
+      - First launch tasks and license acceptance are attempted by setup.sh.
+      - Added to Dock by .macos.
+    manual:
+      - Complete App Store install if `mas install` requires Apple ID approval.
+      - Open Xcode once if additional components require GUI approval.
+    verify:
+      commands:
+        - test -d "/Applications/Xcode.app"
+        - xcode-select -p
+        - xcodebuild -version
+      user_checks:
+        - Xcode launches without first-run prompts.
+    state_locations:
+      - ~/Library/Developer
+    notes:
+      - Xcode app install can require Apple ID interaction and should be expected as a manual boundary.
+
+  - id: claude-code
+    name: Claude Code
+    source: brew_cask
+    package: claude-code
+    command: claude
+    priority: 110
+    setup_phase: agent
+    purpose: Secondary terminal coding agent.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Run `claude` and complete browser authentication.
+      - Decide whether any Claude-specific instructions should be mirrored into agent docs.
+    verify:
+      commands:
+        - command -v claude
+      user_checks:
+        - "`claude` starts without requesting first-time auth."
+    state_locations:
+      - ~/.claude
+    notes:
+      - Claude auth and generated state are not tracked.
+
+  - id: claude
+    name: Claude
+    source: brew_cask
+    package: claude
+    app_path: /Applications/Claude.app
+    priority: 120
+    setup_phase: agent
+    purpose: Claude desktop app for non-Codex AI workflows.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in to Claude.
+      - Review any requested system permissions.
+    verify:
+      commands:
+        - test -d "/Applications/Claude.app"
+      user_checks:
+        - Claude app opens signed in.
+    state_locations:
+      - ~/Library/Application Support/Claude
+    notes:
+      - Claude desktop app state is not tracked.
+
+  - id: superwhisper
+    name: Superwhisper
+    source: brew_cask
+    package: superwhisper
+    app_path: /Applications/superwhisper.app
+    priority: 130
+    setup_phase: input
+    purpose: Dictation and voice input.
+    desired_state: needs_permissions
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in or activate license if required.
+      - Grant Microphone permission.
+      - Grant Accessibility or Automation permission if text insertion requires it.
+      - Configure preferred hotkey and model.
+    verify:
+      commands:
+        - test -d "/Applications/superwhisper.app"
+      user_checks:
+        - Dictation records and inserts text into a test field.
+    state_locations:
+      - ~/Library/Application Support/superwhisper
+    notes:
+      - Permission grants must be done through macOS privacy UI.
+
+  - id: obsidian
+    name: Obsidian
+    source: brew_cask
+    package: obsidian
+    app_path: /Applications/Obsidian.app
+    priority: 140
+    setup_phase: knowledge
+    purpose: Local knowledge base and notes.
+    desired_state: needs_config
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Choose or create the primary vault.
+      - Decide whether Obsidian Sync, iCloud, Git, or Synology backs the vault.
+      - Record the canonical vault path in this registry once chosen.
+    verify:
+      commands:
+        - test -d "/Applications/Obsidian.app"
+      user_checks:
+        - Obsidian opens the expected primary vault.
+    state_locations:
+      - ~/Library/Application Support/obsidian
+    notes:
+      - Vault contents are not part of this dotfiles repo unless explicitly added later.
+
+  - id: things
+    name: Things 3
+    source: mas
+    package: "904280696"
+    app_path: /Applications/Things3.app
+    priority: 150
+    setup_phase: productivity
+    purpose: Personal task manager.
+    desired_state: needs_config
+    automated:
+      - Installed by Mac App Store through Brewfile when possible.
+      - Added to Dock by .macos.
+    manual:
+      - Enable Things Cloud if used.
+      - Confirm calendar integration and reminders import preferences.
+    verify:
+      commands:
+        - test -d "/Applications/Things3.app"
+      user_checks:
+        - Things opens with expected areas, projects, and inbox state.
+    state_locations:
+      - ~/Library/Containers/com.culturedcode.ThingsMac
+    notes:
+      - Task data should be managed by Things Cloud or its native storage, not dotfiles.
+
+  - id: private-internet-access
+    name: Private Internet Access
+    source: brew_cask
+    package: private-internet-access
+    app_path: /Applications/Private Internet Access.app
+    priority: 160
+    setup_phase: network
+    purpose: VPN for public or untrusted networks.
+    desired_state: needs_login
+    automated:
+      - Installed by Brewfile.
+      - Quarantine repair and Homebrew adopt are attempted by setup.sh when needed.
+    manual:
+      - Sign in to PIA.
+      - Configure protocol, region, split tunneling, and startup behavior.
+    verify:
+      commands:
+        - test -d "/Applications/Private Internet Access.app"
+      user_checks:
+        - PIA can connect and disconnect successfully.
+    state_locations:
+      - ~/Library/Application Support/com.privateinternetaccess.vpn
+    notes:
+      - VPN credentials and region preferences are not tracked.
+
+  - id: logi-options-plus
+    name: Logi Options+
+    source: brew_cask
+    package: logi-options+
+    app_path: /Applications/logioptionsplus.app
+    priority: 170
+    setup_phase: hardware
+    purpose: Logitech keyboard and mouse configuration.
+    desired_state: needs_permissions
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Grant requested Input Monitoring, Accessibility, and Bluetooth permissions.
+      - Configure device-specific button mappings and pointer behavior.
+      - Sign in only if Logitech cloud sync is desired.
+    verify:
+      commands:
+        - test -d "/Applications/logioptionsplus.app"
+      user_checks:
+        - Connected Logitech devices appear in Logi Options+.
+        - Custom button mappings work.
+    state_locations:
+      - ~/Library/Application Support/Logitech
+    notes:
+      - Hardware-specific mappings may need future export research before automation.
+
+  - id: ollama
+    name: Ollama
+    source: brew
+    package: ollama
+    command: ollama
+    priority: 180
+    setup_phase: ai-runtime
+    purpose: Local model runtime for experiments.
+    desired_state: optional
+    automated:
+      - Installed by Brewfile.
+      - setup.sh attempts to start the service.
+    manual:
+      - Pull any local models you actually want to keep.
+    verify:
+      commands:
+        - command -v ollama
+        - ollama --version
+      user_checks:
+        - "`ollama list` works."
+    state_locations:
+      - ~/.ollama
+    notes:
+      - Model blobs are generated state and should not be committed.
+
+  - id: db-browser-for-sqlite
+    name: DB Browser for SQLite
+    source: brew_cask
+    package: db-browser-for-sqlite
+    app_path: /Applications/DB Browser for SQLite.app
+    priority: 190
+    setup_phase: development
+    purpose: GUI inspection of SQLite databases.
+    desired_state: ready
+    automated:
+      - Installed by Brewfile.
+    manual: []
+    verify:
+      commands:
+        - test -d "/Applications/DB Browser for SQLite.app"
+      user_checks:
+        - App opens normally.
+    state_locations: []
+    notes: []
+
+  - id: hand-mirror
+    name: Hand Mirror
+    source: mas
+    package: "1502839586"
+    app_path: /Applications/Hand Mirror.app
+    priority: 200
+    setup_phase: utility
+    purpose: Quick camera preview.
+    desired_state: needs_permissions
+    automated:
+      - Installed by Mac App Store through Brewfile when possible.
+    manual:
+      - Grant Camera permission on first launch.
+      - Configure menu bar behavior.
+    verify:
+      commands:
+        - test -d "/Applications/Hand Mirror.app"
+      user_checks:
+        - Camera preview opens from menu bar or app.
+    state_locations: []
+    notes: []
+
+  - id: folder-peek
+    name: Folder Peek
+    source: mas
+    package: "1615988943"
+    app_path: /Applications/Folder Peek.app
+    priority: 210
+    setup_phase: utility
+    purpose: Menu bar folder shortcuts.
+    desired_state: needs_config
+    automated:
+      - Installed by Mac App Store through Brewfile when possible.
+    manual:
+      - Configure folders to expose in the menu bar.
+      - Grant folder permissions if prompted.
+    verify:
+      commands:
+        - test -d "/Applications/Folder Peek.app"
+      user_checks:
+        - Expected folders appear in Folder Peek.
+    state_locations: []
+    notes: []
+
+  - id: stremio
+    name: Stremio
+    source: brew_cask
+    package: stremio
+    app_path: /Applications/Stremio.app
+    priority: 300
+    setup_phase: media
+    purpose: Media streaming.
+    desired_state: optional
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Sign in and configure add-ons if used.
+    verify:
+      commands:
+        - test -d "/Applications/Stremio.app"
+      user_checks:
+        - App opens normally.
+    state_locations: []
+    notes: []
+
+  - id: vlc
+    name: VLC
+    source: brew_cask
+    package: vlc
+    app_path: /Applications/VLC.app
+    priority: 310
+    setup_phase: media
+    purpose: Local media playback.
+    desired_state: ready
+    automated:
+      - Installed by Brewfile.
+    manual: []
+    verify:
+      commands:
+        - test -d "/Applications/VLC.app"
+      user_checks:
+        - App opens normally.
+    state_locations: []
+    notes: []
+
+  - id: qbittorrent
+    name: qBittorrent
+    source: brew_cask
+    package: qbittorrent
+    app_path: /Applications/qBittorrent.app
+    priority: 320
+    setup_phase: media
+    purpose: Torrent client.
+    desired_state: needs_config
+    automated:
+      - Installed by Brewfile.
+    manual:
+      - Configure download location, privacy, and startup behavior.
+    verify:
+      commands:
+        - test -d "/Applications/qBittorrent.app"
+      user_checks:
+        - App opens with expected download directory configured.
+    state_locations: []
+    notes: []
+
+derived_apps:
+  - id: google-docs
+    name: Google Docs
+    source: google-drive
+    app_path: /Applications/Google Docs.app
+    desired_state: optional
+    notes:
+      - App stub is created by Google Drive or Chrome integration, not Brewfile.
+  - id: google-sheets
+    name: Google Sheets
+    source: google-drive
+    app_path: /Applications/Google Sheets.app
+    desired_state: optional
+    notes:
+      - App stub is created by Google Drive or Chrome integration, not Brewfile.
+  - id: google-slides
+    name: Google Slides
+    source: google-drive
+    app_path: /Applications/Google Slides.app
+    desired_state: optional
+    notes:
+      - App stub is created by Google Drive or Chrome integration, not Brewfile.

@@ -41,3 +41,11 @@ Run this after changing Codex config:
 ```bash
 python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
 ```
+
+Run these after changing the app setup registry or app status script:
+
+```bash
+yq e '.' apps.yaml >/dev/null
+zsh -n app-status.sh
+./app-status.sh summary
+```
