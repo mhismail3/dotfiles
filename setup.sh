@@ -182,6 +182,103 @@ EOF
     fi
 }
 
+toml_python() {
+    local py
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        if command -v "$py" &>/dev/null && "$py" -c 'import tomllib' &>/dev/null; then
+            print -r -- "$py"
+            return 0
+        fi
+    done
+    return 1
+}
+
+merge_codex_config() {
+    local baseline="$1" live="$2" py
+    py="$(toml_python)" || {
+        warn "No Python with tomllib found; leaving existing Codex config in place"
+        return 0
+    }
+
+    "$py" - "$baseline" "$live" <<'PY'
+import json
+import pathlib
+import re
+import shutil
+import sys
+import time
+import tomllib
+
+baseline_path = pathlib.Path(sys.argv[1])
+live_path = pathlib.Path(sys.argv[2])
+
+baseline = tomllib.loads(baseline_path.read_text())
+live = tomllib.loads(live_path.read_text()) if live_path.exists() else {}
+
+
+def deep_merge(defaults, current):
+    merged = {}
+    for key, value in defaults.items():
+        if isinstance(value, dict) and isinstance(current.get(key), dict):
+            merged[key] = deep_merge(value, current[key])
+        else:
+            merged[key] = value
+    for key, value in current.items():
+        if key not in merged:
+            merged[key] = value
+    return merged
+
+
+bare_key = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
+def toml_key(key):
+    return key if bare_key.match(key) else json.dumps(key)
+
+
+def toml_value(value):
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, str):
+        return json.dumps(value)
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    if isinstance(value, list):
+        return "[" + ", ".join(toml_value(item) for item in value) + "]"
+    raise TypeError(f"Unsupported TOML value: {value!r}")
+
+
+def emit_table(mapping, path=()):
+    lines = []
+    scalars = [(key, value) for key, value in mapping.items() if not isinstance(value, dict)]
+    children = [(key, value) for key, value in mapping.items() if isinstance(value, dict)]
+
+    if path and scalars:
+        lines.append("[" + ".".join(toml_key(part) for part in path) + "]")
+    for key, value in scalars:
+        lines.append(f"{toml_key(key)} = {toml_value(value)}")
+    if scalars:
+        lines.append("")
+
+    for key, value in children:
+        lines.extend(emit_table(value, path + (key,)))
+
+    return lines
+
+
+merged = deep_merge(baseline, live)
+if live_path.exists():
+    backup = live_path.with_name(live_path.name + f".bak.{time.strftime('%Y%m%d%H%M%S')}")
+    shutil.copy2(live_path, backup)
+
+live_path.parent.mkdir(parents=True, exist_ok=True)
+live_path.write_text("\n".join(emit_table(merged)).rstrip() + "\n")
+live_path.chmod(0o600)
+PY
+}
+
 ###############################################################################
 # Step 1: Xcode Command Line Tools
 ###############################################################################
@@ -350,9 +447,9 @@ step_codex_config() {
         return 0
     fi
 
-    warn "Existing $dst left in place"
-    echo "  Codex app/plugin state lives in config.toml on fresh installs."
-    echo "  Durable baseline remains available at: $src"
+    merge_codex_config "$src" "$dst"
+    success "Merged durable Codex defaults into $dst"
+    echo "  Preserved app/plugin/project state from the live config."
 }
 
 ###############################################################################

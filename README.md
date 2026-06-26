@@ -55,8 +55,8 @@ executables.
 Codex runtime state is intentionally not tracked. Do not commit `~/.codex`
 wholesale; it contains auth, logs, sessions, caches, generated app state,
 plugin/app wiring, MCP runtime paths, and project trust history. On fresh Codex
-app installs, keep the live `~/.codex/config.toml` unless intentionally merging
-the durable defaults from `codex.config.toml`.
+app installs, `setup.sh` merges durable defaults from `codex.config.toml` into
+the live `~/.codex/config.toml` while preserving app-managed state.
 
 ## Starship
 
@@ -134,7 +134,7 @@ System installs stay clean. Runtime managers are used instead:
 
 | Runtime | Tool |
 |---|---|
-| Python | `uv` |
+| Python | `uv` for projects; `python@3.14` for bootstrap validation |
 | Node | `nvm` |
 | Ruby | `rbenv` |
 | Rust | `rustup` |

@@ -42,6 +42,7 @@ brew "zsh-syntax-highlighting"
 ###############################################################################
 
 brew "uv"
+brew "python@3.14" # bootstrap TOML validation/merge
 brew "rustup"
 brew "bun"
 brew "nvm"
