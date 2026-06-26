@@ -115,6 +115,7 @@ if command -v dockutil &>/dev/null; then
     add_dock_app "/Applications/Xcode.app"
     add_dock_app "/System/Applications/Utilities/Terminal.app"
     add_dock_app "/System/Applications/Utilities/Screen Sharing.app"
+    add_dock_app "/Applications/Tailscale.app"
     add_dock_app "/Applications/1Password.app"
     add_dock_app "/System/Applications/System Settings.app"
 fi
