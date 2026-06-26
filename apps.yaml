@@ -237,24 +237,33 @@ apps:
     priority: 80
     setup_phase: development
     purpose: Containers for local development.
-    desired_state: needs_config
+    desired_state: verify
     automated:
       - Installed by Brewfile.
+      - Docker CLI and recommended first-run state are verified by app-status.sh.
     manual:
       - Launch Docker Desktop once to complete onboarding.
-      - Enable or disable "Start Docker Desktop when you sign in" based on current preference.
-      - Sign in only if Docker Hub auth is needed.
+      - Use Docker's recommended settings.
+      - Keep "Start Docker Desktop when you sign in" disabled unless always-on containers become necessary.
+      - Sign in only if Docker Hub auth, private images, or higher Hub limits are needed.
     verify:
       commands:
         - test -d "/Applications/Docker.app"
         - command -v docker
+        - docker info >/dev/null
+        - test "$(docker context show)" = "desktop-linux"
+        - test -L /var/run/docker.sock
+        - jq -e '.AutoStart == false and .UseContainerdSnapshotter == true' "$HOME/Library/Group Containers/group.com.docker/settings-store.json" >/dev/null
       user_checks:
         - Docker Desktop reports "Docker is running".
         - docker ps succeeds after launch.
+        - Docker Hub sign-in is skipped unless actually needed.
     state_locations:
       - ~/Library/Group Containers/group.com.docker
       - ~/.docker
     notes:
+      - Recommended settings created /var/run/docker.sock as a compatibility symlink to ~/.docker/run/docker.sock.
+      - The standard baseline keeps Docker Desktop out of Login Items to avoid unnecessary battery and memory use.
       - Keep Docker credentials and generated container state out of this repo.
 
   - id: visual-studio-code

@@ -89,6 +89,24 @@ Safe automated preferences:
 has created the database. If the database does not exist yet, setup skips this
 step and prints the re-run command.
 
+## Docker Desktop
+
+Use Docker's recommended first-run settings. The baseline keeps Docker Desktop
+out of Login Items so it does not consume memory or battery unless containers are
+needed.
+
+Expected verified state:
+
+1. Docker Desktop is installed and the `docker` CLI is available.
+2. Docker daemon responds to `docker info`.
+3. Current context is `desktop-linux`.
+4. `/var/run/docker.sock` exists as Docker Desktop's compatibility symlink.
+5. `AutoStart` is `false`.
+6. `UseContainerdSnapshotter` is `true`.
+
+Do not track `~/.docker/config.json` wholesale because it can include Docker Hub
+auth and credential helper state.
+
 ## Commands
 
 ```bash
