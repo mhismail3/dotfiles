@@ -1,0 +1,119 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+# Durable Codex defaults copied from the current ~/.codex/config.toml baseline.
+# Keep generated local state out of this file:
+# - auth.json and credentials
+# - [projects.*] trust history
+# - marketplace cache paths
+# - plugin runtime paths
+# - hook trust hashes
+# - app-generated thread/session/log/cache state
+
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+model_reasoning_summary = "auto"
+personality = "pragmatic"
+
+# Optional core model controls. Leave commented to inherit Codex/model defaults.
+# review_model = "gpt-5.5"
+# model_provider = "openai"
+# model_verbosity = "medium"
+# service_tier = "fast"
+
+approval_policy = "never"
+approvals_reviewer = "user"
+sandbox_mode = "danger-full-access"
+web_search = "live"
+cli_auth_credentials_store = "auto"
+mcp_oauth_credentials_store = "auto"
+
+# Optional login restrictions. Leave unset unless you want to force one mode/workspace.
+# forced_login_method = "chatgpt"
+# forced_chatgpt_workspace_id = "00000000-0000-0000-0000-000000000000"
+
+# Optional project instruction discovery controls. Leave commented to use Codex defaults.
+# project_doc_max_bytes = 65536
+# project_doc_fallback_filenames = ["CLAUDE.md", ".agents.md", "TEAM_GUIDE.md"]
+
+# Skills are reusable workflow folders. Keep personal skills under ~/.agents/skills
+# for user-wide workflows or .agents/skills inside a repo for project workflows.
+# Use [[skills.config]] only to enable/disable a specific skill without deleting it.
+# [[skills.config]]
+# path = "/Users/moose/.agents/skills/example/SKILL.md"
+# enabled = false
+
+# Hooks are lifecycle scripts that can run at session, prompt, tool, approval,
+# and stop events. Hooks are enabled by default. Use one representation per layer:
+# hooks.json OR inline [hooks], not both.
+# [features]
+# hooks = true
+#
+# [[hooks.PreToolUse]]
+# matcher = "^Bash$"
+#
+# [[hooks.PreToolUse.hooks]]
+# type = "command"
+# command = "/usr/bin/python3 /absolute/path/to/hook.py"
+# timeout = 30
+# statusMessage = "Checking command"
+
+# Subagents let Codex run explicitly requested parallel agent workflows.
+# [agents]
+# max_threads = 6
+# max_depth = 1
+# job_max_runtime_seconds = 1800
+
+# Memories, history, logs, and telemetry are generated runtime state. Keep
+# required rules in AGENTS.md or repo docs; memories are recall, not enforcement.
+# tool_output_token_limit = 20000
+# log_dir = "/Users/moose/.codex/log"
+# sqlite_home = "/Users/moose/.codex/sqlite"
+
+# [memories]
+# generate_memories = true
+# use_memories = true
+# disable_on_external_context = true
+
+# [history]
+# persistence = "save-all"
+
+# [feedback]
+# enabled = true
+
+# [analytics]
+# enabled = false
+
+# [otel]
+# exporter = "none"
+# trace_exporter = "none"
+# metrics_exporter = "none"
+# log_user_prompt = false
+
+# App-specific behavior. Most Codex app settings live in the app UI, but these
+# config keys are useful to know about. Leave commented unless you want to pin
+# behavior across app, CLI, and IDE surfaces.
+# check_for_update_on_startup = true
+# file_opener = "vscode"
+# hide_agent_reasoning = false
+# show_raw_agent_reasoning = false
+# disable_paste_burst = false
+
+[features]
+prevent_idle_sleep = true
+undo = true
+js_repl = false
+
+[tools]
+view_image = true
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+# Example MCP controls for future servers:
+# [mcp_servers.example]
+# enabled = true
+# required = false
+# startup_timeout_sec = 20
+# tool_timeout_sec = 60
+# enabled_tools = ["search"]
+# disabled_tools = ["delete"]

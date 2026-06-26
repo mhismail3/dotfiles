@@ -1,0 +1,41 @@
+# Agent Notes
+
+This repo is intentionally flat. Keep configuration files at the root unless a
+tool requires a nested directory layout.
+
+## Source of Truth
+
+- Repo: `mhismail3/dotfiles`
+- Branch: `main`
+- Apply entrypoint: `./setup.sh`
+- Symlink map: `CONFIG_LINKS` in `setup.sh`
+- Function test guard: set `DOTFILES_SKIP_MAIN=true` before sourcing `setup.sh`
+
+## Change Rules
+
+- Prefer editing root config files directly.
+- Do not add app-specific folders unless the target path cannot be represented by
+  a root file plus a symlink.
+- Keep setup behavior idempotent and safe to re-run.
+- Do not run or source `.macos` during validation unless explicitly asked; it
+  writes system preferences and restarts Apple services.
+- Avoid storing machine noise, credentials, generated logs, or per-agent memory in
+  this repo.
+
+## Validation
+
+Run these after changing shell, setup, macOS, or Git config:
+
+```bash
+zsh -n setup.sh
+zsh -n .zshrc
+bash -n .macos
+zsh -n .macos
+git config --file .gitconfig --list
+```
+
+Run this after changing Codex config:
+
+```bash
+python3.11 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
+```

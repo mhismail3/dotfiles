@@ -8,8 +8,10 @@
 
 set -o pipefail
 
-DOTFILES="$HOME/.dotfiles"
-GITHUB_USER="mhismail3"
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+GITHUB_REPO="mhismail3/dotfiles"
+DOTFILES_BRANCH="main"
+DOTFILES_REMOTE="https://github.com/$GITHUB_REPO.git"
 RESET=false
 
 # Parse args
@@ -34,6 +36,16 @@ info()    { printf "\n\033[1;34m→ %s\033[0m\n" "$1"; }
 success() { printf "\033[1;32m✓ %s\033[0m\n" "$1"; }
 warn()    { printf "\033[1;33m⚠ %s\033[0m\n" "$1"; }
 err()     { printf "\033[1;31m✗ %s\033[0m\n" "$1" >&2; }
+
+CONFIG_LINKS=(
+    ".zshrc:$HOME/.zshrc"
+    ".gitconfig:$HOME/.gitconfig"
+    ".gitignore_global:$HOME/.gitignore_global"
+    ".tmux.conf:$HOME/.tmux.conf"
+    "starship.toml:$HOME/.config/starship.toml"
+    "codex.config.toml:$HOME/.codex/config.toml"
+    "codex.AGENTS.md:$HOME/.codex/AGENTS.md"
+)
 
 confirm() {
     local prompt="$1" default="${2:-y}" reply
@@ -114,11 +126,19 @@ step_homebrew() {
 
 step_dotfiles() {
     info "Dotfiles"
-    if [[ -d "$DOTFILES" ]]; then
+    if [[ -d "$DOTFILES/.git" ]]; then
         success "Already at $DOTFILES"
-        (cd "$DOTFILES" && git pull --rebase 2>/dev/null) || true
+        (cd "$DOTFILES" && git fetch origin "$DOTFILES_BRANCH" 2>/dev/null) || true
+        if [[ "$(cd "$DOTFILES" && git branch --show-current)" == "$DOTFILES_BRANCH" ]]; then
+            (cd "$DOTFILES" && git pull --rebase origin "$DOTFILES_BRANCH" 2>/dev/null) || true
+        else
+            warn "Dotfiles repo is not on $DOTFILES_BRANCH; leaving branch unchanged"
+        fi
+    elif [[ -e "$DOTFILES" ]]; then
+        err "$DOTFILES exists but is not a git repo"
+        return 1
     else
-        git clone https://github.com/$GITHUB_USER/dotfiles.git "$DOTFILES" || \
+        git clone --branch "$DOTFILES_BRANCH" "$DOTFILES_REMOTE" "$DOTFILES" || \
             { err "Failed to clone"; return 1; }
         success "Cloned"
     fi
@@ -156,12 +176,12 @@ step_packages() {
 
 step_symlinks() {
     info "Creating symlinks"
-    symlink "$DOTFILES/zsh/.zshrc"             "$HOME/.zshrc"
-    symlink "$DOTFILES/git/.gitconfig"         "$HOME/.gitconfig"
-    symlink "$DOTFILES/git/.gitignore_global"  "$HOME/.gitignore_global"
-    symlink "$DOTFILES/tmux/.tmux.conf"        "$HOME/.tmux.conf"
-    symlink "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
-    symlink "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"
+    local entry src dst
+    for entry in "${CONFIG_LINKS[@]}"; do
+        src="${entry%%:*}"
+        dst="${entry#*:}"
+        symlink "$DOTFILES/$src" "$dst"
+    done
     success "Symlinks created"
 }
 
@@ -256,7 +276,7 @@ step_shell() {
     fi
 
     mkdir -p "$HOME/Workspace" "$HOME/.local/bin"
-    success "Directories created"
+    success "Created $HOME/Workspace and $HOME/.local/bin"
 }
 
 ###############################################################################
@@ -311,38 +331,7 @@ step_languages() {
 }
 
 ###############################################################################
-# Step 10: Claude Code
-###############################################################################
-
-step_claude() {
-    info "Claude Code"
-    if ! command -v claude &>/dev/null; then
-        warn "Claude Code not installed yet (will be available after Brewfile)"
-        return 0
-    fi
-
-    local src="$DOTFILES/claude"
-    local dst="$HOME/.claude"
-    mkdir -p "$dst"
-
-    [[ -f "$src/CLAUDE.md" ]]     && symlink "$src/CLAUDE.md"     "$dst/CLAUDE.md"
-    [[ -f "$src/settings.json" ]] && symlink "$src/settings.json" "$dst/settings.json"
-    [[ -f "$src/LEDGER.jsonl" ]]  && symlink "$src/LEDGER.jsonl"  "$dst/LEDGER.jsonl"
-    [[ -d "$src/skills" ]]        && {
-        if [[ "$RESET" == "true" ]] || [[ ! -L "$dst/skills" ]]; then
-            [[ -L "$dst/skills" ]] && rm "$dst/skills"
-            [[ -d "$dst/skills" ]] && rm -rf "$dst/skills"
-            ln -s "$src/skills" "$dst/skills" && echo "  Linked: skills/"
-        else
-            echo "  Already linked: skills/"
-        fi
-    }
-
-    success "Claude Code configured"
-}
-
-###############################################################################
-# Step 11: Ollama
+# Step 10: Ollama
 ###############################################################################
 
 step_ollama() {
@@ -356,25 +345,25 @@ step_ollama() {
 }
 
 ###############################################################################
-# Step 12: macOS preferences
+# Step 11: macOS preferences
 ###############################################################################
 
 step_macos() {
     info "macOS preferences"
-    if [[ ! -f "$DOTFILES/macos/.macos" ]]; then
+    if [[ ! -f "$DOTFILES/.macos" ]]; then
         warn ".macos not found"
         return 1
     fi
 
     if [[ "$RESET" == "true" ]]; then
         echo "  Reset mode: re-applying all macOS preferences."
-        source "$DOTFILES/macos/.macos"
+        source "$DOTFILES/.macos"
     else
         echo "  This will set system preferences and restart Finder/Dock."
         if confirm "Apply macOS preferences?" "n"; then
-            source "$DOTFILES/macos/.macos"
+            source "$DOTFILES/.macos"
         else
-            echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
+            echo "  Skipped. Run later: source ~/.dotfiles/.macos"
         fi
     fi
 }
@@ -411,7 +400,6 @@ main() {
     step_gh_auth
     step_shell
     step_languages
-    step_claude
     step_ollama
     step_macos
 
@@ -433,7 +421,6 @@ main() {
     echo "  [ ] Synology Drive — connect to NAS (server address + credentials)"
     echo "  [ ] Google Drive — sign in to Google account"
     echo "  [ ] Private Internet Access — sign in with PIA credentials"
-    echo "  [ ] Cursor — sign in for AI features / settings sync"
     echo "  [ ] RustDesk — set up password and ID for remote access"
     echo "  [ ] Claude Code — run 'claude' to authenticate (browser-based)"
     echo "  [ ] Docker Desktop — enable 'Start Docker Desktop when you sign in'"
@@ -441,4 +428,6 @@ main() {
     echo ""
 }
 
-main "$@"
+if [[ "${DOTFILES_SKIP_MAIN:-false}" != "true" ]]; then
+    main "$@"
+fi

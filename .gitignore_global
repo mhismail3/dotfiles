@@ -65,3 +65,6 @@ temp/
 *.bak
 *.backup
 
+# Worktrees
+.worktrees/
+

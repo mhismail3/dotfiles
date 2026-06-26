@@ -1,5 +1,5 @@
 # Minimal starship prompt: directory + git branch
-# Symlinked to ~/.config/starship.toml
+# Applied by setup.sh to ~/.config/starship.toml
 
 format = "$directory$git_branch$git_status$character"
 

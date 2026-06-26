@@ -62,17 +62,16 @@ cask "obsidian"
 # Apps — Development
 ###############################################################################
 
-cask "cursor"
 cask "visual-studio-code"
-cask "ghostty"
 cask "google-chrome"
 cask "db-browser-for-sqlite"
-cask "docker"
+cask "docker-desktop"
 
 ###############################################################################
 # Apps — AI
 ###############################################################################
 
+cask "codex-app"
 cask "claude-code"
 brew "ollama"
 
@@ -82,7 +81,6 @@ brew "ollama"
 
 cask "stremio"
 cask "vlc"
-cask "telegram"
 cask "qbittorrent"
 cask "logi-options+"
 

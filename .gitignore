@@ -14,6 +14,5 @@
 # API keys (never commit secrets!)
 .env.api-keys
 
-# Claude Code (synced files are committed individually, not bulk dirs)
-claude/plans/
-claude/plugins/
+# Agent/runtime scratch
+.worktrees/

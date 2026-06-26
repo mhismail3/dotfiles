@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # .macos — System preferences for personal MacBook
-# Run: source ~/.dotfiles/macos/.macos
+# Run: source ~/.dotfiles/.macos
 
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
@@ -76,10 +76,7 @@ if command -v dockutil &>/dev/null; then
     dockutil --add "/Applications/Google Chrome.app" --no-restart
     dockutil --add /Applications/Arc.app --no-restart
     dockutil --add /System/Applications/Photos.app --no-restart
-    dockutil --add /Applications/Claude.app --no-restart
-    dockutil --add /Applications/Cursor.app --no-restart
     dockutil --add /Applications/Xcode.app --no-restart
-    dockutil --add /Applications/Ghostty.app --no-restart
     dockutil --add "/System/Applications/Screen Sharing.app" --no-restart
     dockutil --add "/System/Applications/System Settings.app" --no-restart
 fi

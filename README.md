@@ -1,63 +1,95 @@
 # dotfiles
 
-Setup for a **personal MacBook** — daily driver for development, AI, and general use.
+Personal MacBook setup for development, AI tools, and daily use.
+
+Canonical repo: `mhismail3/dotfiles`
+Canonical branch: `main`
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/mhismail3/dotfiles.git ~/.dotfiles
+git clone --branch main https://github.com/mhismail3/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ./setup.sh
+```
 
-# Re-run safely (skips what's done):
+Re-run safely:
+
+```bash
 ./setup.sh
+```
 
-# Force re-apply everything:
+Force re-apply symlinks, packages, and preferences:
+
+```bash
 ./setup.sh --reset
 ```
 
-## Architecture
+## Structure
 
-**Single-script design.** `setup.sh` contains all logic as functions. Brewfile and config files live in their own directories.
+Config files live at the repo root unless a tool truly requires a directory.
+`setup.sh` is the entrypoint agents and humans should use to apply the machine.
 
-**Symlink-based.** Config files are symlinked — editing this repo takes effect immediately.
+| File | Applied to | Purpose |
+|---|---|---|
+| `setup.sh` | run directly | Bootstrap script for packages, symlinks, runtimes, and macOS preferences |
+| `Brewfile` | `brew bundle --file=~/.dotfiles/Brewfile` | Homebrew packages, casks, and Mac App Store apps |
+| `.zshrc` | `~/.zshrc` | Shell config, PATH, aliases, language managers, completions, prompt |
+| `.gitconfig` | `~/.gitconfig` | Global Git defaults |
+| `.gitignore_global` | `~/.gitignore_global` | Global Git ignore file |
+| `.tmux.conf` | `~/.tmux.conf` | tmux mouse, splits, pane navigation, indexes, scrollback |
+| `starship.toml` | `~/.config/starship.toml` | Starship prompt config |
+| `codex.config.toml` | `~/.codex/config.toml` | Personal Codex defaults |
+| `codex.AGENTS.md` | `~/.codex/AGENTS.md` | Global personal Codex guidance |
+| `.macos` | sourced by `setup.sh` | macOS system preferences |
+| `AGENTS.md` | read by agents | Agent operating notes for this repo |
 
-**Two modes:**
-- `./setup.sh` — idempotent, skips completed steps
-- `./setup.sh --reset` — force re-applies everything (never destroys SSH keys)
+No Claude config folder is applied right now.
 
-## What's Included
+`setup.sh` also creates `~/Workspace` for projects and `~/.local/bin` for user
+executables.
 
-| File | Purpose |
-|---|---|
-| `setup.sh` | Main bootstrap script (12 steps, interactive) |
-| `Brewfile` | All Homebrew packages and casks |
-| `zsh/.zshrc` | Shell config (Homebrew, languages, plugins, starship) |
-| `zsh/path.zsh` | PATH: GNU tools override BSD, user bins |
-| `zsh/aliases.zsh` | Aliases + guardrails (pip warns→uv, npm warns on -g) |
-| `git/.gitconfig` | HTTPS-first auth (via gh) |
-| `git/.gitignore_global` | Global gitignore |
-| `tmux/.tmux.conf` | tmux: mouse, splits, Alt+arrow nav |
-| `starship/starship.toml` | Minimal prompt: directory + git branch |
-| `ghostty/config` | Ghostty terminal config |
-| `macos/.macos` | macOS system preferences |
-| `claude/` | Claude Code: CLAUDE.md, settings, skills, LEDGER |
+Codex runtime state is intentionally not tracked. Do not commit `~/.codex`
+wholesale; it contains auth, logs, sessions, caches, generated app state, and
+project trust history.
 
-## macOS Preferences (.macos)
+## Starship
+
+Starship is the shell prompt renderer initialized by `.zshrc`. This repo uses it
+for a small prompt that shows the current directory, Git branch/status, and a
+green or red prompt character.
+
+## Agent Workflow
+
+Use `./setup.sh` for real application. Use syntax checks for validation before
+running anything that changes the machine:
+
+```bash
+zsh -n setup.sh
+zsh -n .zshrc
+bash -n .macos
+zsh -n .macos
+git config --file .gitconfig --list
+```
+
+Do not source `.macos` unless the user explicitly wants macOS preferences applied;
+it changes system settings and restarts affected Apple services.
+
+## macOS Preferences
 
 | Category | What it sets |
 |---|---|
 | SSH | Remote Login enabled |
 | UI | Dark mode, sounds on, natural scrolling, tabs always, restore windows |
-| Dock | Auto-hide, size 80, magnification, managed app layout via dockutil |
+| Dock | Auto-hide, size, magnification, managed app layout via dockutil |
 | Siri | Disabled |
-| Menu Bar | Spotlight icon hidden, 24h clock with date + seconds |
+| Menu Bar | Spotlight icon hidden, 24h clock with date and seconds |
 | Spotlight | Cmd+Space freed for Raycast, limited categories |
 | Display | Night Shift off, auto-brightness off |
-| Finder | Show hidden files, extensions, path bar, column view, folders first |
-| Keyboard | Fast repeat (2/15), no press-and-hold, full keyboard nav |
+| Finder | Hidden files, extensions, path bar, column view, folders first |
+| Keyboard | Fast repeat, no press-and-hold, full keyboard nav |
 | Trackpad | Tap to click, three-finger drag |
-| Mission Control | Don't rearrange spaces, group by app, hot corners |
+| Mission Control | Stable spaces, group by app, hot corners |
 | Screen Time | Disabled |
 | Privacy | Analytics off, ad tracking off |
 | Security | Password on wake |
@@ -66,26 +98,20 @@ cd ~/.dotfiles
 
 ## Language Environment
 
-System stays clean — every runtime is isolated:
-- **Python**: `uv` (project venvs). `pip` warns to use uv.
-- **Node**: `nvm`. `npm -g` warns about pollution.
-- **Ruby**: `rbenv`
-- **Rust**: `rustup` → `~/.cargo/`
-- **Bun**: project-local
+System installs stay clean. Runtime managers are used instead:
 
-## Other Branches
-
-| Branch | Purpose |
+| Runtime | Tool |
 |---|---|
-| `main` | Personal MacBook (this branch) |
-| `server-laptop` | MacBook as always-on server (lid-closed, AC/battery profiles) |
-| `server-desktop` | Mac Mini/Studio headless server |
+| Python | `uv` |
+| Node | `nvm` |
+| Ruby | `rbenv` |
+| Rust | `rustup` |
+| Bun | project-local Bun |
 
 ## Updating
 
 ```bash
-cd ~/.dotfiles && git pull        # Symlinked files take effect immediately
-source ~/.dotfiles/macos/.macos   # Re-apply macOS prefs
-brew bundle --file=~/.dotfiles/Brewfile  # Re-sync packages
-./setup.sh --reset                # Nuclear option: re-apply everything
+cd ~/.dotfiles && git pull --rebase origin main
+brew bundle --file=~/.dotfiles/Brewfile
+./setup.sh --reset
 ```
