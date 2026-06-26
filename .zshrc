@@ -37,7 +37,7 @@ fi
 alias ..="cd .."
 alias ...="cd ../.."
 alias dl="cd ~/Downloads"
-alias dot="cd ~/.dotfiles"
+alias dot="cd ~/Workspace/dotfiles"
 alias ws="cd ~/Workspace"
 alias reload="exec zsh"
 
@@ -49,7 +49,7 @@ alias ports="lsof -i -P -n | grep LISTEN"
 alias flushdns="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
 
 alias brewup="brew update && brew upgrade && brew cleanup"
-alias brewdiff="brew bundle cleanup --file=~/.dotfiles/Brewfile"
+alias brewdiff="brew bundle cleanup --file=~/Workspace/dotfiles/Brewfile"
 
 pip() {
     echo "Use 'uv pip install' or 'uv add' instead (keeps system clean)."
@@ -71,6 +71,9 @@ npm() {
 # Languages
 ###############################################################################
 
+if [[ -n "$HOMEBREW_PREFIX" && -d "$HOMEBREW_PREFIX/opt/rustup/bin" ]]; then
+    export PATH="$HOMEBREW_PREFIX/opt/rustup/bin:$PATH"
+fi
 [[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
 
 export BUN_INSTALL="$HOME/.bun"
@@ -101,7 +104,7 @@ if [[ -n "$HOMEBREW_PREFIX" && -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlightin
     source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-if type brew &>/dev/null; then
+if type brew &>/dev/null && [[ -t 0 && -t 1 ]]; then
     FPATH="$HOME/.local/share/zsh/site-functions:$FPATH"
     FPATH="$HOMEBREW_PREFIX/share/zsh-completions:$FPATH"
     FPATH="$HOMEBREW_PREFIX/share/zsh/site-functions:$FPATH"

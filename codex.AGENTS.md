@@ -13,7 +13,9 @@
 
 - This file is global personal guidance for Codex across repositories.
 - Repo-specific rules belong in that repo's `AGENTS.md`.
-- Durable Codex settings belong in `~/.codex/config.toml`, managed here by
-  `codex.config.toml`.
+- The dotfiles repo lives at `~/Workspace/dotfiles`; `~/.dotfiles` is a
+  compatibility symlink.
+- Durable Codex defaults live in `codex.config.toml`. Do not symlink it over the
+  live `~/.codex/config.toml` app/plugin state unless doing a deliberate merge.
 - Do not commit Codex auth, logs, sessions, cache, generated state, or project
   trust history.

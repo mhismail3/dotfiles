@@ -1,5 +1,5 @@
 # Brewfile — Personal MacBook
-# Install: brew bundle --file=~/.dotfiles/Brewfile
+# Install: brew bundle --file=~/Workspace/dotfiles/Brewfile
 
 ###############################################################################
 # CLI — Core
@@ -26,6 +26,7 @@ brew "tmux"
 brew "ast-grep"
 brew "mas"
 brew "dockutil"
+brew "displayplacer"
 
 ###############################################################################
 # CLI — Shell
@@ -41,8 +42,8 @@ brew "zsh-syntax-highlighting"
 ###############################################################################
 
 brew "uv"
-brew "rustup-init"
-brew "oven-sh/bun/bun"
+brew "rustup"
+brew "bun"
 brew "nvm"
 brew "rbenv"
 brew "ruby-build"
@@ -105,3 +106,4 @@ cask "google-drive"
 mas "Things 3", id: 904280696
 mas "Hand Mirror", id: 1502839586
 mas "Folder Peek", id: 1615988943
+mas "Xcode", id: 497799835

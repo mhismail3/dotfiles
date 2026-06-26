@@ -1,14 +1,26 @@
 #!/usr/bin/env zsh
 
 # setup.sh — Bootstrap personal MacBook from scratch
-# Run: ~/.dotfiles/setup.sh [--reset]
+# Run: ~/Workspace/dotfiles/setup.sh [--reset]
 #
 # Default mode: skip what's already done (safe to re-run)
 # --reset mode: force re-apply everything to match dotfiles
 
 set -o pipefail
 
-DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+CANONICAL_DOTFILES="$HOME/Workspace/dotfiles"
+SCRIPT_DIR="${0:A:h}"
+if [[ -z "${DOTFILES:-}" ]]; then
+    if [[ -d "$CANONICAL_DOTFILES/.git" ]]; then
+        DOTFILES="$CANONICAL_DOTFILES"
+    elif [[ -d "$SCRIPT_DIR/.git" ]]; then
+        DOTFILES="$SCRIPT_DIR"
+    else
+        DOTFILES="$CANONICAL_DOTFILES"
+    fi
+fi
+DOTFILES="${DOTFILES:A}"
+DOTFILES_COMPAT_LINK="$HOME/.dotfiles"
 GITHUB_REPO="mhismail3/dotfiles"
 DOTFILES_BRANCH="main"
 DOTFILES_REMOTE="https://github.com/$GITHUB_REPO.git"
@@ -43,7 +55,6 @@ CONFIG_LINKS=(
     ".gitignore_global:$HOME/.gitignore_global"
     ".tmux.conf:$HOME/.tmux.conf"
     "starship.toml:$HOME/.config/starship.toml"
-    "codex.config.toml:$HOME/.codex/config.toml"
     "codex.AGENTS.md:$HOME/.codex/AGENTS.md"
 )
 
@@ -60,7 +71,7 @@ confirm() {
 }
 
 symlink() {
-    local src="$1" dst="$2"
+    local src="$1" dst="$2" current
     [[ ! -e "$src" ]] && { warn "Source not found: $src"; return 1; }
     mkdir -p "$(dirname "$dst")"
 
@@ -72,12 +83,103 @@ symlink() {
         return 0
     fi
 
-    if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
-        echo "  Already linked: $dst"
+    if [[ -L "$dst" ]]; then
+        current="$(readlink "$dst")"
+        if [[ "$current" == "$src" || "${current:A}" == "${src:A}" ]]; then
+            echo "  Already linked: $dst"
+            return 0
+        fi
+    fi
+
+    if [[ -L "$dst" ]]; then
+        mv "$dst" "$dst.bak.$(date +%s)"
+        ln -s "$src" "$dst" && echo "  Linked: $dst -> $src"
         return 0
     fi
-    [[ -e "$dst" ]] && mv "$dst" "$dst.bak.$(date +%s)"
+
+    if [[ -e "$dst" ]]; then
+        mv "$dst" "$dst.bak.$(date +%s)"
+        ln -s "$src" "$dst" && echo "  Linked: $dst -> $src"
+        return 0
+    fi
+
     ln -s "$src" "$dst" && echo "  Linked: $dst -> $src"
+}
+
+ensure_dotfiles_compat_link() {
+    local current
+
+    if [[ "$DOTFILES" == "$DOTFILES_COMPAT_LINK" ]]; then
+        return 0
+    fi
+
+    if [[ -L "$DOTFILES_COMPAT_LINK" ]]; then
+        current="$(readlink "$DOTFILES_COMPAT_LINK")"
+        if [[ "${current:A}" == "$DOTFILES" ]]; then
+            success "$DOTFILES_COMPAT_LINK points to $DOTFILES"
+            return 0
+        fi
+        mv "$DOTFILES_COMPAT_LINK" "$DOTFILES_COMPAT_LINK.bak.$(date +%s)"
+    elif [[ -e "$DOTFILES_COMPAT_LINK" ]]; then
+        warn "$DOTFILES_COMPAT_LINK exists and is not a symlink; leaving it in place"
+        return 0
+    fi
+
+    ln -s "$DOTFILES" "$DOTFILES_COMPAT_LINK"
+    success "Linked $DOTFILES_COMPAT_LINK -> $DOTFILES"
+}
+
+ensure_existing_ssh_key() {
+    local key="$1"
+    chmod 600 "$key" 2>/dev/null || true
+    if [[ ! -f "$key.pub" ]]; then
+        ssh-keygen -y -f "$key" > "$key.pub" 2>/dev/null || \
+            warn "Could not regenerate SSH public key"
+    fi
+    [[ -f "$key.pub" ]] && chmod 644 "$key.pub" 2>/dev/null || true
+    ssh-add -K "$key" 2>/dev/null || \
+        ssh-add --apple-use-keychain "$key" 2>/dev/null || \
+        ssh-add "$key" 2>/dev/null || true
+}
+
+fix_zsh_compinit_permissions() {
+    local dirs=(
+        "$HOMEBREW_PREFIX/share"
+        "$HOMEBREW_PREFIX/share/zsh"
+        "$HOMEBREW_PREFIX/share/zsh/site-functions"
+        "$HOMEBREW_PREFIX/share/zsh-completions"
+    )
+    local d
+    for d in "${dirs[@]}"; do
+        [[ -d "$d" ]] && chmod go-w "$d" 2>/dev/null || true
+    done
+}
+
+repair_private_internet_access() {
+    local app="/Applications/Private Internet Access.app"
+    if [[ -d "$app" ]]; then
+        xattr -d com.apple.quarantine "$app" 2>/dev/null || true
+    fi
+    brew install --cask private-internet-access --adopt
+}
+
+write_ssh_config() {
+    mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+    if [[ ! -f "$HOME/.ssh/config" ]] || [[ "$RESET" == "true" ]]; then
+        cat > "$HOME/.ssh/config" << 'EOF'
+Host *
+    IgnoreUnknown UseKeychain,AddKeysToAgent
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+EOF
+        chmod 600 "$HOME/.ssh/config"
+    fi
 }
 
 ###############################################################################
@@ -126,6 +228,8 @@ step_homebrew() {
 
 step_dotfiles() {
     info "Dotfiles"
+    mkdir -p "$(dirname "$DOTFILES")"
+
     if [[ -d "$DOTFILES/.git" ]]; then
         success "Already at $DOTFILES"
         (cd "$DOTFILES" && git fetch origin "$DOTFILES_BRANCH" 2>/dev/null) || true
@@ -142,6 +246,8 @@ step_dotfiles() {
             { err "Failed to clone"; return 1; }
         success "Cloned"
     fi
+
+    ensure_dotfiles_compat_link
 }
 
 ###############################################################################
@@ -151,23 +257,59 @@ step_dotfiles() {
 step_packages() {
     info "Installing packages from Brewfile"
     sudo -v < /dev/tty 2>/dev/null || sudo -v
-    (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) &
+    (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) >/dev/null 2>&1 &
     local keepalive=$!
+    local bundle_status=0 package_status=0
 
     if [[ "$RESET" == "true" ]]; then
         # Force reinstall/upgrade everything
-        brew bundle --file="$DOTFILES/Brewfile" --force
+        brew bundle --file="$DOTFILES/Brewfile" --force || bundle_status=$?
     else
-        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
+        brew bundle --file="$DOTFILES/Brewfile" --no-upgrade || bundle_status=$?
     fi
+
+    if (( bundle_status != 0 )); then
+        warn "brew bundle reported failures; trying known repairs"
+        repair_private_internet_access || true
+    fi
+
+    if ! brew bundle check --file="$DOTFILES/Brewfile"; then
+        package_status=1
+    fi
+
     kill "$keepalive" 2>/dev/null || true
+    wait "$keepalive" 2>/dev/null || true
 
     # Fix zsh compinit permissions
-    local dirs=("$HOMEBREW_PREFIX/share" "$HOMEBREW_PREFIX/share/zsh" "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions")
-    for d in "${dirs[@]}"; do
-        [[ -d "$d" ]] && chmod go-w "$d" 2>/dev/null || true
-    done
+    fix_zsh_compinit_permissions
+
+    if (( package_status != 0 )); then
+        err "Brewfile dependencies are still not satisfied"
+        return 1
+    fi
     success "Packages installed"
+}
+
+###############################################################################
+# Step 4b: Full Xcode app
+###############################################################################
+
+step_xcode_app() {
+    info "Xcode app"
+    local developer_dir="/Applications/Xcode.app/Contents/Developer"
+
+    if [[ ! -d "$developer_dir" ]]; then
+        warn "Xcode.app not installed"
+        echo "  App Store installs can require Apple ID approval."
+        echo "  Re-run: mas install 497799835"
+        return 0
+    fi
+
+    sudo xcode-select -s "$developer_dir" || warn "Could not select Xcode developer directory"
+    sudo xcodebuild -license accept 2>/dev/null || true
+    sudo xcodebuild -runFirstLaunch 2>/dev/null || warn "Xcode first-launch setup did not complete"
+
+    success "Xcode selected"
 }
 
 ###############################################################################
@@ -185,6 +327,34 @@ step_symlinks() {
     success "Symlinks created"
 }
 
+step_codex_config() {
+    info "Codex config"
+    local src="$DOTFILES/codex.config.toml"
+    local dst="$HOME/.codex/config.toml"
+    mkdir -p "$HOME/.codex"
+
+    if [[ ! -f "$src" ]]; then
+        warn "Baseline Codex config not found: $src"
+        return 0
+    fi
+
+    if [[ ! -e "$dst" ]]; then
+        cp "$src" "$dst"
+        chmod 600 "$dst" 2>/dev/null || true
+        success "Seeded $dst from baseline"
+        return 0
+    fi
+
+    if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+        success "Already linked: $dst"
+        return 0
+    fi
+
+    warn "Existing $dst left in place"
+    echo "  Codex app/plugin state lives in config.toml on fresh installs."
+    echo "  Durable baseline remains available at: $src"
+}
+
 ###############################################################################
 # Step 6: SSH key
 ###############################################################################
@@ -193,13 +363,16 @@ step_ssh() {
     info "SSH key"
     local key="$HOME/.ssh/id_ed25519"
     mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
+    write_ssh_config
 
     if [[ -f "$key" ]] && [[ "$RESET" != "true" ]]; then
+        ensure_existing_ssh_key "$key"
         success "Key already exists"
         return 0
     fi
 
     if [[ -f "$key" ]] && [[ "$RESET" == "true" ]]; then
+        ensure_existing_ssh_key "$key"
         success "Key already exists (keeping existing key)"
         return 0
     fi
@@ -211,34 +384,36 @@ step_ssh() {
 
     ssh-keygen -t ed25519 -C "mhismail3@gmail.com" -f "$key" </dev/tty
     eval "$(ssh-agent -s)" > /dev/null
-    ssh-add --apple-use-keychain "$key" 2>/dev/null || ssh-add "$key"
-
-    if [[ ! -f "$HOME/.ssh/config" ]] || [[ "$RESET" == "true" ]]; then
-        cat > "$HOME/.ssh/config" << 'EOF'
-Host *
-    IgnoreUnknown UseKeychain,AddKeysToAgent
-    AddKeysToAgent yes
-    UseKeychain yes
-    IdentityFile ~/.ssh/id_ed25519
-
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_ed25519
-EOF
-        chmod 600 "$HOME/.ssh/config"
-    fi
+    ssh-add -K "$key" 2>/dev/null || ssh-add --apple-use-keychain "$key" 2>/dev/null || ssh-add "$key"
 
     chmod 600 "$key"
     chmod 644 "$key.pub"
     pbcopy < "$key.pub"
     echo ""
-    echo "  Public key copied to clipboard!"
-    echo "  Add to GitHub: https://github.com/settings/keys"
-    echo ""
-    echo -n "  Press Enter after adding..."
-    read </dev/tty
+    echo "  Public key copied to clipboard."
+    echo "  GitHub SSH access will be verified after gh auth."
     success "SSH key configured"
+}
+
+ensure_github_ssh_key() {
+    local key_pub="$HOME/.ssh/id_ed25519.pub"
+    [[ ! -f "$key_pub" ]] && return 0
+
+    local ssh_output
+    ssh_output="$(ssh -T git@github.com -o StrictHostKeyChecking=accept-new 2>&1)" || true
+    if [[ "$ssh_output" == *"successfully authenticated"* ]]; then
+        success "GitHub SSH configured"
+        return 0
+    fi
+
+    warn "GitHub SSH key is not accepted yet"
+    if confirm "Upload SSH public key to GitHub with gh?" "y"; then
+        gh auth refresh -h github.com -s admin:public_key </dev/tty || \
+            warn "Could not refresh gh token scope"
+        gh ssh-key add "$key_pub" \
+            --title "$(hostname) $(date +%F)" \
+            --type authentication || warn "Could not upload SSH key"
+    fi
 }
 
 ###############################################################################
@@ -250,16 +425,19 @@ step_gh_auth() {
     if gh auth status &>/dev/null && [[ "$RESET" != "true" ]]; then
         success "Already authenticated"
     else
-        echo "  This sets up git credential helper for HTTPS."
-        gh auth login </dev/tty
+        echo "  This sets GitHub CLI up for SSH git operations."
+        gh auth login --git-protocol ssh </dev/tty
         success "Authenticated"
     fi
+    gh config set git_protocol ssh -h github.com >/dev/null 2>&1 || true
 
     # Git LFS (always safe to re-run)
     if command -v git-lfs &>/dev/null; then
         git lfs install --system 2>/dev/null || git lfs install
         success "Git LFS configured"
     fi
+
+    ensure_github_ssh_key
 }
 
 ###############################################################################
@@ -287,16 +465,25 @@ step_languages() {
     info "Language runtimes"
 
     # Rust
-    if [[ ! -d "$HOME/.rustup" ]] && command -v rustup-init &>/dev/null; then
-        rustup-init -y --no-modify-path || warn "Rust install failed"
-        success "Rust installed"
-    elif [[ -d "$HOME/.rustup" ]]; then
-        if [[ "$RESET" == "true" ]]; then
-            rustup update 2>/dev/null || true
+    local rustup_cmd=""
+    if command -v rustup &>/dev/null; then
+        rustup_cmd="$(command -v rustup)"
+    elif [[ -n "$HOMEBREW_PREFIX" && -x "$HOMEBREW_PREFIX/opt/rustup/bin/rustup" ]]; then
+        rustup_cmd="$HOMEBREW_PREFIX/opt/rustup/bin/rustup"
+    fi
+
+    if [[ -n "$rustup_cmd" ]]; then
+        if [[ ! -d "$HOME/.rustup" ]]; then
+            "$rustup_cmd" default stable || warn "Rust install failed"
+            success "Rust installed"
+        elif [[ "$RESET" == "true" ]]; then
+            "$rustup_cmd" update 2>/dev/null || true
             success "Rust updated"
         else
             success "Rust already installed"
         fi
+    else
+        warn "rustup not found"
     fi
 
     # Node (via nvm)
@@ -363,7 +550,7 @@ step_macos() {
         if confirm "Apply macOS preferences?" "n"; then
             source "$DOTFILES/.macos"
         else
-            echo "  Skipped. Run later: source ~/.dotfiles/.macos"
+            echo "  Skipped. Run later: source $DOTFILES/.macos"
         fi
     fi
 }
@@ -395,7 +582,9 @@ main() {
     step_homebrew
     step_dotfiles
     step_packages
+    step_xcode_app
     step_symlinks
+    step_codex_config
     step_ssh
     step_gh_auth
     step_shell

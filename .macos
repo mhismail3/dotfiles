@@ -6,9 +6,11 @@
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
 sudo -v < /dev/tty
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+(while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done) >/dev/null 2>&1 &
+SUDO_KEEPALIVE_PID=$!
 
 MACOS_USER="${MACOS_USER:-$(whoami)}"
+REMOTE_LOGIN_NEEDS_MANUAL=false
 
 ###############################################################################
 # Remote Access (SSH only)
@@ -16,11 +18,36 @@ MACOS_USER="${MACOS_USER:-$(whoami)}"
 
 echo "Enabling SSH..."
 
-sudo systemsetup -setremotelogin on 2>/dev/null || \
-    echo "  Enable manually: System Settings > General > Sharing > Remote Login"
+remote_login_output="$(sudo systemsetup -setremotelogin on 2>&1)"
+remote_login_status=$?
+if [[ "$remote_login_status" -eq 0 ]]; then
+    echo "  Remote Login enabled via systemsetup."
+else
+    echo "$remote_login_output" | sed 's/^/  systemsetup: /'
+    if echo "$remote_login_output" | grep -qi "Full Disk Access"; then
+        echo "  macOS requires Full Disk Access for systemsetup to toggle Remote Login."
+        echo "  Grant Full Disk Access to Terminal or Codex, then rerun: source ~/Workspace/dotfiles/.macos"
+    fi
+
+    echo "  Trying launchd SSH service fallback..."
+    sudo launchctl enable system/com.openssh.sshd 2>/dev/null || true
+    sudo launchctl bootstrap system /System/Library/LaunchDaemons/ssh.plist 2>/dev/null || true
+    sudo launchctl kickstart -k system/com.openssh.sshd 2>/dev/null || true
+fi
 
 sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
 sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
+
+remote_login_check="$(sudo systemsetup -getremotelogin 2>&1 || true)"
+if echo "$remote_login_check" | grep -qi "On"; then
+    echo "  Remote Login verified on."
+elif launchctl print system/com.openssh.sshd &>/dev/null; then
+    echo "  SSH launchd service is loaded; verify Remote Login in System Settings."
+else
+    REMOTE_LOGIN_NEEDS_MANUAL=true
+    echo "  Enable manually: System Settings > General > Sharing > Remote Login"
+    open "x-apple.systempreferences:com.apple.preferences.sharing" >/dev/null 2>&1 || true
+fi
 
 ###############################################################################
 # UI/UX
@@ -69,17 +96,62 @@ defaults write com.apple.dock orientation -string "bottom"
 # Dock app layout
 if command -v dockutil &>/dev/null; then
     echo "Setting Dock layout..."
+    add_dock_app() {
+        local app_path="$1"
+        if [[ -e "$app_path" ]]; then
+            dockutil --add "$app_path" --no-restart
+        else
+            echo "  Skipping missing Dock app: $app_path"
+        fi
+    }
+
     dockutil --remove all --no-restart
-    dockutil --add /System/Applications/Calendar.app --no-restart
-    dockutil --add /Applications/Things3.app --no-restart
-    dockutil --add /System/Applications/Messages.app --no-restart
-    dockutil --add "/Applications/Google Chrome.app" --no-restart
-    dockutil --add /Applications/Arc.app --no-restart
-    dockutil --add /System/Applications/Photos.app --no-restart
-    dockutil --add /Applications/Xcode.app --no-restart
-    dockutil --add "/System/Applications/Screen Sharing.app" --no-restart
-    dockutil --add "/System/Applications/System Settings.app" --no-restart
+    add_dock_app "/System/Applications/Calendar.app"
+    add_dock_app "/Applications/Things3.app"
+    add_dock_app "/System/Applications/Messages.app"
+    add_dock_app "/Applications/Arc.app"
+    add_dock_app "/System/Applications/Photos.app"
+    add_dock_app "/Applications/Codex.app"
+    add_dock_app "/Applications/Xcode.app"
+    add_dock_app "/System/Applications/Utilities/Terminal.app"
+    add_dock_app "/System/Applications/Utilities/Screen Sharing.app"
+    add_dock_app "/System/Applications/System Settings.app"
 fi
+
+###############################################################################
+# Login Items
+###############################################################################
+
+echo "Configuring login items..."
+
+add_login_item() {
+    local app_path="$1"
+    local item_name="$2"
+
+    if [[ ! -e "$app_path" ]]; then
+        echo "  Skipping missing login item: $app_path"
+        return
+    fi
+
+    osascript - "$app_path" "$item_name" <<'APPLESCRIPT' >/dev/null || \
+        echo "  Failed to add login item: $item_name"
+on run argv
+    set appPath to item 1 of argv
+    set itemName to item 2 of argv
+
+    tell application "System Events"
+        if not (exists login item itemName) then
+            make login item at end with properties {path:appPath, hidden:false}
+        end if
+        set hidden of login item itemName to false
+    end tell
+end run
+APPLESCRIPT
+}
+
+add_login_item "/Applications/Raycast.app" "Raycast"
+add_login_item "/Applications/1Password.app" "1Password"
+add_login_item "/Applications/Tailscale.app" "Tailscale"
 
 ###############################################################################
 # Desktop & Window Manager
@@ -129,6 +201,9 @@ launchctl disable "user/$UID/com.apple.Siri.agent" 2>/dev/null || true
 echo "Configuring menu bar..."
 
 defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+defaults write com.apple.controlcenter "NSStatusItem VisibleCC Battery" -bool true
+defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
 defaults write com.apple.menuextra.clock Show24Hour -bool true
 defaults write com.apple.menuextra.clock ShowDate -int 1
@@ -185,6 +260,25 @@ echo "Configuring display..."
 defaults write com.apple.CoreBrightness CBBlueReductionStatus -dict AutoBlueReductionEnabled -bool false
 defaults write com.apple.CoreBrightness AutoBrightnessEnable -bool false 2>/dev/null || true
 
+if command -v displayplacer &>/dev/null; then
+    echo "Setting built-in display to More Space..."
+    DISPLAYPLACER_LIST="$(displayplacer list 2>/dev/null || true)"
+    BUILTIN_DISPLAY_ID="$(printf "%s\n" "$DISPLAYPLACER_LIST" | awk '
+        /^Persistent screen id:/ { id=$4 }
+        /^Type: MacBook built in screen/ { print id; exit }
+    ')"
+
+    if [[ -n "$BUILTIN_DISPLAY_ID" ]] && \
+        printf "%s\n" "$DISPLAYPLACER_LIST" | grep -q "res:1800x1169 hz:120 color_depth:8 scaling:on"; then
+        displayplacer "id:$BUILTIN_DISPLAY_ID res:1800x1169 hz:120 color_depth:8 enabled:true scaling:on origin:(0,0) degree:0" || \
+            echo "  Failed to set More Space display mode"
+    else
+        echo "  More Space mode not found for this display; leaving resolution unchanged"
+    fi
+else
+    echo "  displayplacer not found; skipping More Space display mode"
+fi
+
 ###############################################################################
 # Finder
 ###############################################################################
@@ -209,6 +303,7 @@ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 chflags nohidden ~/Library 2>/dev/null
+echo "  Finder sidebar visibility for Recents, AirDrop, Shared, and On My Mac is private UI state; verify manually."
 
 ###############################################################################
 # Keyboard
@@ -326,12 +421,20 @@ echo "  MANUAL STEPS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "  1. Set Raycast hotkey to Cmd+Space (Raycast > Settings > General)"
-echo "  2. Login items: add Raycast, 1Password, Tailscale"
+echo "  2. Verify login items if desired (set automatically for Raycast, 1Password, Tailscale)"
 echo "     System Settings > General > Login Items & Extensions"
-echo "  3. Displays > set resolution to 'More Space'"
-echo "  4. Verify SSH: System Settings > General > Sharing > Remote Login"
-echo "  5. Disable True Tone: System Settings > Displays > True Tone OFF"
-echo "  6. Set up Focus mode if desired (System Settings > Focus)"
+echo "  3. Verify display scaling if desired (set automatically via displayplacer)"
+if [[ "$REMOTE_LOGIN_NEEDS_MANUAL" == "true" ]]; then
+    echo "  4. Enable Remote Login: System Settings > General > Sharing"
+else
+    echo "  4. Verify Remote Login: System Settings > General > Sharing"
+fi
+echo "  5. Remote Login: enable 'Allow full disk access for remote users' if you want remote shell access to protected folders"
+echo "  6. Disable True Tone: System Settings > Displays > True Tone OFF"
+echo "  7. Finder sidebar: remove Recents, AirDrop, Shared, and On My Mac"
+echo "  8. Set up Focus mode if desired (System Settings > Focus)"
 echo ""
 echo "  After completing these steps, RESTART to apply everything."
 echo ""
+
+kill "$SUDO_KEEPALIVE_PID" 2>/dev/null || true

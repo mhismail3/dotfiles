@@ -7,6 +7,8 @@ tool requires a nested directory layout.
 
 - Repo: `mhismail3/dotfiles`
 - Branch: `main`
+- Canonical local checkout: `~/Workspace/dotfiles`
+- Compatibility symlink: `~/.dotfiles`
 - Apply entrypoint: `./setup.sh`
 - Symlink map: `CONFIG_LINKS` in `setup.sh`
 - Function test guard: set `DOTFILES_SKIP_MAIN=true` before sourcing `setup.sh`
@@ -37,5 +39,5 @@ git config --file .gitconfig --list
 Run this after changing Codex config:
 
 ```bash
-python3.11 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
+python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
 ```
