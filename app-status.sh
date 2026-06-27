@@ -109,6 +109,9 @@ verify_app() {
         synology-drive)
             verify_synology_drive || verify_status=1
             ;;
+        docker)
+            verify_docker || verify_status=1
+            ;;
         private-internet-access)
             verify_private_internet_access || verify_status=1
             ;;
@@ -364,6 +367,45 @@ raise SystemExit(1)
 PY
     then
         echo "    failed: missing app-visible Taildrive share $taildrive_share_name -> $taildrive_share_path"
+        return 1
+    fi
+    echo "    ok"
+}
+
+verify_docker() {
+    local settings_path="$HOME/Library/Group Containers/group.com.docker/settings-store.json"
+    local preferences_domain="com.electron.dockerdesktop"
+    local status_item_visible
+
+    echo "  Docker Desktop settings store"
+    if [[ ! -f "$settings_path" ]]; then
+        echo "    failed: missing settings-store.json"
+        return 1
+    fi
+
+    if ! python3 - "$settings_path" <<'PY'
+import json
+import pathlib
+import sys
+
+data = json.loads(pathlib.Path(sys.argv[1]).read_text())
+expected = {
+    "AutoStart": False,
+    "UseContainerdSnapshotter": True,
+}
+if any(data.get(key) != value for key, value in expected.items()):
+    raise SystemExit(1)
+PY
+    then
+        echo "    failed: expected AutoStart=false and UseContainerdSnapshotter=true"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Docker Desktop menu bar status item"
+    status_item_visible="$(defaults read "$preferences_domain" "NSStatusItem Visible Item-0" 2>/dev/null || true)"
+    if [[ "$status_item_visible" != "0" ]]; then
+        echo "    failed: expected NSStatusItem Visible Item-0=false in $preferences_domain"
         return 1
     fi
     echo "    ok"

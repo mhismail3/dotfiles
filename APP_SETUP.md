@@ -118,7 +118,8 @@ step and prints the re-run command.
 
 Use Docker's recommended first-run settings. The baseline keeps Docker Desktop
 out of Login Items so it does not consume memory or battery unless containers are
-needed.
+needed. `setup.sh` also hides Docker Desktop's macOS menu bar status item by
+setting `NSStatusItem Visible Item-0=false` in `com.electron.dockerdesktop`.
 
 Expected verified state:
 
@@ -128,6 +129,7 @@ Expected verified state:
 4. `/var/run/docker.sock` exists as Docker Desktop's compatibility symlink.
 5. `AutoStart` is `false`.
 6. `UseContainerdSnapshotter` is `true`.
+7. Docker Desktop's menu bar status item visibility is `false`.
 
 Do not track `~/.docker/config.json` wholesale because it can include Docker Hub
 auth and credential helper state.

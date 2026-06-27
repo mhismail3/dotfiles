@@ -280,6 +280,8 @@ apps:
     desired_state: verify
     automated:
       - Installed by Brewfile.
+      - setup.sh applies the Docker Desktop settings-store baseline.
+      - setup.sh hides Docker Desktop's macOS menu bar status item through the Electron preferences domain.
       - Docker CLI and recommended first-run state are verified by app-status.sh.
     manual:
       - Launch Docker Desktop once to complete onboarding.
@@ -293,17 +295,19 @@ apps:
         - docker info >/dev/null
         - test "$(docker context show)" = "desktop-linux"
         - test -L /var/run/docker.sock
-        - jq -e '.AutoStart == false and .UseContainerdSnapshotter == true' "$HOME/Library/Group Containers/group.com.docker/settings-store.json" >/dev/null
       user_checks:
         - Docker Desktop reports "Docker is running".
         - docker ps succeeds after launch.
+        - Docker Desktop's menu bar icon is hidden after Docker Desktop is restarted.
         - Docker Hub sign-in is skipped unless actually needed.
     state_locations:
       - ~/Library/Group Containers/group.com.docker
+      - ~/Library/Preferences/com.electron.dockerdesktop.plist
       - ~/.docker
     notes:
       - Recommended settings created /var/run/docker.sock as a compatibility symlink to ~/.docker/run/docker.sock.
       - The standard baseline keeps Docker Desktop out of Login Items to avoid unnecessary battery and memory use.
+      - The status item visibility is stored by macOS/Electron as NSStatusItem Visible Item-0 in com.electron.dockerdesktop.
       - Keep Docker credentials and generated container state out of this repo.
 
   - id: visual-studio-code

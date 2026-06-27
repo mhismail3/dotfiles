@@ -723,6 +723,60 @@ SQL
     echo "  File event notifications disabled; minimalist menu bar icon enabled."
 }
 
+apply_docker_desktop_preferences() {
+    local app="/Applications/Docker.app"
+    local settings_path="$HOME/Library/Group Containers/group.com.docker/settings-store.json"
+    local preferences_domain="com.electron.dockerdesktop"
+    local py
+
+    if [[ ! -d "$app" ]]; then
+        warn "Docker Desktop preferences skipped; app is not installed"
+        return 0
+    fi
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+
+    if [[ -z "$py" ]]; then
+        warn "Python not found; Docker Desktop settings store skipped"
+        return 0
+    fi
+
+    if ! "$py" - "$settings_path" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+path.parent.mkdir(parents=True, exist_ok=True)
+
+if path.exists():
+    data = json.loads(path.read_text())
+else:
+    data = {}
+
+data.update({
+    "AutoStart": False,
+    "UseContainerdSnapshotter": True,
+})
+
+path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+PY
+    then
+        warn "Could not update Docker Desktop settings store"
+        return 1
+    fi
+
+    defaults write "$preferences_domain" "NSStatusItem Visible Item-0" -bool false
+    killall cfprefsd >/dev/null 2>&1 || true
+
+    success "Docker Desktop preferences applied"
+    echo "  Login launch disabled, containerd image store enabled, menu bar status icon hidden."
+    echo "  If Docker Desktop is already running, quit and reopen it for the icon change to apply."
+}
+
 apply_private_internet_access_preferences() {
     local app="/Applications/Private Internet Access.app"
     local settings_path="$HOME/Library/Preferences/com.privateinternetaccess.vpn/clientsettings.json"
@@ -1241,6 +1295,7 @@ PY
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
+    apply_docker_desktop_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences
     apply_tailscale_app_preferences
