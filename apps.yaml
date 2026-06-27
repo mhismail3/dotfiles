@@ -122,24 +122,31 @@ apps:
       - Added to Dock by .macos.
       - Durable defaults merged from codex.config.toml by setup.sh.
       - Global personal AGENTS.md linked by setup.sh.
+      - Personal Codex skills linked from dotfiles by setup.sh.
     manual:
       - Sign in to Codex if not already authenticated.
       - Enable or verify Computer Use permissions in macOS Privacy and Security.
+      - Grant Calendar access to Codex Apple Calendar Helper when using the Apple Calendar skill.
       - Review Settings after config changes that require app restart.
     verify:
       commands:
         - test -d "/Applications/Codex.app"
         - command -v codex
         - codex --version
+        - test -x "$HOME/.codex/skills/things-3/scripts/things.py"
+        - test -x "$HOME/.codex/skills/apple-calendar/scripts/calendar.py"
       user_checks:
         - Codex app is signed in.
         - Computer Use can see and control approved apps.
+        - Apple Calendar skill can list calendars after Calendar access is granted.
     state_locations:
       - ~/.codex/config.toml
       - ~/.codex/AGENTS.md
+      - ~/.codex/skills
       - ~/Library/Application Support/Codex
     notes:
       - Do not commit Codex auth, sessions, logs, cache, plugin runtime state, or project trust history.
+      - Apple Calendar access is granted to the generated helper app, not to the dotfiles repo itself.
 
   - id: tailscale
     name: Tailscale

@@ -90,10 +90,12 @@ python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.
 yq e '.' apps.yaml >/dev/null
 zsh -n app-status.sh
 ./app-status.sh summary
-python3 -m py_compile skills/things-3/scripts/things.py
+python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py
+swiftc -parse skills/apple-calendar/scripts/calendar_helper.swift
 uvx --with pyyaml python - <<'PY'
 import pathlib, yaml
-yaml.safe_load(pathlib.Path("skills/things-3/agents/openai.yaml").read_text())
+for path in sorted(pathlib.Path("skills").glob("*/agents/openai.yaml")):
+    yaml.safe_load(path.read_text())
 PY
 ```
 
@@ -123,6 +125,11 @@ Known Lock Screen shortcut boundary: add `Lock Screen` with `Option+L` manually
 in System Settings > Keyboard > Keyboard Shortcuts > App Shortcuts. A direct
 `NSUserKeyEquivalents` write did not reliably surface in the Tahoe App Shortcuts
 UI and can still type `¬` in text fields such as Codex.
+
+Known Calendar skill boundary: the Apple Calendar skill builds a local
+EventKit helper app named `Codex Apple Calendar Helper`. macOS Calendar access is
+a privacy grant, so approve it in System Settings > Privacy & Security >
+Calendars when first used.
 
 Known Synology Drive boundary: sync task state is stored under
 `~/Library/Application Support/SynologyDrive`, including

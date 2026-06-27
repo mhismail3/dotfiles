@@ -56,9 +56,11 @@ zsh -n app-status.sh
 Run these after changing personal Codex skills:
 
 ```bash
-python3 -m py_compile skills/things-3/scripts/things.py
+python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py
+swiftc -parse skills/apple-calendar/scripts/calendar_helper.swift
 uvx --with pyyaml python - <<'PY'
 import pathlib, yaml
-yaml.safe_load(pathlib.Path("skills/things-3/agents/openai.yaml").read_text())
+for path in sorted(pathlib.Path("skills").glob("*/agents/openai.yaml")):
+    yaml.safe_load(path.read_text())
 PY
 ```
