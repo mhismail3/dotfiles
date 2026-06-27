@@ -440,7 +440,8 @@ apps:
       - Added to Dock by .macos.
     manual:
       - Enable Things Cloud if used.
-      - Confirm calendar integration and reminders import preferences.
+      - Enable Calendar integration only if calendar events should appear in Today and Upcoming.
+      - Enable Reminders import only if Reminders should feed the Things Inbox; imported reminders are deleted from Reminders.
     verify:
       commands:
         - test -d "/Applications/Things3.app"
@@ -449,6 +450,8 @@ apps:
     state_locations:
       - ~/Library/Containers/com.culturedcode.ThingsMac
     notes:
+      - First-run tutorial was completed and the sample project was declined on this Mac.
+      - Current baseline leaves Things Cloud, Calendar integration, and Reminders import off until explicitly enabled.
       - Task data should be managed by Things Cloud or its native storage, not dotfiles.
 
   - id: private-internet-access
