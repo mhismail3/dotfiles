@@ -57,7 +57,7 @@ apps:
     priority: 20
     setup_phase: browser
     purpose: Standard browser for agent-visible web sessions, extensions, and account sync.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - Added to Dock by .macos.
@@ -75,6 +75,7 @@ apps:
       - ~/Library/Application Support/Google/Chrome
     notes:
       - Chrome is the standard browser; Arc is intentionally not installed.
+      - Chrome sign-in/sync and 1Password extension setup were completed on this Mac.
 
   - id: raycast
     name: Raycast
@@ -179,7 +180,7 @@ apps:
     priority: 60
     setup_phase: storage
     purpose: Google Drive file sync and mounted cloud files.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
     manual:
@@ -189,6 +190,7 @@ apps:
     verify:
       commands:
         - test -d "/Applications/Google Drive.app"
+        - 'test -n "$(find "$HOME/Library/CloudStorage" -maxdepth 1 -type d -name "GoogleDrive-*" -print -quit 2>/dev/null)"'
       user_checks:
         - Google Drive is mounted in Finder.
         - Expected files are visible.
@@ -196,6 +198,7 @@ apps:
       - ~/Library/Application Support/Google/DriveFS
     notes:
       - Google Docs, Sheets, and Slides app stubs may appear in /Applications after Drive setup.
+      - Google Drive sign-in was completed on this Mac and the CloudStorage mount is present.
 
   - id: synology-drive
     name: Synology Drive
@@ -366,7 +369,7 @@ apps:
     priority: 120
     setup_phase: agent
     purpose: Claude desktop app for non-Codex AI workflows.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
     manual:
@@ -381,6 +384,7 @@ apps:
       - ~/Library/Application Support/Claude
     notes:
       - Claude desktop app state is not tracked.
+      - Claude desktop sign-in/onboarding was completed on this Mac.
 
   - id: superwhisper
     name: Superwhisper
