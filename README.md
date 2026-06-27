@@ -110,6 +110,11 @@ Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or
 CLI for setting its global hotkey. Set Raycast's hotkey in the app UI.
 
+Known Lock Screen shortcut boundary: add `Lock Screen` with `Option+L` manually
+in System Settings > Keyboard > Keyboard Shortcuts > App Shortcuts. A direct
+`NSUserKeyEquivalents` write did not reliably surface in the Tahoe App Shortcuts
+UI and can still type `¬` in text fields such as Codex.
+
 Known Synology Drive boundary: sync task state is stored under
 `~/Library/Application Support/SynologyDrive`, including
 `data/db/sys.sqlite`, but those files include account/session/private-key and
@@ -141,7 +146,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | Display | Night Shift off, auto-brightness off, built-in display set to More Space via `displayplacer` |
 | Power | Screen saver after 20 minutes; display sleep 15 minutes on battery and 30 minutes on power; system sleep 30 minutes on battery and never on power |
 | Finder | Hidden files, extensions, path bar, column view, folders first; sidebar removals are manual |
-| Keyboard | Fast repeat, no press-and-hold, full keyboard nav, Option+L Lock Screen shortcut |
+| Keyboard | Fast repeat, no press-and-hold, full keyboard nav; Option+L Lock Screen shortcut is manual |
 | Trackpad | Tap to click, three-finger drag |
 | Mission Control | Stable spaces, group by app, hot corners: top-left app drawer, top-right Mission Control, bottom-left screen saver, bottom-right Desktop |
 | Screen Time | Disabled |
