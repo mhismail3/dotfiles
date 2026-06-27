@@ -146,6 +146,12 @@ Shared, and On My Mac does not currently expose a stable `defaults` setting on
 this macOS build. `.macos` records it as a manual verification step instead of
 using brittle GUI automation or private shared-file-list mutation.
 
+Known wallpaper boundary: `.macos` uses System Events to set all desktop spaces
+to `DOTFILES_WALLPAPER` or a root dotfiles image named `wallpaper.heic`,
+`wallpaper.jpg`, `wallpaper.jpeg`, or `wallpaper.png`. It does not read or write
+private wallpaper databases. If no image is configured, the setting is skipped
+and reported as a manual setup item.
+
 App setup is tracked in `apps.yaml` and walked with `./app-status.sh next`.
 When an installed app needs login, privacy permissions, sync configuration, or
 onboarding, record the boundary there rather than only in a thread transcript.
@@ -164,6 +170,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | Display | Night Shift off, auto-brightness off, built-in display set to More Space via `displayplacer` |
 | Power | Screen saver after 20 minutes; display sleep 15 minutes on battery and 30 minutes on power; system sleep 30 minutes on battery and never on power |
 | Finder | Hidden files, extensions, path bar, column view, folders first; sidebar removals are manual |
+| Wallpaper | All desktop spaces set to `DOTFILES_WALLPAPER` or `wallpaper.heic/jpg/jpeg/png` at the dotfiles root when configured |
 | Screenshots | Save to `~/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots` when Synology Drive is mounted |
 | Keyboard | Fast repeat, no press-and-hold, full keyboard nav; Option+L Lock Screen shortcut is manual |
 | Trackpad | Tap to click, three-finger drag |

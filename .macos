@@ -10,8 +10,10 @@ sudo -v < /dev/tty
 SUDO_KEEPALIVE_PID=$!
 
 MACOS_USER="${MACOS_USER:-$(whoami)}"
+DOTFILES_ROOT="${DOTFILES:-$HOME/Workspace/dotfiles}"
 REMOTE_LOGIN_NEEDS_MANUAL=false
 SCREENSHOT_LOCATION_NEEDS_MANUAL=false
+WALLPAPER_NEEDS_MANUAL=false
 
 ###############################################################################
 # Remote Access (SSH only)
@@ -167,6 +169,58 @@ defaults write com.apple.WindowManager GloballyEnabled -bool false
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
 defaults write com.apple.WindowManager StandardHideWidgets -int 1
 defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
+
+resolve_wallpaper_path() {
+    local candidate resolved_dir
+    for candidate in \
+        "${DOTFILES_WALLPAPER:-}" \
+        "$DOTFILES_ROOT/wallpaper.heic" \
+        "$DOTFILES_ROOT/wallpaper.jpg" \
+        "$DOTFILES_ROOT/wallpaper.jpeg" \
+        "$DOTFILES_ROOT/wallpaper.png"
+    do
+        [[ -z "$candidate" ]] && continue
+        case "$candidate" in
+            "~/"*) candidate="$HOME/${candidate#~/}" ;;
+        esac
+        [[ -f "$candidate" ]] || continue
+        resolved_dir="$(cd "$(dirname "$candidate")" 2>/dev/null && pwd -P)" || continue
+        printf "%s/%s\n" "$resolved_dir" "$(basename "$candidate")"
+        return 0
+    done
+    return 1
+}
+
+set_wallpaper() {
+    local wallpaper_path="$1"
+    osascript - "$wallpaper_path" <<'APPLESCRIPT'
+on run argv
+    set wallpaperPath to item 1 of argv
+    set wallpaperFile to POSIX file wallpaperPath
+
+    tell application "System Events"
+        repeat with targetDesktop in desktops
+            set picture of targetDesktop to wallpaperFile
+        end repeat
+    end tell
+end run
+APPLESCRIPT
+}
+
+WALLPAPER_PATH="$(resolve_wallpaper_path || true)"
+if [[ -n "$WALLPAPER_PATH" ]]; then
+    if set_wallpaper "$WALLPAPER_PATH"; then
+        echo "  Wallpaper set to $WALLPAPER_PATH"
+    else
+        WALLPAPER_NEEDS_MANUAL=true
+        echo "  Failed to set wallpaper automatically."
+        echo "  Verify Automation access for Terminal/Codex, then re-run: source ~/Workspace/dotfiles/.macos"
+    fi
+else
+    WALLPAPER_NEEDS_MANUAL=true
+    echo "  No wallpaper configured."
+    echo "  Add wallpaper.heic/jpg/jpeg/png at $DOTFILES_ROOT or set DOTFILES_WALLPAPER, then re-run .macos."
+fi
 
 ###############################################################################
 # Mission Control & Hot Corners
@@ -474,8 +528,16 @@ echo "  6. Disable True Tone: System Settings > Displays > True Tone OFF"
 echo "  7. Finder sidebar: remove Recents, AirDrop, Shared, and On My Mac"
 echo "  8. Keyboard shortcut: add Lock Screen with Option+L in Keyboard Shortcuts > App Shortcuts"
 echo "  9. Set up Focus mode if desired (System Settings > Focus)"
+MANUAL_STEP=10
+print_manual_step() {
+    echo "  $MANUAL_STEP. $1"
+    MANUAL_STEP=$((MANUAL_STEP + 1))
+}
+if [[ "$WALLPAPER_NEEDS_MANUAL" == "true" ]]; then
+    print_manual_step "Wallpaper: add wallpaper.heic/jpg/jpeg/png at $DOTFILES_ROOT or set DOTFILES_WALLPAPER, then re-run .macos"
+fi
 if [[ "$SCREENSHOT_LOCATION_NEEDS_MANUAL" == "true" ]]; then
-    echo "  10. Screenshot save location: re-run .macos after Synology Drive setup"
+    print_manual_step "Screenshot save location: re-run .macos after Synology Drive setup"
 fi
 echo ""
 echo "  After completing these steps, RESTART to apply everything."
