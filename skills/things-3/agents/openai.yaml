@@ -1,0 +1,7 @@
+interface:
+  display_name: "Things 3"
+  short_description: "Read and update Things 3 tasks"
+  default_prompt: "Use $things-3 to review my Things 3 task system and suggest next actions."
+
+policy:
+  allow_implicit_invocation: true

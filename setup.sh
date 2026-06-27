@@ -466,6 +466,52 @@ step_codex_config() {
     echo "  Preserved app/plugin/project state from the live config."
 }
 
+step_codex_skills() {
+    info "Codex skills"
+    local src_dir="$DOTFILES/skills"
+    local dst_dir="$HOME/.codex/skills"
+    local backup_dir="$HOME/.codex/backups/skills"
+    local skill dst current backup count=0
+
+    if [[ ! -d "$src_dir" ]]; then
+        warn "No personal Codex skills found at $src_dir"
+        return 0
+    fi
+
+    mkdir -p "$dst_dir" "$backup_dir"
+    for skill in "$src_dir"/*(N/); do
+        dst="$dst_dir/${skill:t}"
+        if [[ -L "$dst" ]]; then
+            current="$(readlink "$dst")"
+            if [[ "$current" == "$skill" || "${current:A}" == "${skill:A}" ]]; then
+                echo "  Already linked: $dst"
+                (( count++ ))
+                continue
+            fi
+        fi
+
+        if [[ -e "$dst" || -L "$dst" ]]; then
+            backup="$backup_dir/${skill:t}.bak.$(date +%s)"
+            mv "$dst" "$backup"
+            echo "  Backed up existing skill to $backup"
+        fi
+
+        if ln -s "$skill" "$dst"; then
+            echo "  Linked: $dst -> $skill"
+            (( count++ ))
+        else
+            warn "Could not link Codex skill: $skill"
+        fi
+    done
+
+    if (( count == 0 )); then
+        warn "No personal Codex skills found at $src_dir"
+        return 0
+    fi
+
+    success "Codex skills linked"
+}
+
 ###############################################################################
 # Step 6: SSH key
 ###############################################################################
@@ -736,6 +782,7 @@ main() {
     step_xcode_app
     step_symlinks
     step_codex_config
+    step_codex_skills
     step_ssh
     step_gh_auth
     step_shell

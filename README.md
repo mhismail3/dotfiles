@@ -45,6 +45,7 @@ Config files live at the repo root unless a tool truly requires a directory.
 | `starship.toml` | `~/.config/starship.toml` | Starship prompt config |
 | `codex.config.toml` | reference baseline | Personal Codex defaults; not symlinked over live app/plugin state |
 | `codex.AGENTS.md` | `~/.codex/AGENTS.md` | Global personal Codex guidance |
+| `skills/` | `~/.codex/skills/*` | Personal Codex skills that require package directories |
 | `.macos` | sourced by `setup.sh` | macOS system preferences |
 | `AGENTS.md` | read by agents | Agent operating notes for this repo |
 
@@ -63,6 +64,9 @@ the live `~/.codex/config.toml` while preserving app-managed state.
 Codex app configuration keys such as `followUpQueueMode` are top-level config
 keys, not `[desktop]` table keys; `setup.sh` prunes stale `[desktop]` copies
 from older bootstrap revisions during merge.
+Personal Codex skills that should survive rebuilds live under `skills/<name>`;
+`setup.sh` symlinks them into `~/.codex/skills/<name>`. Do not track
+app-installed `.system` skills, auth, task databases, or generated Codex state.
 
 ## Starship
 
@@ -86,6 +90,11 @@ python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.
 yq e '.' apps.yaml >/dev/null
 zsh -n app-status.sh
 ./app-status.sh summary
+python3 -m py_compile skills/things-3/scripts/things.py
+uvx --with pyyaml python - <<'PY'
+import pathlib, yaml
+yaml.safe_load(pathlib.Path("skills/things-3/agents/openai.yaml").read_text())
+PY
 ```
 
 Do not source `.macos` unless the user explicitly wants macOS preferences applied;
