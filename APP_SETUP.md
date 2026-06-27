@@ -258,10 +258,15 @@ Taildrive should be enabled for this Mac with the full user folder shared as
 `moose -> ~/`. The tailnet policy must grant `drive:share` and `drive:access`;
 `./app-status.sh verify tailscale` checks those capabilities. The macOS GUI app
 does not support the public `tailscale drive` folder commands, so `setup.sh`
-uses Tailscale LocalAPI to upsert the share and writes:
+uses Tailscale LocalAPI to upsert the share with a generated security-scoped
+bookmark. The bookmark matters: a bare `name` and `path` share can exist in
+LocalAPI while the Tailscale File Sharing UI still shows "No shared folders".
+The same setup also writes:
 
 ```bash
 defaults write io.tailscale.ipn.macsys FileSharingConfiguration -string show
+defaults write io.tailscale.ipn.macsys TailscaleStartOnLogin -bool true
+defaults write io.tailscale.ipn.macsys HideDockIcon -bool true
 ```
 
 Use this read-only check when debugging:
@@ -269,6 +274,10 @@ Use this read-only check when debugging:
 ```bash
 tailscale debug localapi GET /localapi/v0/drive/shares
 ```
+
+The `moose` share should include non-empty `bookmarkData`. If it does not,
+rerun `setup.sh` on a Mac with Swift available or add the folder once through
+Tailscale Settings > File Sharing so macOS grants the security-scoped bookmark.
 
 PIA should remain an explicit-use VPN unless there is a concrete reason to make
 it always-on. Do not enable PIA Advanced Kill Switch, connect-on-launch,

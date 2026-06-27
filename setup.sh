@@ -1112,10 +1112,26 @@ EOF
     echo "  CLI launcher: screen-share-macbook-server"
 }
 
+apply_tailscale_app_preferences() {
+    if [[ ! -d "/Applications/Tailscale.app" ]]; then
+        warn "Tailscale app not found; app preferences were not configured"
+        return 1
+    fi
+
+    defaults write io.tailscale.ipn.macsys TailscaleStartOnLogin -bool true
+    defaults write io.tailscale.ipn.macsys HideDockIcon -bool true
+    defaults write io.tailscale.ipn.macsys FileSharingConfiguration -string show
+
+    success "Tailscale app preferences configured"
+    echo "  Launch at login: on"
+    echo "  Hide Dock icon: on"
+    echo "  File Sharing UI: shown"
+}
+
 apply_tailscale_taildrive() {
     local share_name="${TAILDRIVE_SHARE_NAME:-moose}"
     local share_path="${TAILDRIVE_SHARE_PATH:-$HOME}"
-    local body py status_json
+    local body py status_json shares_json bookmark_data swift_bin
 
     if ! command -v tailscale &>/dev/null; then
         warn "Tailscale CLI not found; Taildrive share was not configured"
@@ -1162,14 +1178,54 @@ PY
     fi
     rm -f "$status_json"
 
-    # Show the File Sharing pane in the macOS GUI app; the actual share is stored in tailscaled state.
+    # Show the File Sharing pane in the macOS GUI app.
     defaults write io.tailscale.ipn.macsys FileSharingConfiguration -string show 2>/dev/null || true
 
-    body="$("$py" - "$share_name" "$share_path" <<'PY'
+    shares_json="$(tailscale debug localapi GET /localapi/v0/drive/shares 2>/dev/null || echo "[]")"
+    bookmark_data="$("$py" - "$share_name" "$share_path" "$shares_json" <<'PY'
+import json
+import pathlib
+import sys
+
+expected_name = sys.argv[1]
+expected_path = str(pathlib.Path(sys.argv[2]))
+try:
+    shares = json.loads(sys.argv[3] or "[]") or []
+except json.JSONDecodeError:
+    shares = []
+
+for share in shares:
+    if share.get("name") == expected_name and str(pathlib.Path(share.get("path", ""))) == expected_path:
+        print(share.get("bookmarkData", ""))
+        raise SystemExit(0)
+PY
+)"
+
+    if [[ -z "$bookmark_data" ]]; then
+        swift_bin="$(command -v swift || true)"
+        if [[ -n "$swift_bin" ]]; then
+            bookmark_data="$("$swift_bin" - "$share_path" <<'SWIFT' 2>/dev/null || true
+import Foundation
+
+let path = CommandLine.arguments[1]
+let url = URL(fileURLWithPath: path)
+let data = try url.bookmarkData(options: [.withSecurityScope], includingResourceValuesForKeys: nil, relativeTo: nil)
+print(data.base64EncodedString())
+SWIFT
+)"
+        fi
+    fi
+
+    if [[ -z "$bookmark_data" ]]; then
+        warn "Could not generate Taildrive security-scoped bookmark; add the folder once through Tailscale Settings > File Sharing"
+        return 1
+    fi
+
+    body="$("$py" - "$share_name" "$share_path" "$bookmark_data" <<'PY'
 import json
 import sys
 
-print(json.dumps({"name": sys.argv[1], "path": sys.argv[2]}))
+print(json.dumps({"name": sys.argv[1], "path": sys.argv[2], "bookmarkData": sys.argv[3]}))
 PY
 )"
 
@@ -1187,6 +1243,7 @@ step_app_preferences() {
     apply_synology_drive_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences
+    apply_tailscale_app_preferences
     apply_tailscale_screen_sharing_connection
     apply_tailscale_taildrive
 }

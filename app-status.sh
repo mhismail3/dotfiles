@@ -317,6 +317,21 @@ PY
     fi
     echo "    ok"
 
+    echo "  Tailscale app preferences"
+    if [[ "$(defaults read io.tailscale.ipn.macsys TailscaleStartOnLogin 2>/dev/null || true)" != "1" ]]; then
+        echo "    failed: expected Launch Tailscale at login enabled"
+        return 1
+    fi
+    if [[ "$(defaults read io.tailscale.ipn.macsys HideDockIcon 2>/dev/null || true)" != "1" ]]; then
+        echo "    failed: expected Hide Dock Icon enabled"
+        return 1
+    fi
+    if ! osascript -e 'tell application "System Events" to get exists login item "Tailscale"' 2>/dev/null | grep -q true; then
+        echo "    failed: expected Tailscale login item"
+        return 1
+    fi
+    echo "    ok"
+
     echo "  Taildrive user-folder share"
     if [[ "$(defaults read io.tailscale.ipn.macsys FileSharingConfiguration 2>/dev/null || true)" != "show" ]]; then
         echo "    failed: expected Tailscale File Sharing UI enabled"
@@ -330,6 +345,7 @@ PY
     if ! python3 - "$taildrive_share_name" "$taildrive_share_path" "$shares_json" <<'PY'
 import json
 import pathlib
+import base64
 import sys
 
 expected_name = sys.argv[1]
@@ -338,12 +354,16 @@ shares = json.loads(sys.argv[3] or "[]") or []
 
 for share in shares:
     if share.get("name") == expected_name and str(pathlib.Path(share.get("path", ""))) == expected_path:
+        bookmark = share.get("bookmarkData")
+        if not isinstance(bookmark, str) or not bookmark:
+            raise SystemExit(1)
+        base64.b64decode(bookmark)
         raise SystemExit(0)
 
 raise SystemExit(1)
 PY
     then
-        echo "    failed: missing Taildrive share $taildrive_share_name -> $taildrive_share_path"
+        echo "    failed: missing app-visible Taildrive share $taildrive_share_name -> $taildrive_share_path"
         return 1
     fi
     echo "    ok"

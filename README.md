@@ -125,9 +125,10 @@ require macOS account credentials on the server. Screen Sharing host trust files
 are runtime state and are not tracked.
 
 Known Taildrive boundary: `setup.sh` enables the Tailscale File Sharing UI and
-uses Tailscale LocalAPI to share `~/` as `moose`. The tailnet ACL must grant
-`drive:share` and `drive:access`; the verifier checks this, but dotfiles do not
-manage tailnet policy.
+uses Tailscale LocalAPI to share `~/` as `moose` with generated macOS
+security-scoped bookmark data. The tailnet ACL must grant `drive:share` and
+`drive:access`; the verifier checks this, but dotfiles do not manage tailnet
+policy.
 
 Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or
@@ -176,7 +177,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | SSH | Remote Login enabled when macOS permissions allow it; otherwise explicit manual step |
 | UI | Dark mode, sounds on, natural scrolling, tabs always, restore windows |
 | Dock | Auto-hide, size, magnification, managed app layout via dockutil |
-| Login Items | Raycast, 1Password, and Tailscale launch at login |
+| Login Items | Raycast, 1Password, and Tailscale launch at login; Tailscale stays menu-bar only |
 | Siri | Disabled |
 | Menu Bar | Spotlight icon hidden, battery percentage, 24h clock with date and seconds |
 | Spotlight | Cmd+Space freed for Raycast, limited categories |
