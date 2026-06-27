@@ -513,7 +513,7 @@ sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc"
 
 echo "Restarting affected apps..."
 
-for app in "Finder" "Dock" "SystemUIServer" "ControlCenter" "WindowManager"; do
+for app in "Finder" "Dock" "SystemUIServer" "ControlCenter" "WindowManager" "WallpaperAgent"; do
     killall "${app}" &>/dev/null || true
 done
 
