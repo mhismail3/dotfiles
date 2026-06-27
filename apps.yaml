@@ -596,19 +596,28 @@ apps:
     priority: 200
     setup_phase: utility
     purpose: Quick camera preview.
-    desired_state: needs_permissions
+    desired_state: verify
     automated:
       - Installed by Mac App Store through Brewfile when possible.
+      - Camera permission and onboarding state are verified by app-status.sh.
     manual:
-      - Grant Camera permission on first launch.
-      - Configure menu bar behavior.
+      - Grant Camera permission on first launch if prompted by macOS.
+      - Decide later whether Hand Mirror should be added to Login Items.
     verify:
       commands:
         - test -d "/Applications/Hand Mirror.app"
+        - test -d "$HOME/Library/Containers/net.rafaelconde.Hand-Mirror"
+        - defaults read net.rafaelconde.Hand-Mirror isCameraPermissionsAllowed | grep -qx 1
+        - defaults read net.rafaelconde.Hand-Mirror isInMiddleOfOnboarding | grep -qx 0
       user_checks:
         - Camera preview opens from menu bar or app.
-    state_locations: []
-    notes: []
+    state_locations:
+      - ~/Library/Containers/net.rafaelconde.Hand-Mirror
+      - ~/Library/Containers/net.rafaelconde.Hand-Mirror/Data/Library/Preferences/net.rafaelconde.Hand-Mirror.plist
+    notes:
+      - Camera permission and onboarding were completed manually on this Mac.
+      - Do not track the container wholesale; the repeatable setup signal is the small non-secret preferences plist.
+      - Hand Mirror is not currently added to Login Items by dotfiles.
 
   - id: folder-peek
     name: Folder Peek
