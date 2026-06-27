@@ -20,6 +20,31 @@ Use this loop when setting up a fresh Mac or adding a new app:
 Do not store credentials, account identifiers, generated app databases, app
 caches, or private sync contents in this repo.
 
+## Credential Handoff
+
+Use 1Password for credential handoff instead of asking the user to paste secrets
+into chat or terminal output.
+
+Preferred flow:
+
+1. Open 1Password Quick Access with `Cmd+Shift+Space`.
+2. Search for the target item.
+3. Use Quick Access copy actions or keyboard shortcuts to copy username and
+   password.
+4. Paste into the target app or browser field with `Cmd+V`.
+5. Clear the clipboard after successful login.
+
+Rules:
+
+- Never reveal a password field.
+- Never run `pbpaste`, `op item get`, or another command that prints secrets.
+- Prefer Quick Access over opening the full item detail view; full item details
+  can expose OTPs, backup codes, notes, or other sensitive fields through
+  accessibility.
+- Copy and paste passwords only; do not type or log them.
+- If a login requires OTP, backup code, payment confirmation, or a new
+  permission grant, pause for explicit user confirmation at that step.
+
 ## Setup Order
 
 The default order optimizes for unlocking later steps:

@@ -46,6 +46,8 @@ apps:
       - ~/Library/Group Containers/2BUA8C4S2C.com.1password
     notes:
       - Do not store 1Password account details, recovery keys, or vault metadata in this repo.
+      - Prefer 1Password Quick Access (`Cmd+Shift+Space`) for agent credential handoff so username/password can be copied without opening full item details.
+      - Agents may paste copied credentials into target apps, then clear the clipboard, but must not reveal fields or print clipboard contents.
 
   - id: google-chrome
     name: Google Chrome
