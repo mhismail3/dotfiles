@@ -146,11 +146,11 @@ Shared, and On My Mac does not currently expose a stable `defaults` setting on
 this macOS build. `.macos` records it as a manual verification step instead of
 using brittle GUI automation or private shared-file-list mutation.
 
-Known wallpaper boundary: `.macos` uses System Events to set all desktop spaces
-to `DOTFILES_WALLPAPER` or a root dotfiles image named `wallpaper.heic`,
-`wallpaper.jpg`, `wallpaper.jpeg`, or `wallpaper.png`. It does not read or write
-private wallpaper databases. If no image is configured, the setting is skipped
-and reported as a manual setup item.
+Known wallpaper boundary: `.macos` uses Finder/System Events to set desktop
+spaces to `DOTFILES_WALLPAPER` or a root dotfiles image named `wallpaper.heic`,
+`wallpaper.jpg`, `wallpaper.jpeg`, or `wallpaper.png`, then verifies desktop 1
+by read-back. It does not read or write private wallpaper databases. If no image
+is configured, the setting is skipped and reported as a manual setup item.
 
 App setup is tracked in `apps.yaml` and walked with `./app-status.sh next`.
 When an installed app needs login, privacy permissions, sync configuration, or

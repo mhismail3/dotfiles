@@ -198,11 +198,23 @@ on run argv
     set wallpaperPath to item 1 of argv
     set wallpaperFile to POSIX file wallpaperPath
 
+    tell application "Finder"
+        set desktop picture to wallpaperFile
+    end tell
+
     tell application "System Events"
         repeat with targetDesktop in desktops
             set picture of targetDesktop to wallpaperFile
         end repeat
+        set currentPicture to picture of desktop 1
     end tell
+
+    if currentPicture is missing value then
+        error "Desktop picture read-back is missing"
+    end if
+    if (currentPicture as text) is not wallpaperPath then
+        error "Desktop picture read-back did not match " & wallpaperPath
+    end if
 end run
 APPLESCRIPT
 }
