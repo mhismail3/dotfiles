@@ -274,14 +274,14 @@ apps:
     command: code
     priority: 90
     setup_phase: development
-    purpose: Editor for code, config, and file inspection.
-    desired_state: needs_config
+    purpose: Optional fallback editor and file viewer.
+    desired_state: optional
     automated:
       - Installed by Brewfile.
     manual:
-      - Sign in to Settings Sync if desired.
-      - Install or verify the shell command `code`.
-      - Decide which settings should move into dotfiles rather than VS Code sync.
+      - Use as a fallback viewer/editor for files when useful.
+      - Sign in to Settings Sync only if VS Code becomes a primary tool.
+      - Decide which settings should move into dotfiles only if VS Code becomes a primary tool.
     verify:
       commands:
         - test -d "/Applications/Visual Studio Code.app"
@@ -291,7 +291,8 @@ apps:
     state_locations:
       - ~/Library/Application Support/Code/User
     notes:
-      - VS Code user settings are not tracked yet.
+      - Current preference is not to center the workflow around VS Code.
+      - Free modern Git/Markdown alternatives may be evaluated later.
 
   - id: xcode
     name: Xcode
@@ -331,17 +332,18 @@ apps:
     priority: 110
     setup_phase: agent
     purpose: Secondary terminal coding agent.
-    desired_state: needs_login
+    desired_state: optional
     automated:
       - Installed by Brewfile.
     manual:
-      - Run `claude` and complete browser authentication.
+      - Leave unconfigured unless Claude Code becomes useful alongside Codex.
+      - If keeping it active, run `claude` and complete browser authentication.
       - Decide whether any Claude-specific instructions should be mirrored into agent docs.
     verify:
       commands:
         - command -v claude
       user_checks:
-        - "`claude` starts without requesting first-time auth."
+        - If active, `claude` starts without requesting first-time auth.
     state_locations:
       - ~/.claude
     notes:
@@ -378,23 +380,25 @@ apps:
     app_path: /Applications/superwhisper.app
     priority: 130
     setup_phase: input
-    purpose: Dictation and voice input.
-    desired_state: needs_permissions
+    purpose: Optional dictation app to evaluate against Codex built-in dictation.
+    desired_state: optional
     automated:
       - Installed by Brewfile.
     manual:
-      - Sign in or activate license if required.
-      - Grant Microphone permission.
-      - Grant Accessibility or Automation permission if text insertion requires it.
-      - Configure preferred hotkey and model.
+      - Try Codex built-in dictation before committing to Superwhisper Pro.
+      - If keeping Superwhisper, sign in or activate license if required.
+      - If keeping Superwhisper, grant Microphone permission.
+      - If keeping Superwhisper, grant Accessibility or Automation permission if text insertion requires it.
+      - If keeping Superwhisper, configure preferred hotkey and model.
     verify:
       commands:
         - test -d "/Applications/superwhisper.app"
       user_checks:
-        - Dictation records and inserts text into a test field.
+        - If keeping Superwhisper, dictation records and inserts text into a test field.
     state_locations:
       - ~/Library/Application Support/superwhisper
     notes:
+      - Setup is intentionally deferred while evaluating whether Codex dictation can replace it.
       - Permission grants must be done through macOS privacy UI.
 
   - id: obsidian
