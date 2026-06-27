@@ -133,7 +133,7 @@ func positionalArgs(_ args: [String]) -> [String] {
         "--from", "--to", "--days", "--calendar", "--start", "--end",
         "--duration-minutes", "--duration-days", "--location", "--notes",
         "--url", "--title", "--time-zone", "--repeat", "--repeat-days",
-        "--repeat-until", "--repeat-interval"
+        "--repeat-until", "--repeat-interval", "--span"
     ]
     for arg in args {
         if skip {
@@ -509,8 +509,18 @@ func commandDelete(store: EKEventStore, args: [String]) throws {
     }
     let event = try findEvent(store: store, id: id)
     let payload = eventPayload(event)
-    try store.remove(event, span: .thisEvent, commit: true)
-    jsonPrint(["deleted": payload])
+    let rawSpan = value(after: "--span", in: args) ?? "this"
+    let span: EKSpan
+    switch rawSpan.lowercased() {
+    case "this":
+        span = .thisEvent
+    case "future", "all", "series":
+        span = .futureEvents
+    default:
+        throw CalendarCLIError(description: "Unsupported delete span: \(rawSpan). Use this, future, all, or series.")
+    }
+    try store.remove(event, span: span, commit: true)
+    jsonPrint(["deleted": payload, "span": rawSpan])
 }
 
 func commandValidateWrite(store: EKEventStore, args: [String]) throws {
@@ -538,7 +548,7 @@ func usage() -> Never {
       calendar.py search QUERY [--from DATE] [--to DATE] [--days N] [--calendar NAME]
       calendar.py create TITLE --start DATE [--end DATE|--duration-minutes N] [--calendar NAME] [--time-zone IANA_ID] [--all-day] [--location TEXT] [--notes TEXT] [--url URL] [--repeat daily|weekly|monthly|yearly] [--repeat-days tue,thu] [--repeat-until DATE]
       calendar.py update ID [--title TEXT] [--start DATE] [--end DATE] [--all-day|--timed] [--location TEXT] [--notes TEXT] [--url URL]
-      calendar.py delete ID --yes
+      calendar.py delete ID --yes [--span this|future|all]
       calendar.py validate-write [--calendar NAME]
     """
     + "\n", to: codexOutputPath, fallback: FileHandle.standardOutput)

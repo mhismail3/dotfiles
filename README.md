@@ -129,7 +129,9 @@ UI and can still type `¬` in text fields such as Codex.
 Known Calendar skill boundary: the Apple Calendar skill builds a local
 EventKit helper app named `Codex Apple Calendar Helper`. macOS Calendar access is
 a privacy grant, so approve it in System Settings > Privacy & Security >
-Calendars when first used.
+Calendars when first used. During skill development, edits to the Swift helper
+rebuild and re-sign that app, so macOS may ask for Calendar access again; normal
+use without helper changes should not re-prompt.
 
 Known Synology Drive boundary: sync task state is stored under
 `~/Library/Application Support/SynologyDrive`, including

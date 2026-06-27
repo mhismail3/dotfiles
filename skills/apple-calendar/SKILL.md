@@ -30,6 +30,8 @@ Calendar database or slow Calendar.app AppleScript event queries.
 - Prefer `update` for rescheduling/editing.
 - Use `delete` only when the user explicitly asks or the script is deleting a
   temporary event it created for validation.
+- For recurring events, use `delete <id> --yes --span all` to remove the whole
+  recurring series from the selected occurrence forward.
 - For create/update operations that could invite attendees, send messages, or
   affect shared calendars, confirm the calendar target first. This wrapper does
   not create or modify attendees.
@@ -38,6 +40,8 @@ Calendar database or slow Calendar.app AppleScript event queries.
   Calendar databases.
 - If Calendar access is denied, grant access to `Codex Apple Calendar Helper` in
   System Settings > Privacy & Security > Calendars.
+- If the Swift helper was edited and rebuilt, macOS may ask for Calendar access
+  again because the local helper app was re-signed.
 
 ## Common Tasks
 
@@ -63,6 +67,11 @@ Use `search` or `agenda` to find the event `id`, then call:
 - `update <id> --start ... --end ...`
 - `update <id> --location ...`
 - `update <id> --notes ...`
+
+### Delete Events
+
+Use `delete <id> --yes` for a single event or occurrence.
+Use `delete <id> --yes --span all` for a recurring series.
 
 ### User-Facing Reviews
 
