@@ -700,18 +700,32 @@ apps:
     priority: 320
     setup_phase: media
     purpose: Torrent client.
-    desired_state: needs_config
+    desired_state: verify
     automated:
       - Installed by Brewfile.
+      - Local preference baseline is applied by setup.sh after qBittorrent has been quit.
     manual:
-      - Configure download location, privacy, and startup behavior.
+      - Approve the app in macOS Gatekeeper if the downloaded cask is blocked on first launch.
+      - Accept qBittorrent's legal notice on first launch.
+      - Start PIA before starting any torrents when privacy matters; qBittorrent settings do not hide the public IP by themselves.
     verify:
       commands:
         - test -d "/Applications/qBittorrent.app"
+        - test -f "$HOME/.config/qBittorrent/qBittorrent.ini"
+        - test -d "$HOME/Downloads/qBittorrent"
       user_checks:
         - App opens with expected download directory configured.
-    state_locations: []
-    notes: []
+        - New torrents are added stopped by default.
+    state_locations:
+      - ~/.config/qBittorrent/qBittorrent.ini
+      - ~/Library/Preferences/qBittorrent
+      - ~/Library/Application Support/qBittorrent
+      - ~/Downloads/qBittorrent
+    notes:
+      - setup.sh sets downloads to ~/Downloads/qBittorrent and incomplete data to ~/Downloads/qBittorrent/incomplete.
+      - setup.sh enables anonymous mode, disables local peer discovery, disables UPnP/NAT-PMP port forwarding, disables WebUI, and keeps qBittorrent out of Login Items.
+      - DHT and PeX stay enabled for normal torrent functionality; privacy-sensitive use should be paired with PIA before starting transfers.
+      - Do not track logs, resume data, .torrent files, downloaded content, or qBittorrent state directories in dotfiles.
 
 derived_apps:
   - id: google-docs

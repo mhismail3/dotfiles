@@ -170,6 +170,32 @@ Do not track the security-scoped bookmark directly. It is generated local app
 state. `./app-status.sh verify folder-peek` checks for the expected folder,
 login item, and non-secret bookmark path components.
 
+## qBittorrent
+
+qBittorrent is installed by Homebrew cask, but first launch can still require a
+manual macOS Gatekeeper approval. Do that manually; do not bypass Gatekeeper from
+the agent. The legal notice is also a manual first-launch boundary.
+
+The deterministic baseline is applied by `setup.sh` after qBittorrent has been
+quit:
+
+1. Downloads: `~/Downloads/qBittorrent`.
+2. Incomplete downloads: `~/Downloads/qBittorrent/incomplete`.
+3. Add new torrents stopped by default.
+4. Enable qBittorrent anonymous mode.
+5. Disable local peer discovery.
+6. Disable UPnP/NAT-PMP router port forwarding.
+7. Disable WebUI.
+8. Keep qBittorrent out of Login Items.
+
+This baseline reduces accidental exposure, but it does not make torrent traffic
+anonymous. For privacy-sensitive use, connect PIA before starting transfers. DHT
+and PeX stay enabled for normal torrent functionality.
+
+Do not track qBittorrent logs, resume data, `.torrent` files, downloaded content,
+or generated state directories. `./app-status.sh verify qbittorrent` checks the
+small non-secret INI baseline.
+
 ## Commands
 
 ```bash

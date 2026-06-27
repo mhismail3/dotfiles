@@ -66,8 +66,15 @@ summary() {
 }
 
 next_steps() {
-    yq -r '.apps[] | select(((.manual // []) | length) > 0 and (.desired_state == "needs_login" or .desired_state == "needs_config" or .desired_state == "needs_permissions")) | [.priority, .id, .name, .desired_state] | @tsv' "$REGISTRY" |
-        sort -n |
+    local rows priority app_id name desired
+    rows="$(yq -r '.apps[] | select(((.manual // []) | length) > 0 and (.desired_state == "needs_login" or .desired_state == "needs_config" or .desired_state == "needs_permissions")) | [.priority, .id, .name, .desired_state] | @tsv' "$REGISTRY" | sed '/^$/d' | sort -n)"
+
+    if [[ -z "$rows" ]]; then
+        echo "No active app setup steps."
+        return 0
+    fi
+
+    printf "%s\n" "$rows" |
         while IFS=$'\t' read -r priority app_id name desired; do
             printf "\n[%s] %s (%s)\n" "$priority" "$name" "$desired"
             APP_ID="$app_id" yq -r '.apps[] | select(.id == strenv(APP_ID)) | (.manual // [])[] | "  - " + .' "$REGISTRY"
@@ -110,6 +117,9 @@ verify_app() {
             ;;
         folder-peek)
             verify_folder_peek || verify_status=1
+            ;;
+        qbittorrent)
+            verify_qbittorrent || verify_status=1
             ;;
     esac
     return "$verify_status"
@@ -378,6 +388,77 @@ raise SystemExit(1)
 PY
     then
         echo "    failed: expected visible Synology [Photos]/Screenshots folder bookmark"
+        return 1
+    fi
+
+    echo "    ok"
+}
+
+verify_qbittorrent() {
+    local config_path="$HOME/.config/qBittorrent/qBittorrent.ini"
+    local download_dir="$HOME/Downloads/qBittorrent"
+    local incomplete_dir="$download_dir/incomplete"
+
+    echo "  qBittorrent preferences"
+    if [[ ! -f "$config_path" ]]; then
+        echo "    failed: missing qBittorrent.ini"
+        return 1
+    fi
+    if [[ ! -d "$download_dir" || ! -d "$incomplete_dir" ]]; then
+        echo "    failed: missing qBittorrent download directories"
+        return 1
+    fi
+    if osascript -e 'tell application "System Events" to exists login item "qBittorrent"' 2>/dev/null | grep -qx "true"; then
+        echo "    failed: qBittorrent should not be a login item"
+        return 1
+    fi
+
+    if ! python3 - "$config_path" "$download_dir" "$incomplete_dir" <<'PY'
+import configparser
+import pathlib
+import sys
+
+config_path = pathlib.Path(sys.argv[1])
+download_dir = str(pathlib.Path(sys.argv[2]))
+incomplete_dir = str(pathlib.Path(sys.argv[3]))
+
+config = configparser.RawConfigParser(delimiters=("=",), strict=False)
+config.optionxform = str
+config.read(config_path)
+
+expected = {
+    ("BitTorrent", r"Session\AddExtensionToIncompleteFiles"): "true",
+    ("BitTorrent", r"Session\AddTorrentStopped"): "true",
+    ("BitTorrent", r"Session\AnonymousModeEnabled"): "true",
+    ("BitTorrent", r"Session\DefaultSavePath"): download_dir,
+    ("BitTorrent", r"Session\LSDEnabled"): "false",
+    ("BitTorrent", r"Session\TempPath"): incomplete_dir,
+    ("BitTorrent", r"Session\TempPathEnabled"): "true",
+    ("Core", "AutoDeleteAddedTorrentFile"): "Never",
+    ("Network", "PortForwardingEnabled"): "false",
+    ("Network", r"Proxy\Type"): "None",
+    ("Preferences", r"Advanced\AnonymousMode"): "true",
+    ("Preferences", r"Advanced\trackerPortForwarding"): "false",
+    ("Preferences", r"Connection\UPnP"): "false",
+    ("Preferences", r"Downloads\SavePath"): download_dir,
+    ("Preferences", r"Downloads\TempPath"): incomplete_dir,
+    ("Preferences", r"Downloads\TempPathEnabled"): "true",
+    ("Preferences", r"MailNotification\enabled"): "false",
+    ("Preferences", r"WebUI\Enabled"): "false",
+    ("Preferences", r"WebUI\UseUPnP"): "false",
+}
+
+for (section, key), value in expected.items():
+    if not config.has_option(section, key):
+        raise SystemExit(f"missing {section}.{key}")
+    if config.get(section, key) != value:
+        raise SystemExit(f"unexpected {section}.{key}")
+
+if config.get("LegalNotice", "Accepted", fallback="false") != "true":
+    raise SystemExit("legal-notice")
+PY
+    then
+        echo "    failed: expected local downloads, torrents added stopped, anonymous mode on, UPnP/WebUI off, legal notice accepted"
         return 1
     fi
 

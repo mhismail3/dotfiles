@@ -782,10 +782,98 @@ PY
     echo "  Auto region, OpenVPN, LAN allowed, no port forwarding, no connect-on-launch."
 }
 
+apply_qbittorrent_preferences() {
+    local app="/Applications/qBittorrent.app"
+    local config_path="$HOME/.config/qBittorrent/qBittorrent.ini"
+    local download_dir="$HOME/Downloads/qBittorrent"
+    local incomplete_dir="$download_dir/incomplete"
+    local py
+
+    if [[ ! -d "$app" ]]; then
+        warn "qBittorrent preferences skipped; app is not installed"
+        return 0
+    fi
+
+    if pgrep -x qbittorrent >/dev/null 2>&1; then
+        warn "qBittorrent preferences skipped; quit qBittorrent and re-run ./setup.sh"
+        return 0
+    fi
+
+    mkdir -p "$download_dir" "$incomplete_dir" "${config_path:h}"
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+
+    if [[ -z "$py" ]]; then
+        warn "Python not found; qBittorrent preferences skipped"
+        return 0
+    fi
+
+    "$py" - "$config_path" "$download_dir" "$incomplete_dir" <<'PY'
+import configparser
+import pathlib
+import sys
+
+config_path = pathlib.Path(sys.argv[1])
+download_dir = pathlib.Path(sys.argv[2])
+incomplete_dir = pathlib.Path(sys.argv[3])
+
+config = configparser.RawConfigParser(delimiters=("=",), strict=False)
+config.optionxform = str
+if config_path.exists():
+    config.read(config_path)
+
+def put(section, key, value):
+    if not config.has_section(section):
+        config.add_section(section)
+    config.set(section, key, value)
+
+put("BitTorrent", r"Session\AddExtensionToIncompleteFiles", "true")
+put("BitTorrent", r"Session\AddTorrentStopped", "true")
+put("BitTorrent", r"Session\AnonymousModeEnabled", "true")
+put("BitTorrent", r"Session\DefaultSavePath", str(download_dir))
+put("BitTorrent", r"Session\DHTEnabled", "true")
+put("BitTorrent", r"Session\LSDEnabled", "false")
+put("BitTorrent", r"Session\PeXEnabled", "true")
+put("BitTorrent", r"Session\TempPath", str(incomplete_dir))
+put("BitTorrent", r"Session\TempPathEnabled", "true")
+
+put("Core", "AutoDeleteAddedTorrentFile", "Never")
+
+put("Network", "PortForwardingEnabled", "false")
+put("Network", r"Proxy\HostnameLookupEnabled", "false")
+put("Network", r"Proxy\Profiles\BitTorrent", "true")
+put("Network", r"Proxy\Profiles\Misc", "true")
+put("Network", r"Proxy\Profiles\RSS", "true")
+put("Network", r"Proxy\Type", "None")
+
+put("Preferences", r"Advanced\AnonymousMode", "true")
+put("Preferences", r"Advanced\trackerPortForwarding", "false")
+put("Preferences", r"Connection\UPnP", "false")
+put("Preferences", r"Downloads\SavePath", str(download_dir))
+put("Preferences", r"Downloads\TempPath", str(incomplete_dir))
+put("Preferences", r"Downloads\TempPathEnabled", "true")
+put("Preferences", r"General\StatusbarExternalIPDisplayed", "false")
+put("Preferences", r"MailNotification\enabled", "false")
+put("Preferences", r"MailNotification\req_auth", "true")
+put("Preferences", r"WebUI\Enabled", "false")
+put("Preferences", r"WebUI\UseUPnP", "false")
+
+with config_path.open("w") as f:
+    config.write(f, space_around_delimiters=False)
+PY
+
+    success "qBittorrent preferences applied"
+    echo "  Downloads go to $download_dir; torrents add stopped; anonymous mode on; UPnP/WebUI off."
+}
+
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
     apply_private_internet_access_preferences
+    apply_qbittorrent_preferences
 }
 
 ###############################################################################
