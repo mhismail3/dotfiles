@@ -127,3 +127,18 @@ auth and credential helper state.
   over relying on UI memory.
 - If an app stores secrets or high-churn state in its config export, do not track
   that export directly.
+
+## Network Remote-Control Invariant
+
+Tailscale access to the always-on home MacBook server is a setup invariant. The
+expected peer is `mooses-macbook-server`; verify it with:
+
+```bash
+tailscale status
+tailscale ping --c 1 --timeout=3s mooses-macbook-server
+```
+
+PIA should remain an explicit-use VPN unless there is a concrete reason to make
+it always-on. Do not enable PIA Advanced Kill Switch, connect-on-launch,
+connection automation, or broad split-tunnel rules unless Tailscale reachability
+to `mooses-macbook-server` is tested afterward.

@@ -723,9 +723,69 @@ SQL
     echo "  File event notifications disabled; minimalist menu bar icon enabled."
 }
 
+apply_private_internet_access_preferences() {
+    local app="/Applications/Private Internet Access.app"
+    local settings_path="$HOME/Library/Preferences/com.privateinternetaccess.vpn/clientsettings.json"
+    local py
+
+    if [[ ! -d "$app" ]]; then
+        warn "Private Internet Access preferences skipped; app is not installed"
+        return 0
+    fi
+
+    if command -v piactl &>/dev/null; then
+        piactl set protocol openvpn >/dev/null 2>&1 || warn "Could not set PIA protocol"
+        piactl set region auto >/dev/null 2>&1 || warn "Could not set PIA region"
+        piactl set allowlan true >/dev/null 2>&1 || warn "Could not set PIA LAN access"
+        piactl set requestportforward false >/dev/null 2>&1 || warn "Could not set PIA port forwarding"
+        piactl set debuglogging false >/dev/null 2>&1 || warn "Could not set PIA debug logging"
+    else
+        warn "piactl not found; PIA daemon preferences skipped"
+    fi
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+
+    if [[ -z "$py" ]]; then
+        warn "Python not found; PIA client preferences skipped"
+        return 0
+    fi
+
+    "$py" - "$settings_path" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+path.parent.mkdir(parents=True, exist_ok=True)
+
+if path.exists():
+    data = json.loads(path.read_text())
+else:
+    data = {}
+
+data.update({
+    "connectOnLaunch": False,
+    "dashboardFrame": "popup",
+    "desktopNotifications": True,
+    "iconSet": "auto",
+    "regionSortKey": "latency",
+    "themeName": "dark",
+})
+
+path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+PY
+
+    success "Private Internet Access preferences applied"
+    echo "  Auto region, OpenVPN, LAN allowed, no port forwarding, no connect-on-launch."
+}
+
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
+    apply_private_internet_access_preferences
 }
 
 ###############################################################################

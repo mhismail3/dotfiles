@@ -27,7 +27,7 @@ apps:
     priority: 10
     setup_phase: identity
     purpose: Password manager and secret handoff for the rest of setup.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - Added to Dock by .macos.
@@ -145,23 +145,28 @@ apps:
     priority: 50
     setup_phase: network
     purpose: Private mesh networking and remote access.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - Added to Login Items by .macos.
     manual:
       - Sign in and link this Mac to the tailnet.
       - Confirm device name and key expiry settings in the admin console if needed.
+      - Confirm the always-on home MacBook server peer `mooses-macbook-server` remains reachable.
     verify:
       commands:
         - test -d "/Applications/Tailscale.app"
+        - 'command -v tailscale >/dev/null'
+        - 'tailscale status --json >/dev/null'
       user_checks:
         - Tailscale menu bar icon shows connected.
         - This Mac appears in the tailnet admin devices list.
+        - '`mooses-macbook-server` is online and reachable for remote control.'
     state_locations:
       - ~/Library/Containers/io.tailscale.ipn.macsys
     notes:
       - Tailnet identity and auth keys are not tracked in dotfiles.
+      - Tailscale remote access to `mooses-macbook-server` is a setup invariant for robust control of the always-on home MacBook server.
 
   - id: google-drive
     name: Google Drive
@@ -466,18 +471,31 @@ apps:
     automated:
       - Installed by Brewfile.
       - Quarantine repair and Homebrew adopt are attempted by setup.sh when needed.
+      - setup.sh applies the supported piactl baseline of OpenVPN, auto region, LAN traffic allowed, port forwarding off, and debug logging off.
+      - setup.sh applies non-secret client UI preferences for no connect-on-launch, desktop notifications on, dark theme, system tray icon, and latency-sorted regions.
     manual:
       - Sign in to PIA.
-      - Configure protocol, region, split tunneling, and startup behavior.
+      - Connect and disconnect once after sign-in to verify the VPN works.
+      - Confirm normal VPN Kill Switch is enabled.
+      - Enable Advanced Kill Switch only if you want always-on VPN behavior even when disconnected.
+      - Enable PIA MACE, split tunneling, automation rules, or a specific region only if there is a concrete need.
+      - After changing PIA network, kill switch, automation, or split tunnel behavior, verify Tailscale can still reach `mooses-macbook-server`.
     verify:
       commands:
         - test -d "/Applications/Private Internet Access.app"
+        - 'command -v piactl >/dev/null'
+        - 'piactl get connectionstate >/dev/null'
       user_checks:
         - PIA can connect and disconnect successfully.
     state_locations:
       - ~/Library/Application Support/com.privateinternetaccess.vpn
+      - ~/Library/Preferences/com.privateinternetaccess.vpn/clientsettings.json
+      - /Library/Application Support/com.privateinternetaccess.vpn
     notes:
-      - VPN credentials and region preferences are not tracked.
+      - piactl is the supported automation surface for daemon preferences.
+      - VPN credentials, account state, dedicated IP tokens, and privileged daemon support files are not tracked.
+      - Kill switch, Advanced Kill Switch, MACE, and split tunnel filter state are verified manually unless a stable supported interface is found.
+      - Tailscale remote-control reliability has priority over PIA hardening; do not enable always-on VPN or Advanced Kill Switch without testing the Tailscale server path.
 
   - id: logi-options-plus
     name: Logi Options+

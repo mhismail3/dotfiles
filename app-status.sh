@@ -66,7 +66,7 @@ summary() {
 }
 
 next_steps() {
-    yq -r '.apps[] | select(((.manual // []) | length) > 0) | [.priority, .id, .name, .desired_state] | @tsv' "$REGISTRY" |
+    yq -r '.apps[] | select(((.manual // []) | length) > 0 and (.desired_state == "needs_login" or .desired_state == "needs_config" or .desired_state == "needs_permissions")) | [.priority, .id, .name, .desired_state] | @tsv' "$REGISTRY" |
         sort -n |
         while IFS=$'\t' read -r priority app_id name desired; do
             printf "\n[%s] %s (%s)\n" "$priority" "$name" "$desired"
@@ -96,11 +96,80 @@ verify_app() {
         fi
     done < <(yq_app "$app_id" '(.verify.commands // [])[]')
     case "$app_id" in
+        tailscale)
+            verify_tailscale || verify_status=1
+            ;;
         synology-drive)
             verify_synology_drive || verify_status=1
             ;;
+        private-internet-access)
+            verify_private_internet_access || verify_status=1
+            ;;
     esac
     return "$verify_status"
+}
+
+verify_tailscale() {
+    local expected_peer="mooses-macbook-server"
+    local status_json
+
+    echo "  Tailscale local status"
+    if ! command -v tailscale >/dev/null 2>&1; then
+        echo "    failed: missing tailscale CLI"
+        return 1
+    fi
+
+    status_json="$(mktemp)"
+    if ! tailscale status --json >"$status_json" 2>/dev/null; then
+        rm -f "$status_json"
+        echo "    failed: tailscale status is unavailable"
+        return 1
+    fi
+
+    if ! python3 - "$expected_peer" "$status_json" <<'PY'
+import json
+import pathlib
+import sys
+
+expected_peer = sys.argv[1].casefold()
+data = json.loads(pathlib.Path(sys.argv[2]).read_text())
+
+if data.get("BackendState") != "Running":
+    raise SystemExit("backend")
+
+self_ips = data.get("Self", {}).get("TailscaleIPs") or []
+if not self_ips:
+    raise SystemExit("self-ip")
+
+for peer in (data.get("Peer") or {}).values():
+    names = [
+        peer.get("HostName") or "",
+        peer.get("DNSName") or "",
+        peer.get("Name") or "",
+    ]
+    if any(expected_peer in name.casefold() for name in names):
+        if peer.get("Online") is not True:
+            raise SystemExit("peer-offline")
+        if not peer.get("TailscaleIPs"):
+            raise SystemExit("peer-ip")
+        raise SystemExit(0)
+
+raise SystemExit("missing-peer")
+PY
+    then
+        rm -f "$status_json"
+        echo "    failed: expected Tailscale running with online peer $expected_peer"
+        return 1
+    fi
+    rm -f "$status_json"
+    echo "    ok"
+
+    echo "  Tailscale remote-control peer"
+    if ! tailscale ping --c 1 --timeout=3s "$expected_peer" >/dev/null 2>&1; then
+        echo "    failed: could not reach $expected_peer with tailscale ping"
+        return 1
+    fi
+    echo "    ok"
 }
 
 verify_synology_drive() {
@@ -141,6 +210,60 @@ verify_synology_drive() {
         return 1
     fi
 
+    echo "    ok"
+}
+
+verify_private_internet_access() {
+    local settings_path="$HOME/Library/Preferences/com.privateinternetaccess.vpn/clientsettings.json"
+    local protocol region allowlan requestportforward debuglogging
+
+    echo "  Private Internet Access daemon preferences"
+    if ! command -v piactl >/dev/null 2>&1; then
+        echo "    failed: missing piactl"
+        return 1
+    fi
+
+    protocol="$(piactl get protocol 2>/dev/null || true)"
+    region="$(piactl get region 2>/dev/null || true)"
+    allowlan="$(piactl get allowlan 2>/dev/null || true)"
+    requestportforward="$(piactl get requestportforward 2>/dev/null || true)"
+    debuglogging="$(piactl get debuglogging 2>/dev/null || true)"
+
+    if [[ "$protocol" != "openvpn" || "$region" != "auto" || "$allowlan" != "true" || "$requestportforward" != "false" || "$debuglogging" != "false" ]]; then
+        echo "    failed: expected openvpn, auto region, LAN allowed, no port forwarding, debug logging off"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Private Internet Access client preferences"
+    if [[ ! -f "$settings_path" ]]; then
+        echo "    failed: missing clientsettings.json"
+        return 1
+    fi
+
+    if ! python3 - "$settings_path" <<'PY'
+import json
+import pathlib
+import sys
+
+data = json.loads(pathlib.Path(sys.argv[1]).read_text())
+expected = {
+    "connectOnLaunch": False,
+    "dashboardFrame": "popup",
+    "desktopNotifications": True,
+    "iconSet": "auto",
+    "regionSortKey": "latency",
+    "themeName": "dark",
+}
+
+missing = {key: value for key, value in expected.items() if data.get(key) != value}
+if missing:
+    raise SystemExit(1)
+PY
+    then
+        echo "    failed: expected no connect-on-launch, notifications on, system icon, dark theme, latency sort"
+        return 1
+    fi
     echo "    ok"
 }
 
