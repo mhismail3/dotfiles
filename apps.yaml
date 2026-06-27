@@ -627,19 +627,29 @@ apps:
     priority: 210
     setup_phase: utility
     purpose: Menu bar folder shortcuts.
-    desired_state: needs_config
+    desired_state: verify
     automated:
       - Installed by Mac App Store through Brewfile when possible.
+      - Folder Peek's configured folder and login item are verified by app-status.sh.
     manual:
-      - Configure folders to expose in the menu bar.
-      - Grant folder permissions if prompted.
+      - Enable Launch at login in Folder Peek's own onboarding/settings UI.
+      - Add the Synology-backed Screenshots folder to the menu bar.
+      - Grant folder permissions if prompted by macOS.
     verify:
       commands:
         - test -d "/Applications/Folder Peek.app"
+        - test -d "$HOME/Library/Containers/com.sindresorhus.Folder-Peek"
+        - test -d "$HOME/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots"
       user_checks:
-        - Expected folders appear in Folder Peek.
-    state_locations: []
-    notes: []
+        - The Folder Peek menu bar item opens the Screenshots folder menu.
+    state_locations:
+      - ~/Library/Containers/com.sindresorhus.Folder-Peek
+      - ~/Library/Containers/com.sindresorhus.Folder-Peek/Data/Library/Preferences/com.sindresorhus.Folder-Peek.plist
+    notes:
+      - Launch at login was enabled manually inside Folder Peek on this Mac.
+      - The configured folder is ~/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots.
+      - setup.sh/.macos intentionally do not add a separate Folder Peek login item; avoid duplicate launch behavior and let Folder Peek own its background item.
+      - Do not track the security-scoped folder bookmark directly; app-status.sh verifies the bookmark contains the expected non-secret path components.
 
   - id: stremio
     name: Stremio

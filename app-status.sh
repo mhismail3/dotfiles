@@ -108,6 +108,9 @@ verify_app() {
         logi-options-plus)
             verify_logi_options_plus || verify_status=1
             ;;
+        folder-peek)
+            verify_folder_peek || verify_status=1
+            ;;
     esac
     return "$verify_status"
 }
@@ -321,6 +324,60 @@ if any(settings.get(key) != value for key, value in expected_settings.items()):
 PY
     then
         echo "    failed: expected onboarding complete, permissions granted, analytics quiet, recommendations off, star-rating prompts off"
+        return 1
+    fi
+
+    echo "    ok"
+}
+
+verify_folder_peek() {
+    local expected_folder="$HOME/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots"
+    local pref_path="$HOME/Library/Containers/com.sindresorhus.Folder-Peek/Data/Library/Preferences/com.sindresorhus.Folder-Peek.plist"
+
+    echo "  Folder Peek login item and folder bookmark"
+    if [[ ! -d "$expected_folder" ]]; then
+        echo "    failed: missing expected Screenshots folder"
+        return 1
+    fi
+    if [[ ! -f "$pref_path" ]]; then
+        echo "    failed: missing Folder Peek preferences"
+        return 1
+    fi
+    if ! osascript -e 'tell application "System Events" to exists login item "Folder Peek"' 2>/dev/null | grep -qx "true"; then
+        echo "    failed: Folder Peek login item is not enabled"
+        return 1
+    fi
+
+    if ! python3 - "$pref_path" <<'PY'
+import base64
+import json
+import pathlib
+import plistlib
+import sys
+
+data = plistlib.loads(pathlib.Path(sys.argv[1]).read_bytes())
+folders = data.get("folders") or []
+expected_components = [
+    b"SynologyDrive-SynologyDrive",
+    b"[Photos]",
+    b"Screenshots",
+]
+
+for raw_folder in folders:
+    folder = json.loads(raw_folder)
+    bookmark = base64.b64decode(folder.get("urlBookmark") or "")
+    if (
+        folder.get("isVisible") is True
+        and folder.get("showFolderContents") is True
+        and folder.get("keepFoldersOnTop") is True
+        and all(component in bookmark for component in expected_components)
+    ):
+        raise SystemExit(0)
+
+raise SystemExit(1)
+PY
+    then
+        echo "    failed: expected visible Synology [Photos]/Screenshots folder bookmark"
         return 1
     fi
 

@@ -153,6 +153,23 @@ mappings should be configured after the target Logitech device is connected, and
 export/import should be researched only if a stable vendor-supported surface is
 found.
 
+## Folder Peek
+
+Folder Peek owns its own launch-at-login state. Enable `Launch at login` inside
+Folder Peek during onboarding, then verify that state rather than adding a second
+login item from `.macos`.
+
+Standard setup:
+
+1. Enable `Launch at login` in Folder Peek.
+2. Add `~/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots`.
+3. Grant folder access if macOS prompts.
+4. Confirm the Folder Peek menu bar item opens the Screenshots folder menu.
+
+Do not track the security-scoped bookmark directly. It is generated local app
+state. `./app-status.sh verify folder-peek` checks for the expected folder,
+login item, and non-secret bookmark path components.
+
 ## Commands
 
 ```bash
