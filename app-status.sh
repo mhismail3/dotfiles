@@ -127,6 +127,7 @@ verify_app() {
 
 verify_tailscale() {
     local expected_peer="mooses-macbook-server"
+    local screen_sharing_location="$HOME/Applications/Screen Sharing/Mooses MacBook Server.vncloc"
     local status_json
 
     echo "  Tailscale local status"
@@ -142,7 +143,8 @@ verify_tailscale() {
         return 1
     fi
 
-    if ! python3 - "$expected_peer" "$status_json" <<'PY'
+    local peer_ip
+    if ! peer_ip="$(python3 - "$expected_peer" "$status_json" <<'PY'
 import json
 import pathlib
 import sys
@@ -166,15 +168,22 @@ for peer in (data.get("Peer") or {}).values():
     if any(expected_peer in name.casefold() for name in names):
         if peer.get("Online") is not True:
             raise SystemExit("peer-offline")
-        if not peer.get("TailscaleIPs"):
+        ips = peer.get("TailscaleIPs") or []
+        if not ips:
             raise SystemExit("peer-ip")
+        print(ips[0])
         raise SystemExit(0)
 
 raise SystemExit("missing-peer")
 PY
-    then
+)"; then
         rm -f "$status_json"
         echo "    failed: expected Tailscale running with online peer $expected_peer"
+        return 1
+    fi
+    if [[ -z "$peer_ip" ]]; then
+        rm -f "$status_json"
+        echo "    failed: expected Tailscale IP for $expected_peer"
         return 1
     fi
     rm -f "$status_json"
@@ -183,6 +192,35 @@ PY
     echo "  Tailscale remote-control peer"
     if ! tailscale ping --c 1 --timeout=3s "$expected_peer" >/dev/null 2>&1; then
         echo "    failed: could not reach $expected_peer with tailscale ping"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Tailscale Screen Sharing port"
+    if ! nc -vz -G 3 "$expected_peer" 5900 >/dev/null 2>&1; then
+        echo "    failed: Screen Sharing port 5900 is not reachable on $expected_peer"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Screen Sharing shortcut"
+    if [[ ! -f "$screen_sharing_location" ]]; then
+        echo "    failed: missing $screen_sharing_location"
+        return 1
+    fi
+    if ! python3 - "$screen_sharing_location" "vnc://$peer_ip" <<'PY'
+import pathlib
+import plistlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+expected_url = sys.argv[2]
+data = plistlib.loads(path.read_bytes())
+if data.get("URL") != expected_url:
+    raise SystemExit(1)
+PY
+    then
+        echo "    failed: Screen Sharing shortcut does not target vnc://$peer_ip"
         return 1
     fi
     echo "    ok"

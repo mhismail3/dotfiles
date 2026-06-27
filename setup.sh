@@ -869,11 +869,119 @@ PY
     echo "  Downloads go to $download_dir; torrents add stopped; anonymous mode on; UPnP/WebUI off."
 }
 
+resolve_tailscale_peer_ip() {
+    local peer="$1" status_json py
+
+    command -v tailscale &>/dev/null || return 1
+    status_json="$(mktemp)"
+    if ! tailscale status --json >"$status_json" 2>/dev/null; then
+        rm -f "$status_json"
+        return 1
+    fi
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+    if [[ -z "$py" ]]; then
+        rm -f "$status_json"
+        return 1
+    fi
+
+    "$py" - "$peer" "$status_json" <<'PY'
+import json
+import pathlib
+import sys
+
+expected = sys.argv[1].casefold()
+data = json.loads(pathlib.Path(sys.argv[2]).read_text())
+
+for peer in (data.get("Peer") or {}).values():
+    names = [
+        peer.get("HostName") or "",
+        peer.get("DNSName") or "",
+        peer.get("Name") or "",
+    ]
+    if any(expected in name.casefold() for name in names):
+        ips = peer.get("TailscaleIPs") or []
+        if ips:
+            print(ips[0])
+            raise SystemExit(0)
+
+raise SystemExit(1)
+PY
+    local status
+    status=$?
+    rm -f "$status_json"
+    return "$status"
+}
+
+apply_tailscale_screen_sharing_shortcut() {
+    local peer="${TAILSCALE_SERVER_PEER:-mooses-macbook-server}"
+    local fallback_ip="${TAILSCALE_SERVER_IP:-100.82.140.87}"
+    local peer_ip url location_dir location_path share_dir share_link launcher py
+
+    location_dir="$HOME/Applications/Screen Sharing"
+    location_path="$location_dir/Mooses MacBook Server.vncloc"
+    share_dir="$HOME/.local/share/dotfiles/remote-control"
+    share_link="$share_dir/Mooses MacBook Server.vncloc"
+    launcher="$HOME/.local/bin/screen-share-macbook-server"
+
+    peer_ip="$(resolve_tailscale_peer_ip "$peer" 2>/dev/null || true)"
+    if [[ -z "$peer_ip" ]]; then
+        peer_ip="$fallback_ip"
+        warn "Could not resolve $peer from Tailscale; using fallback IP $peer_ip"
+    fi
+    url="vnc://$peer_ip"
+
+    mkdir -p "$location_dir" "$share_dir" "$HOME/.local/bin"
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+
+    if [[ -n "$py" ]]; then
+        "$py" - "$location_path" "$url" <<'PY'
+import pathlib
+import plistlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+url = sys.argv[2]
+path.write_bytes(plistlib.dumps({"URL": url}, fmt=plistlib.FMT_XML, sort_keys=True))
+PY
+    else
+        cat > "$location_path" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>URL</key>
+    <string>$url</string>
+</dict>
+</plist>
+EOF
+    fi
+
+    ln -sf "$location_path" "$share_link"
+    cat > "$launcher" <<EOF
+#!/usr/bin/env zsh
+open "$location_path"
+EOF
+    chmod 755 "$launcher"
+
+    success "Screen Sharing shortcut configured"
+    echo "  $location_path -> $url"
+    echo "  CLI launcher: screen-share-macbook-server"
+}
+
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences
+    apply_tailscale_screen_sharing_shortcut
 }
 
 ###############################################################################
