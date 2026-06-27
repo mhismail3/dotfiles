@@ -43,9 +43,35 @@ func jsonPrint(_ object: Any) {
     }
 }
 
-func parseDate(_ raw: String, endOfDay: Bool = false) throws -> Date {
+func calendarFor(timeZone: TimeZone?) -> Calendar {
+    var calendar = Calendar.current
+    if let timeZone {
+        calendar.timeZone = timeZone
+    }
+    return calendar
+}
+
+func formatterFor(timeZone: TimeZone?) -> DateFormatter {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = timeZone ?? TimeZone.current
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+    return formatter
+}
+
+func parseTimeZone(_ raw: String?) throws -> TimeZone? {
+    guard let raw, !raw.isEmpty else {
+        return nil
+    }
+    if let timeZone = TimeZone(identifier: raw) {
+        return timeZone
+    }
+    throw CalendarCLIError(description: "Unknown time zone identifier: \(raw)")
+}
+
+func parseDate(_ raw: String, endOfDay: Bool = false, timeZone: TimeZone? = nil) throws -> Date {
     let now = Date()
-    let calendar = Calendar.current
+    let calendar = calendarFor(timeZone: timeZone)
     let lower = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
     if lower == "now" {
@@ -76,7 +102,7 @@ func parseDate(_ raw: String, endOfDay: Bool = false) throws -> Date {
     for format in formats {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone.current
+        formatter.timeZone = timeZone ?? TimeZone.current
         formatter.dateFormat = format
         if let date = formatter.date(from: normalized) {
             if format == "yyyy-MM-dd", endOfDay {
@@ -106,7 +132,8 @@ func positionalArgs(_ args: [String]) -> [String] {
     let flagsWithValues: Set<String> = [
         "--from", "--to", "--days", "--calendar", "--start", "--end",
         "--duration-minutes", "--duration-days", "--location", "--notes",
-        "--url", "--title"
+        "--url", "--title", "--time-zone", "--repeat", "--repeat-days",
+        "--repeat-until", "--repeat-interval"
     ]
     for arg in args {
         if skip {
@@ -168,6 +195,7 @@ func calendarPayload(_ calendar: EKCalendar) -> [String: Any] {
 }
 
 func eventPayload(_ event: EKEvent) -> [String: Any] {
+    let eventFormatter = formatterFor(timeZone: event.timeZone)
     var payload: [String: Any] = [
         "id": event.eventIdentifier ?? "",
         "calendarItemId": event.calendarItemIdentifier,
@@ -175,6 +203,9 @@ func eventPayload(_ event: EKEvent) -> [String: Any] {
         "title": event.title ?? "",
         "start": localFormatter.string(from: event.startDate),
         "end": localFormatter.string(from: event.endDate),
+        "startInTimeZone": eventFormatter.string(from: event.startDate),
+        "endInTimeZone": eventFormatter.string(from: event.endDate),
+        "timeZone": event.timeZone?.identifier ?? TimeZone.current.identifier,
         "allDay": event.isAllDay,
         "calendarName": event.calendar.title,
         "calendarId": event.calendar.calendarIdentifier,
@@ -198,8 +229,10 @@ func eventPayload(_ event: EKEvent) -> [String: Any] {
     }
     if event.hasRecurrenceRules {
         payload["recurring"] = true
+        payload["recurrenceRules"] = event.recurrenceRules?.map { "\($0)" } ?? []
     } else {
         payload["recurring"] = false
+        payload["recurrenceRules"] = []
     }
     return payload
 }
@@ -299,6 +332,82 @@ func commandSearch(store: EKEventStore, args: [String]) throws {
     jsonPrint(matches.map(eventPayload))
 }
 
+func recurrenceFrequency(_ raw: String) throws -> EKRecurrenceFrequency {
+    switch raw.lowercased() {
+    case "daily":
+        return .daily
+    case "weekly":
+        return .weekly
+    case "monthly":
+        return .monthly
+    case "yearly", "annually", "annual":
+        return .yearly
+    default:
+        throw CalendarCLIError(description: "Unsupported repeat frequency: \(raw)")
+    }
+}
+
+func recurrenceWeekday(_ raw: String) throws -> EKRecurrenceDayOfWeek {
+    switch raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+    case "sun", "sunday":
+        return EKRecurrenceDayOfWeek(.sunday)
+    case "mon", "monday":
+        return EKRecurrenceDayOfWeek(.monday)
+    case "tue", "tues", "tuesday":
+        return EKRecurrenceDayOfWeek(.tuesday)
+    case "wed", "wednesday":
+        return EKRecurrenceDayOfWeek(.wednesday)
+    case "thu", "thur", "thurs", "thursday":
+        return EKRecurrenceDayOfWeek(.thursday)
+    case "fri", "friday":
+        return EKRecurrenceDayOfWeek(.friday)
+    case "sat", "saturday":
+        return EKRecurrenceDayOfWeek(.saturday)
+    default:
+        throw CalendarCLIError(description: "Unsupported repeat weekday: \(raw)")
+    }
+}
+
+func recurrenceDays(from raw: String?) throws -> [EKRecurrenceDayOfWeek]? {
+    guard let raw, !raw.isEmpty else {
+        return nil
+    }
+    return try raw.split(separator: ",").map { try recurrenceWeekday(String($0)) }
+}
+
+func applyRecurrence(to event: EKEvent, args: [String], timeZone: TimeZone?) throws {
+    guard let rawRepeat = value(after: "--repeat", in: args) else {
+        return
+    }
+    let frequency = try recurrenceFrequency(rawRepeat)
+    let interval = Int(value(after: "--repeat-interval", in: args) ?? "1") ?? 1
+    if interval < 1 {
+        throw CalendarCLIError(description: "--repeat-interval must be 1 or greater")
+    }
+    let daysOfWeek = try recurrenceDays(from: value(after: "--repeat-days", in: args))
+
+    let recurrenceEnd: EKRecurrenceEnd?
+    if let rawUntil = value(after: "--repeat-until", in: args) {
+        let until = try parseDate(rawUntil, endOfDay: true, timeZone: timeZone)
+        recurrenceEnd = EKRecurrenceEnd(end: until)
+    } else {
+        recurrenceEnd = nil
+    }
+
+    let rule = EKRecurrenceRule(
+        recurrenceWith: frequency,
+        interval: interval,
+        daysOfTheWeek: daysOfWeek,
+        daysOfTheMonth: nil,
+        monthsOfTheYear: nil,
+        weeksOfTheYear: nil,
+        daysOfTheYear: nil,
+        setPositions: nil,
+        end: recurrenceEnd
+    )
+    event.addRecurrenceRule(rule)
+}
+
 func commandCreate(store: EKEventStore, args: [String]) throws {
     let pos = positionalArgs(args)
     guard let title = pos.first else {
@@ -308,28 +417,29 @@ func commandCreate(store: EKEventStore, args: [String]) throws {
         throw CalendarCLIError(description: "create requires --start")
     }
 
+    let timeZone = try parseTimeZone(value(after: "--time-zone", in: args))
     let allDay = has("--all-day", in: args)
-    var start = try parseDate(rawStart)
+    var start = try parseDate(rawStart, timeZone: timeZone)
     if allDay {
-        start = Calendar.current.startOfDay(for: start)
+        start = calendarFor(timeZone: timeZone).startOfDay(for: start)
     }
 
     let end: Date
     if let rawEnd = value(after: "--end", in: args) {
-        var parsedEnd = try parseDate(rawEnd)
+        var parsedEnd = try parseDate(rawEnd, timeZone: timeZone)
         if allDay {
-            parsedEnd = Calendar.current.startOfDay(for: parsedEnd)
+            parsedEnd = calendarFor(timeZone: timeZone).startOfDay(for: parsedEnd)
             if parsedEnd <= start {
-                parsedEnd = Calendar.current.date(byAdding: .day, value: 1, to: start) ?? start
+                parsedEnd = calendarFor(timeZone: timeZone).date(byAdding: .day, value: 1, to: start) ?? start
             }
         }
         end = parsedEnd
     } else if allDay {
         let days = Int(value(after: "--duration-days", in: args) ?? "1") ?? 1
-        end = Calendar.current.date(byAdding: .day, value: max(days, 1), to: start) ?? start
+        end = calendarFor(timeZone: timeZone).date(byAdding: .day, value: max(days, 1), to: start) ?? start
     } else {
         let minutes = Int(value(after: "--duration-minutes", in: args) ?? "60") ?? 60
-        end = Calendar.current.date(byAdding: .minute, value: minutes, to: start) ?? start
+        end = calendarFor(timeZone: timeZone).date(byAdding: .minute, value: minutes, to: start) ?? start
     }
 
     if end <= start {
@@ -342,11 +452,15 @@ func commandCreate(store: EKEventStore, args: [String]) throws {
     event.startDate = start
     event.endDate = end
     event.isAllDay = allDay
+    if let timeZone {
+        event.timeZone = timeZone
+    }
     event.location = value(after: "--location", in: args)
     event.notes = value(after: "--notes", in: args)
     if let rawURL = value(after: "--url", in: args), let url = URL(string: rawURL) {
         event.url = url
     }
+    try applyRecurrence(to: event, args: args, timeZone: timeZone)
     try store.save(event, span: .thisEvent, commit: true)
     jsonPrint(eventPayload(event))
 }
@@ -422,7 +536,7 @@ func usage() -> Never {
       calendar.py tomorrow [--calendar NAME]
       calendar.py agenda [--from DATE] [--to DATE] [--days N] [--calendar NAME]
       calendar.py search QUERY [--from DATE] [--to DATE] [--days N] [--calendar NAME]
-      calendar.py create TITLE --start DATE [--end DATE|--duration-minutes N] [--calendar NAME] [--all-day] [--location TEXT] [--notes TEXT] [--url URL]
+      calendar.py create TITLE --start DATE [--end DATE|--duration-minutes N] [--calendar NAME] [--time-zone IANA_ID] [--all-day] [--location TEXT] [--notes TEXT] [--url URL] [--repeat daily|weekly|monthly|yearly] [--repeat-days tue,thu] [--repeat-until DATE]
       calendar.py update ID [--title TEXT] [--start DATE] [--end DATE] [--all-day|--timed] [--location TEXT] [--notes TEXT] [--url URL]
       calendar.py delete ID --yes
       calendar.py validate-write [--calendar NAME]

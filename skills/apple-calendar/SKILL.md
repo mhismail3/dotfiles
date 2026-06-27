@@ -17,6 +17,7 @@ Calendar database or slow Calendar.app AppleScript event queries.
 ~/.codex/skills/apple-calendar/scripts/calendar.py agenda --from today --to tomorrow
 ~/.codex/skills/apple-calendar/scripts/calendar.py search "dentist" --from today --to 2026-07-31
 ~/.codex/skills/apple-calendar/scripts/calendar.py create "Focus block" --start "2026-07-01 09:00" --duration-minutes 90 --calendar Default
+~/.codex/skills/apple-calendar/scripts/calendar.py create "Class" --start "2026-08-04 15:00" --end "2026-08-04 17:00" --time-zone America/Los_Angeles --repeat weekly --repeat-days tue,thu --repeat-until 2026-08-31 --calendar Default
 ~/.codex/skills/apple-calendar/scripts/calendar.py validate-write --calendar Default
 ```
 
@@ -49,6 +50,10 @@ Run `calendars` to identify writable calendars, then `today`, `tomorrow`, or
 
 Use `create` with `--start` and either `--end` or `--duration-minutes`.
 Use `--all-day` for all-day events.
+Use `--time-zone IANA_ID` when the user's requested time zone differs from this
+Mac's local time zone.
+Use `--repeat weekly --repeat-days tue,thu --repeat-until YYYY-MM-DD` for
+bounded weekly recurrence.
 
 ### Update Events
 
