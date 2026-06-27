@@ -334,6 +334,7 @@ defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+# System Settings > Keyboard > Keyboard Shortcuts > App Shortcuts > All Applications
 defaults write NSGlobalDomain NSUserKeyEquivalents -dict-add "Lock Screen" "~l"
 
 ###############################################################################
