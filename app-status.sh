@@ -105,6 +105,9 @@ verify_app() {
         private-internet-access)
             verify_private_internet_access || verify_status=1
             ;;
+        logi-options-plus)
+            verify_logi_options_plus || verify_status=1
+            ;;
     esac
     return "$verify_status"
 }
@@ -264,6 +267,63 @@ PY
         echo "    failed: expected no connect-on-launch, notifications on, system icon, dark theme, latency sort"
         return 1
     fi
+    echo "    ok"
+}
+
+verify_logi_options_plus() {
+    local app_support="$HOME/Library/Application Support/LogiOptionsPlus"
+    local permissions_path="$app_support/permissions.json"
+    local config_path="$app_support/config.json"
+    local settings_path="$app_support/settings.db"
+
+    echo "  Logi Options+ onboarding and privacy baseline"
+    if [[ ! -f "$permissions_path" || ! -f "$config_path" || ! -f "$settings_path" ]]; then
+        echo "    failed: missing Logi Options+ app support files"
+        return 1
+    fi
+
+    if ! python3 - "$permissions_path" "$config_path" "$settings_path" <<'PY'
+import json
+import pathlib
+import sqlite3
+import sys
+
+permissions_path, config_path, settings_path = map(pathlib.Path, sys.argv[1:])
+
+permissions = json.loads(permissions_path.read_text())
+if permissions.get("macOSPermissionsGranted") is not True:
+    raise SystemExit("permissions")
+
+config = json.loads(config_path.read_text()).get("settings") or {}
+expected_config = {
+    "appOnboardingOpened": True,
+    "permissionScreenStatus": "permissionSuccess",
+    "isSentryEnabled": False,
+}
+if any(config.get(key) != value for key, value in expected_config.items()):
+    raise SystemExit("config")
+
+with sqlite3.connect(settings_path) as con:
+    row = con.execute("select file from data order by _id desc limit 1").fetchone()
+if not row:
+    raise SystemExit("settings-missing")
+
+settings = json.loads(row[0])
+expected_settings = {
+    "device_recommendation_enabled": False,
+    "star_rating_notification": False,
+    "low_battery_notifications_enabled": True,
+    "use_system_theme": True,
+    "first_time_run": False,
+}
+if any(settings.get(key) != value for key, value in expected_settings.items()):
+    raise SystemExit("settings")
+PY
+    then
+        echo "    failed: expected onboarding complete, permissions granted, analytics quiet, recommendations off, star-rating prompts off"
+        return 1
+    fi
+
     echo "    ok"
 }
 

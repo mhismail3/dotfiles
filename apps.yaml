@@ -518,23 +518,30 @@ apps:
     priority: 170
     setup_phase: hardware
     purpose: Logitech keyboard and mouse configuration.
-    desired_state: needs_permissions
+    desired_state: verify
     automated:
       - Installed by Brewfile.
+      - Stable onboarding and privacy defaults are verified by app-status.sh.
     manual:
-      - Grant requested Input Monitoring, Accessibility, and Bluetooth permissions.
-      - Configure device-specific button mappings and pointer behavior.
-      - Sign in only if Logitech cloud sync is desired.
+      - Grant Accessibility, Input Monitoring, and Bluetooth permissions if prompted by macOS.
+      - Connect the target Logitech keyboard or mouse before configuring device-specific button mappings and pointer behavior.
+      - Sign in only if Logitech cloud sync is deliberately desired.
     verify:
       commands:
         - test -d "/Applications/logioptionsplus.app"
+        - test -d "$HOME/Library/Application Support/LogiOptionsPlus"
       user_checks:
         - Connected Logitech devices appear in Logi Options+.
         - Custom button mappings work.
     state_locations:
-      - ~/Library/Application Support/Logitech
+      - ~/Library/Application Support/LogiOptionsPlus
+      - ~/Library/Preferences/com.logi.optionsplus.plist
+      - ~/Library/Preferences/com.logi.optionsplus.driverhost.plist
     notes:
-      - Hardware-specific mappings may need future export research before automation.
+      - Accessibility permission was granted manually on this Mac during setup.
+      - Onboarding was completed without Logitech login or cloud sync.
+      - Diagnostics analytics, device recommendations, and star-rating prompts were disabled in the app UI.
+      - Hardware-specific mappings may need future export research before automation; do not copy LogiOptionsPlus databases wholesale because they include generated cache, detected apps, and device state.
 
   - id: ollama
     name: Ollama

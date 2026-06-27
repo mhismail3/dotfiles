@@ -132,6 +132,27 @@ Expected verified state:
 Do not track `~/.docker/config.json` wholesale because it can include Docker Hub
 auth and credential helper state.
 
+## Logi Options+
+
+Use Logi Options+ locally unless Logitech cloud profile sync is deliberately
+needed. During onboarding, grant macOS privacy permissions manually when
+prompted, decline diagnostics/usage analytics, skip Logitech login, and disable
+recommendations and star-rating prompts.
+
+Stable verified state:
+
+1. Logi Options+ is installed.
+2. App support state exists under `~/Library/Application Support/LogiOptionsPlus`.
+3. Onboarding and macOS permission prompts are complete.
+4. Diagnostics/Sentry, recommendations, and star-rating prompts are off.
+5. Functional device alerts such as low battery remain on.
+
+Do not track LogiOptionsPlus databases wholesale. They include generated cache,
+detected installed apps, device state, and hardware-specific mappings. Button
+mappings should be configured after the target Logitech device is connected, and
+export/import should be researched only if a stable vendor-supported surface is
+found.
+
 ## Commands
 
 ```bash
