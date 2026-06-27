@@ -254,6 +254,22 @@ account credentials on the server, and Screen Sharing host trust files under
 `Application Support/Screen Sharing Hosts` are runtime state, not dotfiles
 state.
 
+Taildrive should be enabled for this Mac with the full user folder shared as
+`moose -> ~/`. The tailnet policy must grant `drive:share` and `drive:access`;
+`./app-status.sh verify tailscale` checks those capabilities. The macOS GUI app
+does not support the public `tailscale drive` folder commands, so `setup.sh`
+uses Tailscale LocalAPI to upsert the share and writes:
+
+```bash
+defaults write io.tailscale.ipn.macsys FileSharingConfiguration -string show
+```
+
+Use this read-only check when debugging:
+
+```bash
+tailscale debug localapi GET /localapi/v0/drive/shares
+```
+
 PIA should remain an explicit-use VPN unless there is a concrete reason to make
 it always-on. Do not enable PIA Advanced Kill Switch, connect-on-launch,
 connection automation, or broad split-tunnel rules unless Tailscale reachability

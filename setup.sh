@@ -1112,12 +1112,83 @@ EOF
     echo "  CLI launcher: screen-share-macbook-server"
 }
 
+apply_tailscale_taildrive() {
+    local share_name="${TAILDRIVE_SHARE_NAME:-moose}"
+    local share_path="${TAILDRIVE_SHARE_PATH:-$HOME}"
+    local body py status_json
+
+    if ! command -v tailscale &>/dev/null; then
+        warn "Tailscale CLI not found; Taildrive share was not configured"
+        return 1
+    fi
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+    if [[ -z "$py" ]]; then
+        warn "Python not found; Taildrive share was not configured"
+        return 1
+    fi
+
+    if [[ ! -d "$share_path" ]]; then
+        warn "Taildrive share path does not exist: $share_path"
+        return 1
+    fi
+
+    status_json="$(mktemp)"
+    if ! tailscale status --json >"$status_json" 2>/dev/null; then
+        rm -f "$status_json"
+        warn "Tailscale status is unavailable; Taildrive share was not configured"
+        return 1
+    fi
+
+    if ! "$py" - "$status_json" <<'PY'
+import json
+import pathlib
+import sys
+
+data = json.loads(pathlib.Path(sys.argv[1]).read_text())
+self_node = data.get("Self") or {}
+caps = set(self_node.get("Capabilities") or [])
+missing = {"drive:share", "drive:access"} - caps
+if data.get("BackendState") != "Running" or missing or self_node.get("NoFileSharingReason"):
+    raise SystemExit(1)
+PY
+    then
+        rm -f "$status_json"
+        warn "Taildrive is not enabled by the tailnet policy for this Mac"
+        return 1
+    fi
+    rm -f "$status_json"
+
+    # Show the File Sharing pane in the macOS GUI app; the actual share is stored in tailscaled state.
+    defaults write io.tailscale.ipn.macsys FileSharingConfiguration -string show 2>/dev/null || true
+
+    body="$("$py" - "$share_name" "$share_path" <<'PY'
+import json
+import sys
+
+print(json.dumps({"name": sys.argv[1], "path": sys.argv[2]}))
+PY
+)"
+
+    if ! tailscale debug localapi PUT /localapi/v0/drive/shares "$body" >/dev/null 2>&1; then
+        warn "Could not configure Taildrive share through Tailscale LocalAPI"
+        return 1
+    fi
+
+    success "Taildrive share configured"
+    echo "  $share_name -> $share_path"
+}
+
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences
     apply_tailscale_screen_sharing_connection
+    apply_tailscale_taildrive
 }
 
 ###############################################################################

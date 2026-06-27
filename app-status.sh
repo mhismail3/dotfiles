@@ -132,6 +132,8 @@ verify_tailscale() {
     local screen_sharing_location="$HOME/Library/Containers/com.apple.ScreenSharing/Data/Library/Application Support/Screen Sharing/$display_name.vncloc"
     local screen_sharing_link="$HOME/.local/share/dotfiles/remote-control/Mooses MacBook Server.vncloc"
     local launcher="$HOME/.local/bin/screen-share-macbook-server"
+    local taildrive_share_name="moose"
+    local taildrive_share_path="$HOME"
     local status_json
 
     echo "  Tailscale local status"
@@ -190,8 +192,30 @@ PY
         echo "    failed: expected Tailscale IP for $expected_peer"
         return 1
     fi
-    rm -f "$status_json"
     echo "    ok"
+
+    echo "  Tailscale Taildrive capabilities"
+    if ! python3 - "$status_json" <<'PY'
+import json
+import pathlib
+import sys
+
+data = json.loads(pathlib.Path(sys.argv[1]).read_text())
+self_node = data.get("Self") or {}
+caps = set(self_node.get("Capabilities") or [])
+missing = {"drive:share", "drive:access"} - caps
+if missing:
+    raise SystemExit("missing-cap")
+if self_node.get("NoFileSharingReason"):
+    raise SystemExit("file-sharing-disabled")
+PY
+    then
+        rm -f "$status_json"
+        echo "    failed: expected drive:share and drive:access capabilities"
+        return 1
+    fi
+    echo "    ok"
+    rm -f "$status_json"
 
     echo "  Tailscale remote-control peer"
     if ! tailscale ping --c 1 --timeout=3s "$expected_peer" >/dev/null 2>&1; then
@@ -289,6 +313,37 @@ PY
     fi
     if [[ ! -x "$launcher" ]]; then
         echo "    failed: missing executable $launcher"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Taildrive user-folder share"
+    if [[ "$(defaults read io.tailscale.ipn.macsys FileSharingConfiguration 2>/dev/null || true)" != "show" ]]; then
+        echo "    failed: expected Tailscale File Sharing UI enabled"
+        return 1
+    fi
+    local shares_json
+    if ! shares_json="$(tailscale debug localapi GET /localapi/v0/drive/shares 2>/dev/null)"; then
+        echo "    failed: could not read Taildrive shares from Tailscale LocalAPI"
+        return 1
+    fi
+    if ! python3 - "$taildrive_share_name" "$taildrive_share_path" "$shares_json" <<'PY'
+import json
+import pathlib
+import sys
+
+expected_name = sys.argv[1]
+expected_path = str(pathlib.Path(sys.argv[2]))
+shares = json.loads(sys.argv[3] or "[]") or []
+
+for share in shares:
+    if share.get("name") == expected_name and str(pathlib.Path(share.get("path", ""))) == expected_path:
+        raise SystemExit(0)
+
+raise SystemExit(1)
+PY
+    then
+        echo "    failed: missing Taildrive share $taildrive_share_name -> $taildrive_share_path"
         return 1
     fi
     echo "    ok"

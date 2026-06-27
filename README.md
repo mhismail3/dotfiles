@@ -124,6 +124,11 @@ and the sandboxed Screen Sharing store, but the first connection can still
 require macOS account credentials on the server. Screen Sharing host trust files
 are runtime state and are not tracked.
 
+Known Taildrive boundary: `setup.sh` enables the Tailscale File Sharing UI and
+uses Tailscale LocalAPI to share `~/` as `moose`. The tailnet ACL must grant
+`drive:share` and `drive:access`; the verifier checks this, but dotfiles do not
+manage tailnet policy.
+
 Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or
 CLI for setting its global hotkey. Set Raycast's hotkey in the app UI.
