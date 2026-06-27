@@ -1,5 +1,5 @@
 version: 1
-last_reviewed: "2026-06-26"
+last_reviewed: "2026-06-27"
 source_of_truth:
   installs: Brewfile
   bootstrap: setup.sh
@@ -84,7 +84,7 @@ apps:
     priority: 30
     setup_phase: launcher
     purpose: Primary launcher, command palette, clipboard, snippets, and app workflow hub.
-    desired_state: needs_config
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - Added to Login Items by .macos.
@@ -104,6 +104,7 @@ apps:
       - ~/Library/Application Support/com.raycast.macos
     notes:
       - Raycast does not expose a stable pre-onboarding CLI or defaults key for the global hotkey on this macOS build.
+      - Cmd+Space hotkey was configured manually and confirmed working on this Mac.
 
   - id: codex
     name: Codex
@@ -204,7 +205,7 @@ apps:
     priority: 70
     setup_phase: storage
     purpose: NAS sync for personal files that live outside git.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - File event notifications are disabled by setup.sh after the sync database exists.
@@ -234,6 +235,7 @@ apps:
       - setup.sh only updates the non-secret system_table keys enable_desktop_notification and use_black_white_icon.
       - Do not copy SynologyDrive config or database files into dotfiles; they include server, account, session, private-key, and File Provider state.
       - Server address, credentials, generated sync state, and sync contents are not tracked in dotfiles.
+      - Standard SynologyDrive sync task and preferred UI toggles were verified on this Mac.
 
   - id: docker
     name: Docker Desktop
@@ -416,7 +418,7 @@ apps:
     priority: 140
     setup_phase: knowledge
     purpose: Local knowledge base and notes.
-    desired_state: needs_config
+    desired_state: optional
     automated:
       - Installed by Brewfile.
     manual:
@@ -432,6 +434,7 @@ apps:
       - ~/Library/Application Support/obsidian
     notes:
       - Vault contents are not part of this dotfiles repo unless explicitly added later.
+      - Deferred for now because Obsidian requires choosing/opening a vault and is not the preferred drag-and-drop file viewer.
 
   - id: things
     name: Things 3
@@ -441,7 +444,7 @@ apps:
     priority: 150
     setup_phase: productivity
     purpose: Personal task manager.
-    desired_state: needs_config
+    desired_state: verify
     automated:
       - Installed by Mac App Store through Brewfile when possible.
       - Added to Dock by .macos.
@@ -452,6 +455,8 @@ apps:
     verify:
       commands:
         - test -d "/Applications/Things3.app"
+        - test -x "$HOME/.codex/skills/things-3/scripts/things.py"
+        - '"$HOME/.codex/skills/things-3/scripts/things.py" snapshot --open-only >/dev/null'
       user_checks:
         - Things opens with expected areas, projects, and inbox state.
     state_locations:
@@ -460,6 +465,7 @@ apps:
       - First-run tutorial was completed and the sample project was declined on this Mac.
       - Current baseline leaves Things Cloud, Calendar integration, and Reminders import off until explicitly enabled.
       - Task data should be managed by Things Cloud or its native storage, not dotfiles.
+      - Personal Codex Things 3 skill is installed from dotfiles and can read/write through Things AppleScript automation.
 
   - id: private-internet-access
     name: Private Internet Access
@@ -469,7 +475,7 @@ apps:
     priority: 160
     setup_phase: network
     purpose: VPN for public or untrusted networks.
-    desired_state: needs_login
+    desired_state: verify
     automated:
       - Installed by Brewfile.
       - Quarantine repair and Homebrew adopt are attempted by setup.sh when needed.
@@ -498,6 +504,7 @@ apps:
       - VPN credentials, account state, dedicated IP tokens, and privileged daemon support files are not tracked.
       - Kill switch, Advanced Kill Switch, MACE, and split tunnel filter state are verified manually unless a stable supported interface is found.
       - Tailscale remote-control reliability has priority over PIA hardening; do not enable always-on VPN or Advanced Kill Switch without testing the Tailscale server path.
+      - Login was completed through 1Password credential handoff on this Mac; connect/disconnect is left user-confirmed because it changes network routing.
 
   - id: logi-options-plus
     name: Logi Options+
