@@ -11,6 +11,7 @@ SUDO_KEEPALIVE_PID=$!
 
 MACOS_USER="${MACOS_USER:-$(whoami)}"
 REMOTE_LOGIN_NEEDS_MANUAL=false
+SCREENSHOT_LOCATION_NEEDS_MANUAL=false
 
 ###############################################################################
 # Remote Access (SSH only)
@@ -326,6 +327,25 @@ chflags nohidden ~/Library 2>/dev/null
 echo "  Finder sidebar visibility for Recents, AirDrop, Shared, and On My Mac is private UI state; verify manually."
 
 ###############################################################################
+# Screenshots
+###############################################################################
+
+echo "Configuring screenshots..."
+
+SYNOLOGY_DRIVE_ROOT="$HOME/Library/CloudStorage/SynologyDrive-SynologyDrive"
+SCREENSHOT_LOCATION="$SYNOLOGY_DRIVE_ROOT/[Photos]/Screenshots"
+
+if [[ -d "$SYNOLOGY_DRIVE_ROOT" ]]; then
+    mkdir -p "$SCREENSHOT_LOCATION"
+    defaults write com.apple.screencapture location -string "$SCREENSHOT_LOCATION"
+    echo "  Screenshots save to $SCREENSHOT_LOCATION"
+else
+    SCREENSHOT_LOCATION_NEEDS_MANUAL=true
+    echo "  Synology Drive CloudStorage folder not found; screenshot location was not changed."
+    echo "  Complete Synology Drive setup, then re-run: source ~/Workspace/dotfiles/.macos"
+fi
+
+###############################################################################
 # Keyboard
 ###############################################################################
 
@@ -454,6 +474,9 @@ echo "  6. Disable True Tone: System Settings > Displays > True Tone OFF"
 echo "  7. Finder sidebar: remove Recents, AirDrop, Shared, and On My Mac"
 echo "  8. Keyboard shortcut: add Lock Screen with Option+L in Keyboard Shortcuts > App Shortcuts"
 echo "  9. Set up Focus mode if desired (System Settings > Focus)"
+if [[ "$SCREENSHOT_LOCATION_NEEDS_MANUAL" == "true" ]]; then
+    echo "  10. Screenshot save location: re-run .macos after Synology Drive setup"
+fi
 echo ""
 echo "  After completing these steps, RESTART to apply everything."
 echo ""

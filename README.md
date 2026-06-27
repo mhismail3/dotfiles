@@ -155,6 +155,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | Display | Night Shift off, auto-brightness off, built-in display set to More Space via `displayplacer` |
 | Power | Screen saver after 20 minutes; display sleep 15 minutes on battery and 30 minutes on power; system sleep 30 minutes on battery and never on power |
 | Finder | Hidden files, extensions, path bar, column view, folders first; sidebar removals are manual |
+| Screenshots | Save to `~/Library/CloudStorage/SynologyDrive-SynologyDrive/[Photos]/Screenshots` when Synology Drive is mounted |
 | Keyboard | Fast repeat, no press-and-hold, full keyboard nav; Option+L Lock Screen shortcut is manual |
 | Trackpad | Tap to click, three-finger drag |
 | Mission Control | Stable spaces, group by app, hot corners: top-left app drawer, top-right Mission Control, bottom-left screen saver, bottom-right Desktop |
