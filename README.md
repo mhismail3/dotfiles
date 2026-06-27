@@ -117,11 +117,12 @@ authorization controlled by Apple's Sharing settings UI or management profiles,
 not a public `systemsetup`/`defaults` flag. Keep it manual unless this Mac is
 managed with a deliberate PPPC profile.
 
-Known Screen Sharing boundary: `setup.sh` creates
-`~/Applications/Screen Sharing/Mooses MacBook Server.vncloc` and the
-`screen-share-macbook-server` launcher for the Tailscale peer
-`mooses-macbook-server`. It verifies Tailscale ping and port `5900`, but the
-first connection can still require macOS account credentials on the server.
+Known Screen Sharing boundary: `setup.sh` writes the native Screen Sharing
+`connectionsStore` entry for `mooses-macbook-server` and creates the derived
+`screen-share-macbook-server` launcher. It verifies Tailscale ping, port `5900`,
+and the sandboxed Screen Sharing store, but the first connection can still
+require macOS account credentials on the server. Screen Sharing host trust files
+are runtime state and are not tracked.
 
 Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or

@@ -916,25 +916,28 @@ PY
     return "$status"
 }
 
-apply_tailscale_screen_sharing_shortcut() {
+apply_tailscale_screen_sharing_connection() {
     local peer="${TAILSCALE_SERVER_PEER:-mooses-macbook-server}"
     local fallback_ip="${TAILSCALE_SERVER_IP:-100.82.140.87}"
-    local peer_ip url location_dir location_path share_dir share_link launcher py
+    local display_name="${TAILSCALE_SERVER_DISPLAY_NAME:-Moose's MacBook Server}"
+    local username="${TAILSCALE_SERVER_USERNAME:-moose}"
+    local peer_ip url app_support_dir app_location_path share_dir share_link launcher pref_path py
 
-    location_dir="$HOME/Applications/Screen Sharing"
-    location_path="$location_dir/Mooses MacBook Server.vncloc"
+    app_support_dir="$HOME/Library/Containers/com.apple.ScreenSharing/Data/Library/Application Support/Screen Sharing"
+    app_location_path="$app_support_dir/$display_name.vncloc"
     share_dir="$HOME/.local/share/dotfiles/remote-control"
     share_link="$share_dir/Mooses MacBook Server.vncloc"
     launcher="$HOME/.local/bin/screen-share-macbook-server"
+    pref_path="$HOME/Library/Containers/com.apple.ScreenSharing/Data/Library/Preferences/com.apple.ScreenSharing.plist"
 
     peer_ip="$(resolve_tailscale_peer_ip "$peer" 2>/dev/null || true)"
     if [[ -z "$peer_ip" ]]; then
         peer_ip="$fallback_ip"
         warn "Could not resolve $peer from Tailscale; using fallback IP $peer_ip"
     fi
-    url="vnc://$peer_ip"
+    url="vnc://$peer"
 
-    mkdir -p "$location_dir" "$share_dir" "$HOME/.local/bin"
+    mkdir -p "$app_support_dir" "$share_dir" "$HOME/.local/bin" "$(dirname "$pref_path")"
 
     for py in python3.14 python3.13 python3.12 python3.11 python3; do
         command -v "$py" &>/dev/null && break
@@ -942,17 +945,148 @@ apply_tailscale_screen_sharing_shortcut() {
     done
 
     if [[ -n "$py" ]]; then
-        "$py" - "$location_path" "$url" <<'PY'
+        "$py" - "$pref_path" "$app_location_path" "$url" "$display_name" "$peer" "$peer_ip" "$username" <<'PY'
+import datetime as dt
 import pathlib
 import plistlib
 import sys
+import uuid
 
-path = pathlib.Path(sys.argv[1])
-url = sys.argv[2]
-path.write_bytes(plistlib.dumps({"URL": url}, fmt=plistlib.FMT_XML, sort_keys=True))
+pref_path = pathlib.Path(sys.argv[1])
+location_path = pathlib.Path(sys.argv[2])
+url = sys.argv[3]
+display_name = sys.argv[4]
+peer = sys.argv[5]
+peer_ip = sys.argv[6]
+username = sys.argv[7]
+
+default_pref = {
+    "AppleIDOnlyDomains": ["mac.com", "me.com", "icloud.com", "gmail.com", "hotmail.com", "yahoo.com"],
+    "DisabledAuthenticationMethods": [],
+    "DontQuitWhenLastWindowCloses": False,
+    "MigratedTo1011": True,
+    "MigratedTo112": True,
+    "lastRunMigrationVersion": 1,
+}
+store = {
+    "connectionDetails": {},
+    "connectionGroups": {},
+    "sessionMetadatas": {},
+    "connectionsMigrated": True,
+}
+
+if pref_path.exists():
+    prefs = plistlib.loads(pref_path.read_bytes())
+    if not isinstance(prefs, dict):
+        prefs = {}
+else:
+    prefs = {}
+
+if isinstance(prefs.get("connectionsStore"), bytes):
+    try:
+        store = plistlib.loads(prefs["connectionsStore"])
+    except Exception:
+        store = store
+
+details = store.setdefault("connectionDetails", {})
+metadata = store.setdefault("sessionMetadatas", {})
+store.setdefault("connectionGroups", {})
+store["connectionsMigrated"] = True
+
+connection_id = None
+for existing_id, detail in details.items():
+    params = detail.get("connectionParameters", {})
+    network = params.get("networkAddress", {}).get("_0", {})
+    if network.get("address") in {peer, peer_ip} or network.get("displayName") == display_name:
+        connection_id = existing_id
+        break
+if connection_id is None:
+    connection_id = str(uuid.uuid4()).upper()
+
+display_configuration = {
+    "displayType": {
+        "virtualDisplays": {
+            "numberOfDisplays": 0,
+        },
+    },
+}
+details[connection_id] = {
+    "id": connection_id,
+    "isManaged": False,
+    "createdFromMigration": False,
+    "connectionParameters": {
+        "networkAddress": {
+            "_0": {
+                "displayName": display_name,
+                "displayConfiguration": display_configuration,
+                "address": peer,
+                "port": 5900,
+                "username": username,
+            },
+        },
+    },
+}
+
+previous_session = metadata.get(connection_id, {})
+session_state = previous_session.get("sessionState", {})
+if not session_state:
+    session_state = {
+        "URL": url,
+        "restorationAttributes": {
+            "targetAddress": url,
+            "quality": 5,
+            "displayType": 1,
+            "controlMode": 1,
+            "scalingMode": 1,
+            "dynamicResolution": 0,
+            "autoClipboard": 1,
+            "isFullScreen": 0,
+        },
+    }
+metadata[connection_id] = {
+    **previous_session,
+    "lastConnectedDate": previous_session.get("lastConnectedDate", dt.datetime.now()),
+    "supportsProMode": previous_session.get("supportsProMode", False),
+    "sessionState": session_state,
+}
+
+def decode_recent_ids(value):
+    if isinstance(value, bytes):
+        try:
+            value = plistlib.loads(value)
+        except Exception:
+            return []
+    if not isinstance(value, (list, tuple)):
+        return []
+    return [item for item in value if isinstance(item, str)]
+
+recent_ids = [connection_id]
+for existing_id in decode_recent_ids(prefs.get("recentConnectionIDs")):
+    if existing_id != connection_id:
+        recent_ids.append(existing_id)
+
+prefs = {**default_pref, **prefs}
+prefs["recentConnectionIDs"] = plistlib.dumps(recent_ids, fmt=plistlib.FMT_BINARY, sort_keys=True)
+prefs["connectionsStore"] = plistlib.dumps(store, fmt=plistlib.FMT_BINARY, sort_keys=True)
+pref_path.write_bytes(plistlib.dumps(prefs, fmt=plistlib.FMT_BINARY, sort_keys=True))
+
+location_path.write_bytes(plistlib.dumps({
+    "URL": url,
+    "restorationAttributes": {
+        "targetAddress": url,
+        "quality": "adaptive",
+        "displayType": 1,
+        "controlMode": 1,
+        "scalingMode": True,
+        "dynamicResolution": False,
+        "autoClipboard": True,
+        "isFullScreen": False,
+    },
+}, fmt=plistlib.FMT_XML, sort_keys=True))
 PY
     else
-        cat > "$location_path" <<EOF
+        warn "Python not found; Screen Sharing connectionsStore was not updated"
+        cat > "$app_location_path" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -964,15 +1098,17 @@ PY
 EOF
     fi
 
-    ln -sf "$location_path" "$share_link"
+    ln -sf "$app_location_path" "$share_link"
     cat > "$launcher" <<EOF
 #!/usr/bin/env zsh
-open "$location_path"
+open "$app_location_path"
 EOF
     chmod 755 "$launcher"
 
-    success "Screen Sharing shortcut configured"
-    echo "  $location_path -> $url"
+    success "Screen Sharing connection configured"
+    echo "  $display_name appears in Screen Sharing Connections."
+    echo "  $app_location_path -> $url"
+    echo "  Current Tailscale IP: $peer_ip"
     echo "  CLI launcher: screen-share-macbook-server"
 }
 
@@ -981,7 +1117,7 @@ step_app_preferences() {
     apply_synology_drive_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences
-    apply_tailscale_screen_sharing_shortcut
+    apply_tailscale_screen_sharing_connection
 }
 
 ###############################################################################

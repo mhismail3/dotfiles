@@ -127,7 +127,11 @@ verify_app() {
 
 verify_tailscale() {
     local expected_peer="mooses-macbook-server"
-    local screen_sharing_location="$HOME/Applications/Screen Sharing/Mooses MacBook Server.vncloc"
+    local display_name="Moose's MacBook Server"
+    local screen_sharing_pref="$HOME/Library/Containers/com.apple.ScreenSharing/Data/Library/Preferences/com.apple.ScreenSharing.plist"
+    local screen_sharing_location="$HOME/Library/Containers/com.apple.ScreenSharing/Data/Library/Application Support/Screen Sharing/$display_name.vncloc"
+    local screen_sharing_link="$HOME/.local/share/dotfiles/remote-control/Mooses MacBook Server.vncloc"
+    local launcher="$HOME/.local/bin/screen-share-macbook-server"
     local status_json
 
     echo "  Tailscale local status"
@@ -203,12 +207,68 @@ PY
     fi
     echo "    ok"
 
-    echo "  Screen Sharing shortcut"
+    echo "  Screen Sharing native connection"
+    if [[ ! -f "$screen_sharing_pref" ]]; then
+        echo "    failed: missing $screen_sharing_pref"
+        return 1
+    fi
+    if ! python3 - "$screen_sharing_pref" "$expected_peer" "$display_name" <<'PY'
+import pathlib
+import plistlib
+import sys
+
+pref_path = pathlib.Path(sys.argv[1])
+expected_peer = sys.argv[2]
+display_name = sys.argv[3]
+expected_url = f"vnc://{expected_peer}"
+
+prefs = plistlib.loads(pref_path.read_bytes())
+
+def decode(value):
+    if isinstance(value, bytes):
+        return plistlib.loads(value)
+    return value
+
+store = decode(prefs.get("connectionsStore"))
+if not isinstance(store, dict):
+    raise SystemExit("missing-store")
+
+found_id = None
+for connection_id, detail in (store.get("connectionDetails") or {}).items():
+    params = detail.get("connectionParameters") or {}
+    network = ((params.get("networkAddress") or {}).get("_0")) or {}
+    if (
+        network.get("address") == expected_peer
+        and network.get("port") == 5900
+        and network.get("displayName") == display_name
+    ):
+        found_id = connection_id
+        break
+
+if not found_id:
+    raise SystemExit("missing-connection")
+
+recent_ids = decode(prefs.get("recentConnectionIDs"))
+if not isinstance(recent_ids, list) or found_id not in recent_ids:
+    raise SystemExit("missing-recent")
+
+session_state = ((store.get("sessionMetadatas") or {}).get(found_id) or {}).get("sessionState") or {}
+restoration = session_state.get("restorationAttributes") or {}
+if session_state.get("URL") != expected_url and restoration.get("targetAddress") != expected_url:
+    raise SystemExit("missing-session-url")
+PY
+    then
+        echo "    failed: expected native Screen Sharing connection for $expected_peer"
+        return 1
+    fi
+    echo "    ok"
+
+    echo "  Screen Sharing location and launcher"
     if [[ ! -f "$screen_sharing_location" ]]; then
         echo "    failed: missing $screen_sharing_location"
         return 1
     fi
-    if ! python3 - "$screen_sharing_location" "vnc://$peer_ip" <<'PY'
+    if ! python3 - "$screen_sharing_location" "vnc://$expected_peer" <<'PY'
 import pathlib
 import plistlib
 import sys
@@ -220,7 +280,15 @@ if data.get("URL") != expected_url:
     raise SystemExit(1)
 PY
     then
-        echo "    failed: Screen Sharing shortcut does not target vnc://$peer_ip"
+        echo "    failed: Screen Sharing location does not target vnc://$expected_peer"
+        return 1
+    fi
+    if [[ ! -L "$screen_sharing_link" || "$(readlink "$screen_sharing_link")" != "$screen_sharing_location" ]]; then
+        echo "    failed: derived Screen Sharing symlink is missing or stale"
+        return 1
+    fi
+    if [[ ! -x "$launcher" ]]; then
+        echo "    failed: missing executable $launcher"
         return 1
     fi
     echo "    ok"

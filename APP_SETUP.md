@@ -228,16 +228,31 @@ tailscale ping --c 1 --timeout=3s mooses-macbook-server
 nc -vz -G 3 mooses-macbook-server 5900
 ```
 
-`setup.sh` creates a Screen Sharing location at
-`~/Applications/Screen Sharing/Mooses MacBook Server.vncloc` and a CLI launcher:
+`setup.sh` writes the native Screen Sharing connection to:
+
+```text
+~/Library/Containers/com.apple.ScreenSharing/Data/Library/Preferences/com.apple.ScreenSharing.plist
+```
+
+Inside that preference file, `connectionsStore` is a binary plist blob and is
+the source of truth for the Screen Sharing Connections window. The generated
+entry targets `vnc://mooses-macbook-server` on port `5900`.
+
+`setup.sh` also creates a derived Screen Sharing location and CLI launcher:
+
+```text
+~/Library/Containers/com.apple.ScreenSharing/Data/Library/Application Support/Screen Sharing/Moose's MacBook Server.vncloc
+```
 
 ```bash
 screen-share-macbook-server
 ```
 
-The location targets the server's current Tailscale IP so macOS Screen Sharing
-connects over the tailnet as if the server were on the local network. The first
-connection can still require macOS account credentials on the server.
+Use `screen-share-macbook-server` or `open vnc://mooses-macbook-server` for
+programmatic connection handoff. The first connection can still require macOS
+account credentials on the server, and Screen Sharing host trust files under
+`Application Support/Screen Sharing Hosts` are runtime state, not dotfiles
+state.
 
 PIA should remain an explicit-use VPN unless there is a concrete reason to make
 it always-on. Do not enable PIA Advanced Kill Switch, connect-on-launch,
