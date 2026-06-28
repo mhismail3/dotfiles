@@ -109,6 +109,9 @@ verify_app() {
         synology-drive)
             verify_synology_drive || verify_status=1
             ;;
+        google-drive)
+            verify_google_drive || verify_status=1
+            ;;
         docker)
             verify_docker || verify_status=1
             ;;
@@ -420,6 +423,28 @@ PY
     else
         echo "    ok: launchers configured; not currently mounted"
     fi
+}
+
+verify_google_drive() {
+    local preferences_domain="com.google.drivefs"
+    local status_item_visible
+    local mount_path
+
+    echo "  Google Drive CloudStorage mount"
+    mount_path="$(find "$HOME/Library/CloudStorage" -maxdepth 1 -type d -name "GoogleDrive-*" -print -quit 2>/dev/null || true)"
+    if [[ -z "$mount_path" ]]; then
+        echo "    failed: expected a GoogleDrive-* CloudStorage mount"
+        return 1
+    fi
+    echo "    ok: $mount_path"
+
+    echo "  Google Drive menu bar status item"
+    status_item_visible="$(defaults read "$preferences_domain" "NSStatusItem Visible Item-0" 2>/dev/null || true)"
+    if [[ "$status_item_visible" != "0" ]]; then
+        echo "    failed: expected NSStatusItem Visible Item-0=false in $preferences_domain"
+        return 1
+    fi
+    echo "    ok"
 }
 
 verify_docker() {

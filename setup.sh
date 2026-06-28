@@ -723,6 +723,23 @@ SQL
     echo "  File event notifications disabled; minimalist menu bar icon enabled."
 }
 
+apply_google_drive_preferences() {
+    local app="/Applications/Google Drive.app"
+    local preferences_domain="com.google.drivefs"
+
+    if [[ ! -d "$app" ]]; then
+        warn "Google Drive preferences skipped; app is not installed"
+        return 0
+    fi
+
+    defaults write "$preferences_domain" "NSStatusItem Visible Item-0" -bool false
+    killall cfprefsd >/dev/null 2>&1 || true
+
+    success "Google Drive preferences applied"
+    echo "  Menu bar status icon hidden."
+    echo "  If Google Drive is already running, quit and reopen it for the icon change to apply."
+}
+
 apply_docker_desktop_preferences() {
     local app="/Applications/Docker.app"
     local settings_path="$HOME/Library/Group Containers/group.com.docker/settings-store.json"
@@ -1455,6 +1472,7 @@ EOF
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
+    apply_google_drive_preferences
     apply_docker_desktop_preferences
     apply_private_internet_access_preferences
     apply_qbittorrent_preferences

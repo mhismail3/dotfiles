@@ -80,6 +80,23 @@ Keep these manual unless a stable vendor-supported interface is found:
 - Sync folder choices and account-specific paths.
 - Hardware-specific mappings without export/import support.
 
+## Google Drive
+
+Google Drive account state and sync metadata live under
+`~/Library/Application Support/Google/DriveFS`. Do not copy that state into
+dotfiles; it includes account-specific cache, sync, and File Provider data.
+
+Expected verified state:
+
+1. Google Drive is installed.
+2. A `~/Library/CloudStorage/GoogleDrive-*` mount exists.
+3. Google Drive's menu bar status item visibility is `false`.
+
+`setup.sh` hides the macOS menu bar icon by setting
+`NSStatusItem Visible Item-0=false` in `com.google.drivefs`. If Google Drive is
+already running, quit and reopen Google Drive for the visible icon change to
+apply.
+
 ## Synology Drive
 
 Synology Drive stores local task metadata in

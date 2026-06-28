@@ -222,6 +222,7 @@ apps:
     desired_state: verify
     automated:
       - Installed by Brewfile.
+      - setup.sh hides Google Drive's macOS menu bar status item through the com.google.drivefs preferences domain.
     manual:
       - Sign in to the Google account.
       - Choose streaming or mirroring behavior.
@@ -233,11 +234,14 @@ apps:
       user_checks:
         - Google Drive is mounted in Finder.
         - Expected files are visible.
+        - Google Drive's menu bar icon is hidden after Google Drive is restarted.
     state_locations:
       - ~/Library/Application Support/Google/DriveFS
+      - ~/Library/Preferences/com.google.drivefs.plist
     notes:
       - Google Docs, Sheets, and Slides app stubs may appear in /Applications after Drive setup.
       - Google Drive sign-in was completed on this Mac and the CloudStorage mount is present.
+      - The status item visibility is stored by macOS/AppKit as NSStatusItem Visible Item-0 in com.google.drivefs.
 
   - id: synology-drive
     name: Synology Drive
