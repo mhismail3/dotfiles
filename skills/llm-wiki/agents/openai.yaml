@@ -1,0 +1,7 @@
+interface:
+  display_name: "LLM Wiki"
+  short_description: "Maintain the local LLM wiki and Raindrop intake queue"
+  default_prompt: "Use $llm-wiki to inspect my LLM wiki and Raindrop ingest state."
+
+policy:
+  allow_implicit_invocation: true

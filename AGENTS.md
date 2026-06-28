@@ -56,7 +56,7 @@ zsh -n app-status.sh
 Run these after changing personal Codex skills:
 
 ```bash
-python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py
+python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py skills/llm-wiki/scripts/wiki.py
 swiftc -parse skills/apple-calendar/scripts/calendar_helper.swift
 uvx --with pyyaml python - <<'PY'
 import pathlib, yaml
