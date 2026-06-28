@@ -281,6 +281,26 @@ The `moose` share should include non-empty `bookmarkData`. If it does not,
 rerun `setup.sh` on a Mac with Swift available or add the folder once through
 Tailscale Settings > File Sharing so macOS grants the security-scoped bookmark.
 
+Taildrive Finder access is exposed through WebDAV at:
+
+```text
+http://100.100.100.100:8080/
+```
+
+`setup.sh` creates `~/Taildrive` and the launchers:
+
+```bash
+open-taildrive
+open-taildrive-server
+```
+
+The launchers mount Taildrive with `mount_webdav` and open the mount in Finder.
+`open-taildrive-server` opens the home server's Taildrive path when WebDAV
+discovery can see it. Finder sidebar insertion is not scripted: `sfltool` can
+list/reset shared-file-list entries but cannot add favorites, and Apple's old
+`LSSharedFileList` favorite API is marked no longer supported. To pin it once,
+run `open-taildrive`, then drag `~/Taildrive` into Finder Favorites.
+
 PIA should remain an explicit-use VPN unless there is a concrete reason to make
 it always-on. Do not enable PIA Advanced Kill Switch, connect-on-launch,
 connection automation, or broad split-tunnel rules unless Tailscale reachability

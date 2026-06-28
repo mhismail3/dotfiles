@@ -128,7 +128,10 @@ Known Taildrive boundary: `setup.sh` enables the Tailscale File Sharing UI and
 uses Tailscale LocalAPI to share `~/` as `moose` with generated macOS
 security-scoped bookmark data. The tailnet ACL must grant `drive:share` and
 `drive:access`; the verifier checks this, but dotfiles do not manage tailnet
-policy.
+policy. It also creates `~/Taildrive`, `open-taildrive`, and
+`open-taildrive-server` for Finder/WebDAV access. Finder sidebar pinning is a
+manual one-time drag because macOS does not expose a supported scriptable API
+for adding Favorites on this version.
 
 Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or

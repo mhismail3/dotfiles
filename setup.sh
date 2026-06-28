@@ -1292,6 +1292,166 @@ PY
     echo "  $share_name -> $share_path"
 }
 
+apply_tailscale_taildrive_finder_access() {
+    local base_url="${TAILDRIVE_WEBDAV_URL:-http://100.100.100.100:8080/}"
+    local mount_point="${TAILDRIVE_MOUNT_POINT:-$HOME/Taildrive}"
+    local remote_peer="${TAILDRIVE_REMOTE_PEER:-mooses-macbook-server}"
+    local remote_share="${TAILDRIVE_REMOTE_SHARE_NAME:-moose}"
+    local share_dir="$HOME/.local/share/dotfiles/taildrive"
+    local config_path="$share_dir/config.json"
+    local opener="$HOME/.local/bin/open-taildrive"
+    local peer_opener="$HOME/.local/bin/open-taildrive-server"
+    local py python_bin
+
+    if ! command -v tailscale &>/dev/null; then
+        warn "Tailscale CLI not found; Taildrive Finder access was not configured"
+        return 1
+    fi
+    if ! command -v mount_webdav &>/dev/null; then
+        warn "mount_webdav not found; Taildrive Finder access was not configured"
+        return 1
+    fi
+
+    for py in python3.14 python3.13 python3.12 python3.11 python3; do
+        command -v "$py" &>/dev/null && break
+        py=""
+    done
+    if [[ -z "$py" ]]; then
+        warn "Python not found; Taildrive Finder access was not configured"
+        return 1
+    fi
+    python_bin="$(command -v "$py")"
+
+    mkdir -p "$mount_point" "$share_dir" "$HOME/.local/bin"
+
+    "$py" - "$base_url" "$remote_peer" "$remote_share" "$mount_point" "$config_path" <<'PY'
+import json
+import pathlib
+import sys
+import urllib.parse
+import urllib.request
+import xml.etree.ElementTree as ET
+
+base_url, remote_peer, remote_share, mount_point, config_path = sys.argv[1:6]
+if not base_url.endswith("/"):
+    base_url += "/"
+
+def propfind(url):
+    request = urllib.request.Request(url, method="PROPFIND", headers={"Depth": "1"})
+    with urllib.request.urlopen(request, timeout=5) as response:
+        root = ET.fromstring(response.read())
+    ns = {"D": "DAV:"}
+    return [node.text or "" for node in root.findall(".//D:href", ns)]
+
+def url_from_href(href):
+    return urllib.parse.urljoin(base_url, urllib.parse.quote(href.lstrip("/"), safe="/"))
+
+def rel_from_href(href):
+    return urllib.parse.unquote(href.strip("/"))
+
+data = {
+    "base_url": base_url,
+    "mount_point": mount_point,
+    "remote_peer": remote_peer,
+    "remote_share": remote_share,
+    "account_href": "",
+    "peer_href": "",
+    "share_href": "",
+    "open_relative_path": "",
+    "remote_share_present": False,
+}
+
+try:
+    root_hrefs = [href for href in propfind(base_url) if href.strip("/") != ""]
+    account_href = root_hrefs[0] if root_hrefs else ""
+    data["account_href"] = account_href
+
+    if account_href:
+        account_url = url_from_href(account_href)
+        peer_hrefs = [href for href in propfind(account_url) if href.rstrip("/") != account_href.rstrip("/")]
+        expected = remote_peer.casefold()
+        for href in peer_hrefs:
+            if expected in urllib.parse.unquote(href).casefold():
+                data["peer_href"] = href
+                break
+
+    if data["peer_href"]:
+        peer_url = url_from_href(data["peer_href"])
+        share_hrefs = [href for href in propfind(peer_url) if href.rstrip("/") != data["peer_href"].rstrip("/")]
+        expected_share = f"/{remote_share.casefold()}/"
+        for href in share_hrefs:
+            decoded = f"/{urllib.parse.unquote(href).strip('/').split('/')[-1].casefold()}/"
+            if decoded == expected_share:
+                data["share_href"] = href
+                data["remote_share_present"] = True
+                break
+except Exception as exc:
+    data["discovery_error"] = str(exc)
+
+open_href = data["share_href"] or data["peer_href"] or data["account_href"]
+if open_href:
+    data["open_relative_path"] = rel_from_href(open_href)
+
+path = pathlib.Path(config_path)
+path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+PY
+
+    cat > "$opener" <<EOF
+#!/usr/bin/env zsh
+set -euo pipefail
+
+base_url="${base_url}"
+mount_point="${mount_point}"
+
+mkdir -p "\$mount_point"
+if ! mount | /usr/bin/grep -F " on \$mount_point (" | /usr/bin/grep -F "webdav" >/dev/null; then
+    /sbin/mount_webdav -S -v Taildrive "\$base_url" "\$mount_point"
+fi
+
+/usr/bin/open "\$mount_point"
+EOF
+    chmod 755 "$opener"
+
+    cat > "$peer_opener" <<EOF
+#!/usr/bin/env zsh
+set -euo pipefail
+
+base_url="${base_url}"
+mount_point="${mount_point}"
+config_path="${config_path}"
+
+mkdir -p "\$mount_point"
+if ! mount | /usr/bin/grep -F " on \$mount_point (" | /usr/bin/grep -F "webdav" >/dev/null; then
+    /sbin/mount_webdav -S -v Taildrive "\$base_url" "\$mount_point"
+fi
+
+relative_path="\$("${python_bin}" - "\$config_path" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+if not path.exists():
+    raise SystemExit(0)
+data = json.loads(path.read_text())
+print(data.get("open_relative_path") or "")
+PY
+)"
+
+if [[ -n "\$relative_path" ]]; then
+    /usr/bin/open "\$mount_point/\$relative_path"
+else
+    /usr/bin/open "\$mount_point"
+fi
+EOF
+    chmod 755 "$peer_opener"
+
+    success "Taildrive Finder access configured"
+    echo "  Mount point: $mount_point"
+    echo "  Launchers: open-taildrive, open-taildrive-server"
+    echo "  Finder sidebar pinning is manual on this macOS; run open-taildrive, then drag $mount_point into Finder Favorites if desired."
+}
+
 step_app_preferences() {
     info "App preferences"
     apply_synology_drive_preferences
@@ -1301,6 +1461,7 @@ step_app_preferences() {
     apply_tailscale_app_preferences
     apply_tailscale_screen_sharing_connection
     apply_tailscale_taildrive
+    apply_tailscale_taildrive_finder_access
 }
 
 ###############################################################################

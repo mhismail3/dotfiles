@@ -137,6 +137,10 @@ verify_tailscale() {
     local launcher="$HOME/.local/bin/screen-share-macbook-server"
     local taildrive_share_name="moose"
     local taildrive_share_path="$HOME"
+    local taildrive_mount_point="$HOME/Taildrive"
+    local taildrive_config="$HOME/.local/share/dotfiles/taildrive/config.json"
+    local taildrive_opener="$HOME/.local/bin/open-taildrive"
+    local taildrive_peer_opener="$HOME/.local/bin/open-taildrive-server"
     local status_json
 
     echo "  Tailscale local status"
@@ -370,6 +374,52 @@ PY
         return 1
     fi
     echo "    ok"
+
+    echo "  Taildrive Finder access"
+    if [[ ! -d "$taildrive_mount_point" ]]; then
+        echo "    failed: missing Taildrive mount point $taildrive_mount_point"
+        return 1
+    fi
+    if [[ ! -x "$taildrive_opener" || ! -x "$taildrive_peer_opener" ]]; then
+        echo "    failed: missing open-taildrive launchers"
+        return 1
+    fi
+    if [[ ! -f "$taildrive_config" ]]; then
+        echo "    failed: missing Taildrive Finder config"
+        return 1
+    fi
+    if ! python3 - "$taildrive_config" "$expected_peer" <<'PY'
+import json
+import pathlib
+import sys
+import urllib.request
+import xml.etree.ElementTree as ET
+
+config = json.loads(pathlib.Path(sys.argv[1]).read_text())
+expected_peer = sys.argv[2].casefold()
+base_url = config.get("base_url")
+if base_url != "http://100.100.100.100:8080/":
+    raise SystemExit("base-url")
+if not config.get("mount_point"):
+    raise SystemExit("mount-point")
+
+request = urllib.request.Request(base_url, method="PROPFIND", headers={"Depth": "1"})
+with urllib.request.urlopen(request, timeout=5) as response:
+    ET.fromstring(response.read())
+
+peer_href = config.get("peer_href") or ""
+if expected_peer not in peer_href.casefold():
+    raise SystemExit("peer")
+PY
+    then
+        echo "    failed: expected Taildrive WebDAV root and home-server path"
+        return 1
+    fi
+    if mount | grep -F " on $taildrive_mount_point (" | grep -F "webdav" >/dev/null; then
+        echo "    ok: mounted"
+    else
+        echo "    ok: launchers configured; not currently mounted"
+    fi
 }
 
 verify_docker() {
