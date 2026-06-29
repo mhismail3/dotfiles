@@ -272,6 +272,9 @@ echo "Configuring menu bar..."
 defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
 defaults write com.apple.controlcenter BatteryShowPercentage -bool true
 defaults write com.apple.controlcenter "NSStatusItem VisibleCC Battery" -bool true
+# Focus and Now Playing menu-bar visibility is stored per host.
+defaults -currentHost write com.apple.controlcenter "NSStatusItem VisibleCC FocusModes" -bool false
+defaults -currentHost write com.apple.controlcenter "NSStatusItem VisibleCC NowPlaying" -bool false
 defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
 defaults write com.apple.menuextra.clock Show24Hour -bool true

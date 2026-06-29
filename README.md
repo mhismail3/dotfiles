@@ -182,7 +182,7 @@ onboarding, record the boundary there rather than only in a thread transcript.
 | Dock | Auto-hide, size, magnification, managed app layout via dockutil |
 | Login Items | Raycast, 1Password, and Tailscale launch at login; Tailscale stays menu-bar only |
 | Siri | Disabled |
-| Menu Bar | Spotlight icon hidden, battery percentage, 24h clock with date and seconds |
+| Menu Bar | Spotlight, Focus, and Now Playing icons hidden; battery percentage, 24h clock with date and seconds |
 | Spotlight | Cmd+Space freed for Raycast, limited categories |
 | Display | Night Shift off, auto-brightness off, built-in display set to More Space via `displayplacer` |
 | Power | Screen saver after 20 minutes; display sleep 15 minutes on battery and 30 minutes on power; system sleep 30 minutes on battery and never on power |
