@@ -1,0 +1,7 @@
+interface:
+  display_name: "Personal OS"
+  short_description: "Maintain private journal, reflection, profile, and reversible task memory"
+  default_prompt: "Use $personal-os to inspect my private Personal OS state and help with reflection or personal task follow-up."
+
+policy:
+  allow_implicit_invocation: true

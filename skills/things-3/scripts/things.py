@@ -144,6 +144,10 @@ def snapshot_data() -> dict[str, Any]:
     todos = []
     for fields in split_records(sections[0]):
         item = load_json_field(fields)
+        if item.get("cancellationDate"):
+            item["status"] = "canceled"
+        elif item.get("completionDate"):
+            item["status"] = "completed"
         item["projectId"] = fields[1] if len(fields) > 1 else ""
         item["projectName"] = fields[2] if len(fields) > 2 else ""
         item["areaId"] = fields[3] if len(fields) > 3 else ""
@@ -164,6 +168,10 @@ def snapshot_data() -> dict[str, Any]:
     projects = []
     for fields in split_records(sections[2]):
         item = load_json_field(fields)
+        if item.get("cancellationDate"):
+            item["status"] = "canceled"
+        elif item.get("completionDate"):
+            item["status"] = "completed"
         item["areaId"] = fields[1] if len(fields) > 1 else ""
         item["areaName"] = fields[2] if len(fields) > 2 else ""
         projects.append(item)
