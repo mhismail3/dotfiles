@@ -705,6 +705,18 @@ def butlers_book_view(root: Path, manifests: list[dict[str, Any]]) -> str:
         path = root / "profile" / filename
         if path.exists():
             lines.append(f"- [{kind.title()}](profile/{filename})")
+    extra_profiles = sorted((root / "profile").glob("*.md"))
+    for path in extra_profiles:
+        if path.name not in PROFILE_FILES.values():
+            title = path.stem.replace("-", " ").title()
+            lines.append(f"- [{title}]({relative(root, path)})")
+    lines.extend(["", "## Recent Notes", ""])
+    recent_notes = [note for note in collect_notes(root) if note.get("kind") in {"journal", "episodes", "reflections", "profile"}][:12]
+    if recent_notes:
+        for note in recent_notes:
+            lines.append(f"- [{note['title']}]({note['path']}) - `{note['kind']}`; updated {note['mtime']}")
+    else:
+        lines.append("- No notes captured yet.")
     lines.extend(["", "## Important Files", ""])
     if recent:
         for manifest in recent:
@@ -1337,6 +1349,15 @@ def add_file_to_root(
     file_id = file_id_for(source, title_text, digest)
     existing_path = file_manifest_path(root, file_id)
     existing = load_json(existing_path, {}) if existing_path.exists() else {}
+    source_paths = []
+    for value in existing.get("source_paths", []):
+        if value and value not in source_paths:
+            source_paths.append(str(value))
+    previous_source = existing.get("source_path")
+    if previous_source and previous_source not in source_paths:
+        source_paths.append(str(previous_source))
+    if str(source) not in source_paths:
+        source_paths.append(str(source))
     copied_path = str(existing.get("copied_path") or "")
     if copy_file:
         dest_dir = root / "files" / "originals" / file_id
@@ -1354,6 +1375,7 @@ def add_file_to_root(
         "kind": kind,
         "sensitivity": sensitivity_for_kind(kind),
         "source_path": str(source),
+        "source_paths": source_paths,
         "copied_path": copied_path,
         "original_filename": source.name,
         "sha256": digest,
@@ -1698,6 +1720,8 @@ def verify_file_layer(root: Path) -> list[str]:
             errors.append(f"Manifest has invalid extraction_status: {relative(root, path)}")
         if manifest.get("summary_status") not in SUMMARY_STATUSES:
             errors.append(f"Manifest has invalid summary_status: {relative(root, path)}")
+        if "source_paths" in manifest and not isinstance(manifest.get("source_paths"), list):
+            errors.append(f"Manifest source_paths must be a list: {relative(root, path)}")
         copied = str(manifest.get("copied_path") or "")
         if copied and not Path(copied).expanduser().exists():
             errors.append(f"Copied file missing for manifest: {relative(root, path)}")
