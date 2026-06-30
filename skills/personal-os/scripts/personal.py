@@ -10,7 +10,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import fnmatch
+import hashlib
+import html.parser
 import json
+import mimetypes
 import os
 import plistlib
 import re
@@ -26,6 +30,11 @@ CHRONICLE_RESOURCES = Path("~/.codex/memories/extensions/chronicle/resources").e
 THINGS_SCRIPT = Path("~/.codex/skills/things-3/scripts/things.py").expanduser()
 LAUNCH_AGENT_LABEL = "com.moose.personal-os.daily"
 LAUNCH_AGENT_PATH = Path("~/Library/LaunchAgents").expanduser() / f"{LAUNCH_AGENT_LABEL}.plist"
+BUNDLED_PYTHON = Path("~/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3").expanduser()
+THINGS_PROJECT_NAME = "🤖 Agent Tasks"
+THINGS_PROJECT_ID = "Du31k5uGbRWNgX6F4WFAnK"
+THINGS_TAG = "Personal OS"
+LARGE_FILE_THRESHOLD_BYTES = 250 * 1024 * 1024
 
 REQUIRED_DIRS = (
     "inbox",
@@ -34,13 +43,67 @@ REQUIRED_DIRS = (
     "reflections/daily",
     "profile",
     "files",
+    "files/originals",
+    "files/manifests",
+    "files/extracted",
+    "files/summaries",
+    "files/outlines",
+    "files/indexes",
     "_views",
     "_state",
     "_state/launchagents",
     "_reports",
+    "_reports/garden",
     "_logs",
     "_logs/runs",
 )
+
+FILE_KINDS = (
+    "household",
+    "financial",
+    "medical",
+    "legal",
+    "identity",
+    "career",
+    "home",
+    "travel",
+    "procedure",
+    "reference",
+    "archive",
+    "other",
+)
+
+SENSITIVE_FILE_KINDS = {"financial", "medical", "legal", "identity"}
+EXTRACTION_STATUSES = {"pending", "complete", "failed", "needs_ocr", "unsupported"}
+SUMMARY_STATUSES = {"pending", "complete", "failed", "pending_agent"}
+BULK_EXCLUDE_PATTERNS = (
+    ".git",
+    "node_modules",
+    "*.app",
+    "*.photoslibrary",
+    "*.sparsebundle",
+    "*.backupbundle",
+    "Library",
+    "Applications",
+)
+TEXT_EXTENSIONS = {
+    ".txt",
+    ".md",
+    ".markdown",
+    ".csv",
+    ".tsv",
+    ".json",
+    ".jsonl",
+    ".yaml",
+    ".yml",
+    ".xml",
+    ".log",
+}
+HTML_EXTENSIONS = {".html", ".htm"}
+RTF_EXTENSIONS = {".rtf"}
+DOCX_EXTENSIONS = {".docx"}
+PDF_EXTENSIONS = {".pdf"}
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".tif", ".tiff", ".heic", ".webp"}
 
 PROFILE_FILES = {
     "preference": "preferences.md",
@@ -209,6 +272,499 @@ def append_text(path: Path, text: str, touched: list[Path]) -> None:
     touched.append(path)
 
 
+def append_section_if_missing(path: Path, marker: str, section: str, touched: list[Path]) -> None:
+    existing = path.read_text(encoding="utf-8") if path.exists() else ""
+    if marker in existing:
+        return
+    write_text(path, existing.rstrip() + "\n\n" + section.strip() + "\n", touched)
+
+
+def file_manifest_path(root: Path, file_id: str) -> Path:
+    return root / "files" / "manifests" / f"{file_id}.json"
+
+
+def file_extracted_path(root: Path, file_id: str) -> Path:
+    return root / "files" / "extracted" / f"{file_id}.txt"
+
+
+def file_summary_path(root: Path, file_id: str) -> Path:
+    return root / "files" / "summaries" / f"{file_id}.md"
+
+
+def file_outline_path(root: Path, file_id: str) -> Path:
+    return root / "files" / "outlines" / f"{file_id}.md"
+
+
+def things_routing_path(root: Path) -> Path:
+    return root / "_state" / "things-routing.json"
+
+
+def default_things_routing() -> dict[str, str]:
+    return {
+        "destination": "project",
+        "project_name": THINGS_PROJECT_NAME,
+        "project_id": THINGS_PROJECT_ID,
+        "tag": THINGS_TAG,
+    }
+
+
+def load_things_routing(root: Path) -> dict[str, str]:
+    data = load_json(things_routing_path(root), default_things_routing())
+    routing = default_things_routing()
+    if isinstance(data, dict):
+        routing.update({key: str(value) for key, value in data.items() if value is not None})
+    return routing
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def detect_mime(path: Path) -> str:
+    guessed = mimetypes.guess_type(path.name)[0]
+    if guessed:
+        return guessed
+    proc = run_command(["file", "--brief", "--mime-type", str(path)])
+    if proc.returncode == 0 and proc.stdout.strip():
+        return proc.stdout.strip()
+    return "application/octet-stream"
+
+
+def file_title_from_path(path: Path, title: str | None = None) -> str:
+    return title.strip() if title and title.strip() else path.stem.replace("-", " ").replace("_", " ").strip() or path.name
+
+
+def file_id_for(path: Path, title: str, sha256: str, added: dt.date | None = None) -> str:
+    day = added or dt.date.today()
+    return f"{day.isoformat().replace('-', '')}-{slugify(title, 'file')}-{sha256[:12]}"
+
+
+def sensitivity_for_kind(kind: str) -> str:
+    return "sensitive" if kind in SENSITIVE_FILE_KINDS else "normal"
+
+
+def source_modified_at(path: Path) -> str | None:
+    try:
+        return dt.datetime.fromtimestamp(path.stat().st_mtime, UTC).isoformat().replace("+00:00", "Z")
+    except FileNotFoundError:
+        return None
+
+
+def load_file_manifests(root: Path) -> list[dict[str, Any]]:
+    manifests: list[dict[str, Any]] = []
+    for path in sorted((root / "files" / "manifests").glob("*.json")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(data, dict):
+            manifests.append(data)
+    manifests.sort(key=lambda item: str(item.get("added_at", "")), reverse=True)
+    return manifests
+
+
+def find_manifest(root: Path, file_id: str) -> dict[str, Any]:
+    path = file_manifest_path(root, file_id)
+    if not path.exists():
+        raise SystemExit(f"No Personal OS file manifest found for {file_id}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise SystemExit(f"Invalid manifest: {relative(root, path)}")
+    return data
+
+
+def duplicate_for_sha(root: Path, sha256: str, file_id: str) -> str | None:
+    for manifest in load_file_manifests(root):
+        if manifest.get("sha256") == sha256 and manifest.get("file_id") != file_id:
+            return str(manifest.get("file_id"))
+    return None
+
+
+def manifest_source_path(manifest: dict[str, Any]) -> Path | None:
+    copied = manifest.get("copied_path")
+    source = manifest.get("source_path")
+    if copied:
+        return Path(str(copied)).expanduser()
+    if source:
+        return Path(str(source)).expanduser()
+    return None
+
+
+def relative_or_empty(root: Path, value: str | None) -> str:
+    if not value:
+        return ""
+    return relative(root, Path(value))
+
+
+class _HTMLTextExtractor(html.parser.HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        clean = data.strip()
+        if clean:
+            self.parts.append(clean)
+
+    def text(self) -> str:
+        return "\n".join(self.parts)
+
+
+def strip_html(text: str) -> str:
+    parser = _HTMLTextExtractor()
+    parser.feed(text)
+    return parser.text()
+
+
+def bundled_python_available() -> bool:
+    return BUNDLED_PYTHON.exists() and os.access(BUNDLED_PYTHON, os.X_OK)
+
+
+def extract_pdf(path: Path) -> dict[str, str]:
+    if not bundled_python_available():
+        return {"status": "failed", "method": "pdf", "text": "", "error": f"Bundled Python missing: {BUNDLED_PYTHON}"}
+    code = r'''
+import json, sys
+path = sys.argv[1]
+text = ""
+method = "pdfplumber"
+error = ""
+try:
+    import pdfplumber
+    with pdfplumber.open(path) as pdf:
+        text = "\n\n".join((page.extract_text() or "") for page in pdf.pages)
+except Exception as exc:
+    error = str(exc)
+    try:
+        from pypdf import PdfReader
+        method = "pypdf"
+        reader = PdfReader(path)
+        text = "\n\n".join((page.extract_text() or "") for page in reader.pages)
+        error = ""
+    except Exception as exc2:
+        error = f"{error}; pypdf: {exc2}" if error else str(exc2)
+status = "complete" if text.strip() else ("needs_ocr" if not error else "failed")
+print(json.dumps({"status": status, "method": method, "text": text, "error": error}))
+'''
+    proc = run_command([str(BUNDLED_PYTHON), "-c", code, str(path)])
+    if proc.returncode != 0:
+        return {"status": "failed", "method": "pdf", "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return {"status": "failed", "method": "pdf", "text": "", "error": proc.stdout[:500]}
+    return {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+
+
+def extract_docx(path: Path) -> dict[str, str]:
+    if not bundled_python_available():
+        return {"status": "failed", "method": "python-docx", "text": "", "error": f"Bundled Python missing: {BUNDLED_PYTHON}"}
+    code = r'''
+import json, sys
+path = sys.argv[1]
+parts = []
+error = ""
+try:
+    import docx
+    doc = docx.Document(path)
+    parts.extend(p.text for p in doc.paragraphs if p.text)
+    for table in doc.tables:
+        for row in table.rows:
+            cells = [cell.text.strip() for cell in row.cells]
+            if any(cells):
+                parts.append(" | ".join(cells))
+except Exception as exc:
+    error = str(exc)
+text = "\n".join(parts)
+print(json.dumps({"status": "complete" if text.strip() else "failed", "method": "python-docx", "text": text, "error": error}))
+'''
+    proc = run_command([str(BUNDLED_PYTHON), "-c", code, str(path)])
+    if proc.returncode != 0:
+        return {"status": "failed", "method": "python-docx", "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return {"status": "failed", "method": "python-docx", "text": "", "error": proc.stdout[:500]}
+    return {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+
+
+def image_metadata(path: Path) -> str:
+    proc = run_command(["sips", "-g", "format", "-g", "pixelWidth", "-g", "pixelHeight", str(path)])
+    if proc.returncode != 0:
+        return f"Image file detected. OCR provider is not configured. sips error: {proc.stderr.strip()}"
+    return "Image file detected. OCR provider is not configured.\n\n" + proc.stdout.strip()
+
+
+def extract_file_text(path: Path) -> dict[str, str]:
+    suffix = path.suffix.casefold()
+    try:
+        if suffix in TEXT_EXTENSIONS:
+            return {"status": "complete", "method": "utf-8-text", "text": path.read_text(encoding="utf-8", errors="replace"), "error": ""}
+        if suffix in HTML_EXTENSIONS:
+            return {"status": "complete", "method": "html-parser", "text": strip_html(path.read_text(encoding="utf-8", errors="replace")), "error": ""}
+        if suffix in RTF_EXTENSIONS:
+            proc = run_command(["textutil", "-convert", "txt", "-stdout", str(path)])
+            if proc.returncode != 0:
+                return {"status": "failed", "method": "textutil", "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+            return {"status": "complete", "method": "textutil", "text": proc.stdout, "error": ""}
+        if suffix in PDF_EXTENSIONS:
+            return extract_pdf(path)
+        if suffix in DOCX_EXTENSIONS:
+            return extract_docx(path)
+        if suffix in IMAGE_EXTENSIONS:
+            return {"status": "needs_ocr", "method": "image-metadata", "text": image_metadata(path), "error": "OCR provider is not configured"}
+    except OSError as exc:
+        return {"status": "failed", "method": "filesystem", "text": "", "error": str(exc)}
+    return {"status": "unsupported", "method": "extension", "text": "", "error": f"Unsupported file extension: {suffix or '<none>'}"}
+
+
+def write_manifest(root: Path, manifest: dict[str, Any], touched: list[Path]) -> None:
+    write_json(file_manifest_path(root, str(manifest["file_id"])), manifest, touched)
+
+
+def concise_excerpt(text: str, limit: int = 1800) -> str:
+    clean = re.sub(r"\n{3,}", "\n\n", text.strip())
+    if len(clean) <= limit:
+        return clean
+    return clean[: limit - 3].rstrip() + "..."
+
+
+def outline_from_text(title: str, file_id: str, extracted_rel: str, text: str) -> str:
+    headings: list[str] = []
+    for line in text.splitlines():
+        clean = line.strip()
+        if re.match(r"^#{1,6}\s+\S", clean):
+            headings.append(clean)
+        elif len(clean) <= 90 and clean.endswith(":") and len(clean.split()) <= 12:
+            headings.append(clean)
+    lines = [
+        frontmatter(
+            {
+                "type": "personal_file_outline",
+                "file_id": file_id,
+                "updated": utc_now().isoformat().replace("+00:00", "Z"),
+                "source": extracted_rel,
+            }
+        ).rstrip(),
+        "",
+        f"# Outline: {title}",
+        "",
+    ]
+    if headings:
+        lines.append("## Detected Structure")
+        lines.append("")
+        for heading in headings[:120]:
+            lines.append(f"- {heading.lstrip('#').strip()}")
+    else:
+        lines.extend(
+            [
+                "## Detected Structure",
+                "",
+                "- No explicit headings detected. Use the extracted text for full inspection.",
+            ]
+        )
+    lines.append("")
+    return "\n".join(lines)
+
+
+def summary_from_manifest(root: Path, manifest: dict[str, Any], text: str) -> str:
+    file_id = str(manifest["file_id"])
+    copied_rel = relative_or_empty(root, manifest.get("copied_path"))
+    source_rel = relative_or_empty(root, manifest.get("source_path"))
+    manifest_rel = relative(root, file_manifest_path(root, file_id))
+    extracted_rel = relative(root, file_extracted_path(root, file_id)) if file_extracted_path(root, file_id).exists() else ""
+    lines = [
+        frontmatter(
+            {
+                "type": "personal_file_summary",
+                "file_id": file_id,
+                "title": manifest.get("title", file_id),
+                "summary_status": manifest.get("summary_status", "pending_agent"),
+                "extraction_status": manifest.get("extraction_status", "pending"),
+                "privacy": "private",
+                "updated": utc_now().isoformat().replace("+00:00", "Z"),
+                "sources": [manifest_rel, copied_rel or source_rel],
+            }
+        ).rstrip(),
+        "",
+        f"# {manifest.get('title', file_id)}",
+        "",
+        "## Source",
+        "",
+        f"- Manifest: `{manifest_rel}`",
+        f"- Original copy: `{copied_rel or 'external-only'}`",
+        f"- Original source path: `{source_rel}`",
+        f"- Extraction: `{manifest.get('extraction_status', 'pending')}` via `{manifest.get('extraction_method', '')}`",
+        "",
+        "## Summary Status",
+        "",
+        "This is a deterministic intake summary. A model-authored synthesis is still `pending_agent` unless explicitly reviewed in a Codex session.",
+        "",
+        "## Extracted Excerpt",
+        "",
+    ]
+    if text.strip():
+        lines.append(concise_excerpt(text))
+    else:
+        lines.append("No extracted text is available.")
+    lines.append("")
+    if extracted_rel:
+        lines.extend(["## Full Extracted Text", "", f"- `{extracted_rel}`", ""])
+    return "\n".join(lines)
+
+
+def file_catalog_view(root: Path, manifests: list[dict[str, Any]]) -> str:
+    lines = [
+        frontmatter({"type": "view", "view": "file-catalog", "updated": utc_now().isoformat().replace("+00:00", "Z"), "file_count": len(manifests)}).rstrip(),
+        "",
+        "# File Catalog",
+        "",
+    ]
+    by_kind: dict[str, list[dict[str, Any]]] = {}
+    for manifest in manifests:
+        by_kind.setdefault(str(manifest.get("kind", "other")), []).append(manifest)
+    if not manifests:
+        lines.append("No Personal OS files have been added yet.")
+        lines.append("")
+        return "\n".join(lines)
+    for kind in sorted(by_kind):
+        lines.extend([f"## {kind.title()}", ""])
+        for manifest in by_kind[kind]:
+            file_id = str(manifest.get("file_id", ""))
+            title = str(manifest.get("title", file_id))
+            summary = relative(root, file_summary_path(root, file_id)) if file_summary_path(root, file_id).exists() else ""
+            manifest_rel = relative(root, file_manifest_path(root, file_id))
+            bits = [
+                f"`{manifest.get('extraction_status', 'pending')}` extraction",
+                f"`{manifest.get('summary_status', 'pending')}` summary",
+                f"added {manifest.get('added_at', '')}",
+            ]
+            target = summary or manifest_rel
+            lines.append(f"- [{title}]({target}) - {'; '.join(bits)}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def review_needed_rows(manifests: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for manifest in manifests:
+        reasons = []
+        if manifest.get("extraction_status") in {"failed", "needs_ocr", "unsupported"}:
+            reasons.append(str(manifest.get("extraction_status")))
+        if manifest.get("summary_status") in {"failed", "pending_agent"}:
+            reasons.append(f"summary:{manifest.get('summary_status')}")
+        if manifest.get("duplicate_of"):
+            reasons.append(f"duplicate_of:{manifest.get('duplicate_of')}")
+        if manifest.get("source_changed"):
+            reasons.append("source_changed")
+        if reasons:
+            rows.append({"manifest": manifest, "reasons": reasons})
+    return rows
+
+
+def review_needed_view(root: Path, manifests: list[dict[str, Any]]) -> str:
+    rows = review_needed_rows(manifests)
+    lines = [
+        frontmatter({"type": "view", "view": "review-needed", "updated": utc_now().isoformat().replace("+00:00", "Z"), "item_count": len(rows)}).rstrip(),
+        "",
+        "# Review Needed",
+        "",
+    ]
+    if not rows:
+        lines.extend(["No file review items are currently open.", ""])
+        return "\n".join(lines)
+    for row in rows:
+        manifest = row["manifest"]
+        file_id = str(manifest.get("file_id", ""))
+        title = str(manifest.get("title", file_id))
+        manifest_rel = relative(root, file_manifest_path(root, file_id))
+        lines.append(f"- [{title}]({manifest_rel}) - {', '.join(row['reasons'])}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def butlers_book_view(root: Path, manifests: list[dict[str, Any]]) -> str:
+    recent = manifests[:20]
+    things_state = load_json(things_state_path(root), [])
+    open_tasks = [row for row in things_state if isinstance(row, dict) and not row.get("rolled_back")]
+    lines = [
+        frontmatter({"type": "view", "view": "butlers-book", "updated": utc_now().isoformat().replace("+00:00", "Z"), "privacy": "private"}).rstrip(),
+        "",
+        "# Personal OS Butler's Book",
+        "",
+        "This is the main agent entrypoint for private personal context. It links to source manifests and summaries rather than copying raw document text into the view.",
+        "",
+        "## Profile",
+        "",
+    ]
+    for kind, filename in PROFILE_FILES.items():
+        path = root / "profile" / filename
+        if path.exists():
+            lines.append(f"- [{kind.title()}](profile/{filename})")
+    lines.extend(["", "## Important Files", ""])
+    if recent:
+        for manifest in recent:
+            file_id = str(manifest.get("file_id", ""))
+            title = str(manifest.get("title", file_id))
+            target = relative(root, file_summary_path(root, file_id)) if file_summary_path(root, file_id).exists() else relative(root, file_manifest_path(root, file_id))
+            lines.append(f"- [{title}]({target}) - `{manifest.get('kind', 'other')}`; added {manifest.get('added_at', '')}")
+    else:
+        lines.append("- No files added yet.")
+    lines.extend(["", "## Review Queues", ""])
+    lines.append("- [File catalog](_views/file-catalog.md)")
+    lines.append("- [Review needed](_views/review-needed.md)")
+    lines.append("- [Wiki promotion candidates](_views/wiki-promotion-candidates.md)")
+    lines.append("- [Calendar candidates](_views/calendar-candidates.md)")
+    lines.extend(["", "## Agent-Created Things Follow-Ups", ""])
+    if open_tasks:
+        for row in open_tasks[-30:]:
+            lines.append(f"- {row.get('title', row.get('id', 'Untitled task'))} (`{row.get('id', '')}`)")
+    else:
+        lines.append("- None recorded.")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def file_index_data(root: Path, manifests: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "type": "personal_os_file_index",
+        "updated": utc_now().isoformat().replace("+00:00", "Z"),
+        "file_count": len(manifests),
+        "files": [
+            {
+                "file_id": manifest.get("file_id"),
+                "title": manifest.get("title"),
+                "kind": manifest.get("kind"),
+                "sensitivity": manifest.get("sensitivity"),
+                "manifest": relative(root, file_manifest_path(root, str(manifest.get("file_id")))),
+                "summary": relative(root, file_summary_path(root, str(manifest.get("file_id"))))
+                if file_summary_path(root, str(manifest.get("file_id"))).exists()
+                else "",
+                "extraction_status": manifest.get("extraction_status"),
+                "summary_status": manifest.get("summary_status"),
+                "added_at": manifest.get("added_at"),
+            }
+            for manifest in manifests
+        ],
+    }
+
+
+def rebuild_file_views(root: Path, touched: list[Path]) -> None:
+    manifests = load_file_manifests(root)
+    write_json(root / "files" / "indexes" / "files-index.json", file_index_data(root, manifests), touched)
+    write_text(root / "_views" / "file-catalog.md", file_catalog_view(root, manifests), touched)
+    write_text(root / "_views" / "review-needed.md", review_needed_view(root, manifests), touched)
+    write_text(root / "_views" / "butlers-book.md", butlers_book_view(root, manifests), touched)
+    if not (root / "_views" / "calendar-candidates.md").exists():
+        write_text(root / "_views" / "calendar-candidates.md", calendar_candidates_stub(root), touched)
+    if not (root / "_views" / "wiki-promotion-candidates.md").exists():
+        write_text(root / "_views" / "wiki-promotion-candidates.md", wiki_promotion_stub(root), touched)
+
+
 def start_run(args: argparse.Namespace, command: str, root: Path) -> dict[str, Any]:
     return {
         "run_id": run_id(),
@@ -256,7 +812,7 @@ def launch_agent_plist(root: Path, disabled: bool = True) -> dict[str, Any]:
             str(script),
             "--root",
             str(root),
-            "reflect",
+            "garden",
             "daily",
             "--date",
             "today",
@@ -303,6 +859,23 @@ personal journal.
 
 Profile notes may be updated automatically only from explicit profile candidate
 lines in reflections. Every appended claim must cite a source file path.
+
+## Files And Butler's Book
+
+- Important personal files live under `files/`, not in `~/.codex/wiki`.
+- Raw copied files live in `files/originals/` and are committed to this private
+  local git repo by default.
+- File manifests are the source of truth for document metadata, provenance,
+  extraction status, and review state.
+- Generated views under `_views/` are rebuildable scan surfaces.
+- Missing OCR/model capability must be surfaced as `needs_ocr` or
+  `pending_agent`, not hidden.
+
+## Things Routing
+
+Agent-created Personal OS follow-ups go to the Things project `🤖 Agent Tasks`
+with the `Personal OS` marker. Writes must be recorded in
+`_state/things-created.json` and rollback must affect only recorded tasks.
 """
 
 
@@ -321,6 +894,10 @@ journaling, reflection, or user-authorized introspection tasks.
 
 Do not copy raw personal content into `~/.codex/wiki` or `~/.codex/memories`.
 Use `~/.codex/skills/personal-os/scripts/personal.py` for writes.
+
+Start with `_views/butlers-book.md` when you need private personal context.
+Use `files/manifests/` for provenance and `files/summaries/` or
+`files/extracted/` for progressive disclosure into specific documents.
 """
 
 
@@ -396,14 +973,53 @@ def cmd_bootstrap(args: argparse.Namespace) -> None:
         if not path.exists():
             write_text(path, text, touched)
 
+    append_section_if_missing(
+        root / "rules.md",
+        "## Files And Butler's Book",
+        """
+## Files And Butler's Book
+
+- Important personal files live under `files/`, not in `~/.codex/wiki`.
+- Raw copied files live in `files/originals/` and are committed to this private
+  local git repo by default.
+- File manifests are the source of truth for document metadata, provenance,
+  extraction status, and review state.
+- Generated views under `_views/` are rebuildable scan surfaces.
+- Missing OCR/model capability must be surfaced as `needs_ocr` or
+  `pending_agent`, not hidden.
+
+## Things Routing
+
+Agent-created Personal OS follow-ups go to the Things project `🤖 Agent Tasks`
+with the `Personal OS` marker. Writes must be recorded in
+`_state/things-created.json` and rollback must affect only recorded tasks.
+""",
+        touched,
+    )
+    append_section_if_missing(
+        root / "AGENTS.md",
+        "_views/butlers-book.md",
+        """
+Start with `_views/butlers-book.md` when you need private personal context.
+Use `files/manifests/` for provenance and `files/summaries/` or
+`files/extracted/` for progressive disclosure into specific documents.
+""",
+        touched,
+    )
+
     for kind, filename in PROFILE_FILES.items():
         path = root / "profile" / filename
         if not path.exists():
             write_text(path, profile_seed(kind), touched)
 
+    routing_path = things_routing_path(root)
+    if not routing_path.exists():
+        write_json(routing_path, default_things_routing(), touched)
+
     template_path = root / "_state" / "launchagents" / f"{LAUNCH_AGENT_LABEL}.plist"
     write_plist(template_path, launch_agent_plist(root, disabled=True))
     touched.append(template_path)
+    rebuild_file_views(root, touched)
     write_text(root / "index.md", render_index(root), touched)
     record["rollback"].append("Remove ~/.codex/personal-os only if you want to delete the private Personal OS root.")
     finish_run(args, root, record, touched, "personal-os: bootstrap")
@@ -699,6 +1315,404 @@ def verify_things_item(item_id: str) -> list[dict[str, Any]]:
     return [todo for todo in snapshot.get("todos", []) if str(todo.get("id")) == str(item_id)]
 
 
+def add_file_to_root(
+    root: Path,
+    source: Path,
+    *,
+    kind: str,
+    title: str | None,
+    notes: str,
+    copy_file: bool,
+    touched: list[Path],
+) -> dict[str, Any]:
+    source = source.expanduser().resolve()
+    if not source.exists():
+        raise SystemExit(f"File does not exist: {source}")
+    if not source.is_file():
+        raise SystemExit(f"Expected a file: {source}")
+    if kind not in FILE_KINDS:
+        raise SystemExit(f"Unsupported file kind {kind!r}. Use one of: {', '.join(FILE_KINDS)}")
+    digest = sha256_file(source)
+    title_text = file_title_from_path(source, title)
+    file_id = file_id_for(source, title_text, digest)
+    existing_path = file_manifest_path(root, file_id)
+    existing = load_json(existing_path, {}) if existing_path.exists() else {}
+    copied_path = str(existing.get("copied_path") or "")
+    if copy_file:
+        dest_dir = root / "files" / "originals" / file_id
+        dest_dir.mkdir(parents=True, exist_ok=True)
+        dest = dest_dir / source.name
+        if not dest.exists() or sha256_file(dest) != digest:
+            shutil.copy2(source, dest)
+            touched.append(dest)
+        copied_path = str(dest)
+    duplicate_of = existing.get("duplicate_of") or duplicate_for_sha(root, digest, file_id)
+    now = utc_now().isoformat().replace("+00:00", "Z")
+    manifest = {
+        "file_id": file_id,
+        "title": title_text,
+        "kind": kind,
+        "sensitivity": sensitivity_for_kind(kind),
+        "source_path": str(source),
+        "copied_path": copied_path,
+        "original_filename": source.name,
+        "sha256": digest,
+        "size_bytes": source.stat().st_size,
+        "mime_type": detect_mime(source),
+        "added_at": existing.get("added_at") or now,
+        "updated_at": now,
+        "source_modified_at": source_modified_at(source),
+        "extraction_status": existing.get("extraction_status") or "pending",
+        "summary_status": existing.get("summary_status") or "pending",
+        "notes": notes,
+        "tags": existing.get("tags") or [],
+        "related_people": existing.get("related_people") or [],
+        "related_places": existing.get("related_places") or [],
+        "review_after": existing.get("review_after"),
+        "supersedes": existing.get("supersedes"),
+        "duplicate_of": duplicate_of,
+        "source_exists": True,
+        "source_changed": False,
+    }
+    for optional in ("extraction_method", "extracted_path", "extracted_at", "extraction_error", "summary_path", "outline_path", "summarized_at"):
+        if optional in existing:
+            manifest[optional] = existing[optional]
+    write_manifest(root, manifest, touched)
+    return manifest
+
+
+def should_skip_bulk_path(path: Path) -> bool:
+    return any(fnmatch.fnmatch(path.name, pattern) for pattern in BULK_EXCLUDE_PATTERNS)
+
+
+def collect_folder_candidates(folder: Path, recursive: bool) -> dict[str, Any]:
+    folder = folder.expanduser().resolve()
+    if not folder.is_dir():
+        raise SystemExit(f"Expected a folder: {folder}")
+    candidates: list[dict[str, Any]] = []
+    skipped: list[dict[str, str]] = []
+    iterator: list[Path] = []
+    if recursive:
+        for current, dirs, files in os.walk(folder):
+            current_path = Path(current)
+            kept_dirs = []
+            for dirname in dirs:
+                dpath = current_path / dirname
+                if should_skip_bulk_path(dpath):
+                    skipped.append({"path": str(dpath), "reason": "excluded-directory"})
+                else:
+                    kept_dirs.append(dirname)
+            dirs[:] = kept_dirs
+            for filename in files:
+                iterator.append(current_path / filename)
+    else:
+        iterator = [path for path in folder.iterdir() if path.is_file()]
+        for path in folder.iterdir():
+            if path.is_dir() and should_skip_bulk_path(path):
+                skipped.append({"path": str(path), "reason": "excluded-directory"})
+    for path in sorted(iterator):
+        if should_skip_bulk_path(path):
+            skipped.append({"path": str(path), "reason": "excluded-file"})
+            continue
+        try:
+            size = path.stat().st_size
+        except OSError as exc:
+            skipped.append({"path": str(path), "reason": str(exc)})
+            continue
+        candidates.append(
+            {
+                "path": str(path),
+                "size_bytes": size,
+                "large": size >= LARGE_FILE_THRESHOLD_BYTES,
+                "mime_type": detect_mime(path),
+            }
+        )
+    return {"folder": str(folder), "candidates": candidates, "skipped": skipped}
+
+
+def cmd_file_add(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    record = start_run(args, "file add", root)
+    touched: list[Path] = []
+    manifest = add_file_to_root(
+        root,
+        Path(args.path),
+        kind=args.kind,
+        title=args.title,
+        notes=args.notes or "",
+        copy_file=args.copy_mode == "copy",
+        touched=touched,
+    )
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append(f"Use git revert for this commit, or remove files/manifests/{manifest['file_id']}.json and files/originals/{manifest['file_id']}/.")
+    finish_run(args, root, record, touched, f"personal-os: add file {manifest['file_id']}")
+    print_json({"run_id": record["run_id"], "manifest": manifest})
+
+
+def cmd_file_add_folder(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    report = collect_folder_candidates(Path(args.path), recursive=args.recursive)
+    if not args.write:
+        print_json({**report, "dry_run": True, "write_required": "Re-run with --write to copy candidate files."})
+        return
+    record = start_run(args, "file add-folder", root)
+    touched: list[Path] = []
+    manifests = []
+    for candidate in report["candidates"]:
+        manifests.append(
+            add_file_to_root(
+                root,
+                Path(candidate["path"]),
+                kind=args.kind,
+                title=None,
+                notes=args.notes or "",
+                copy_file=True,
+                touched=touched,
+            )
+        )
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append("Use git revert for this commit to remove copied files and manifests from Personal OS.")
+    finish_run(args, root, record, touched, f"personal-os: add folder {Path(args.path).name}")
+    print_json({"run_id": record["run_id"], "added_count": len(manifests), "skipped": report["skipped"], "large_files": [row for row in report["candidates"] if row["large"]]})
+
+
+def extract_manifest(root: Path, manifest: dict[str, Any], touched: list[Path]) -> dict[str, Any]:
+    file_id = str(manifest["file_id"])
+    source = manifest_source_path(manifest)
+    if source is None or not source.exists():
+        manifest["extraction_status"] = "failed"
+        manifest["extraction_error"] = "No available copied or source file."
+        manifest["extracted_at"] = utc_now().isoformat().replace("+00:00", "Z")
+        write_manifest(root, manifest, touched)
+        return manifest
+    result = extract_file_text(source)
+    status = result.get("status", "failed")
+    if status not in EXTRACTION_STATUSES:
+        status = "failed"
+    extraction_path = file_extracted_path(root, file_id)
+    extracted_text = result.get("text", "")
+    if status != "complete" and result.get("error"):
+        extracted_text = (extracted_text + "\n\n" if extracted_text else "") + f"Extraction status: {status}\nError: {result['error']}\n"
+    write_text(extraction_path, extracted_text, touched)
+    manifest["extraction_status"] = status
+    manifest["extraction_method"] = result.get("method", "")
+    manifest["extracted_path"] = str(extraction_path)
+    manifest["extracted_at"] = utc_now().isoformat().replace("+00:00", "Z")
+    manifest["extraction_error"] = result.get("error", "")
+    write_manifest(root, manifest, touched)
+    return manifest
+
+
+def cmd_file_extract(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    manifest = find_manifest(root, args.file_id)
+    if not args.write:
+        print_json({"file_id": args.file_id, "would_extract_from": str(manifest_source_path(manifest) or ""), "write_required": True})
+        return
+    record = start_run(args, "file extract", root)
+    touched: list[Path] = []
+    manifest = extract_manifest(root, manifest, touched)
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append(f"Use git revert for the extraction commit for {args.file_id}.")
+    finish_run(args, root, record, touched, f"personal-os: extract file {args.file_id}")
+    print_json({"run_id": record["run_id"], "file_id": args.file_id, "extraction_status": manifest.get("extraction_status")})
+
+
+def summarize_manifest(root: Path, manifest: dict[str, Any], touched: list[Path]) -> dict[str, Any]:
+    file_id = str(manifest["file_id"])
+    if manifest.get("extraction_status") == "pending":
+        manifest = extract_manifest(root, manifest, touched)
+    extraction_path = file_extracted_path(root, file_id)
+    text = extraction_path.read_text(encoding="utf-8", errors="replace") if extraction_path.exists() else ""
+    if manifest.get("extraction_status") in {"failed", "unsupported"}:
+        manifest["summary_status"] = "failed"
+    else:
+        manifest["summary_status"] = "pending_agent"
+    summary = summary_from_manifest(root, manifest, text)
+    outline = outline_from_text(str(manifest.get("title", file_id)), file_id, relative(root, extraction_path), text)
+    write_text(file_summary_path(root, file_id), summary, touched)
+    write_text(file_outline_path(root, file_id), outline, touched)
+    manifest["summary_path"] = str(file_summary_path(root, file_id))
+    manifest["outline_path"] = str(file_outline_path(root, file_id))
+    manifest["summarized_at"] = utc_now().isoformat().replace("+00:00", "Z")
+    write_manifest(root, manifest, touched)
+    return manifest
+
+
+def cmd_file_summarize(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    manifest = find_manifest(root, args.file_id)
+    if not args.write:
+        print_json({"file_id": args.file_id, "would_summarize": True, "current_summary_status": manifest.get("summary_status"), "write_required": True})
+        return
+    record = start_run(args, "file summarize", root)
+    touched: list[Path] = []
+    manifest = summarize_manifest(root, manifest, touched)
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append(f"Use git revert for the summary commit for {args.file_id}.")
+    finish_run(args, root, record, touched, f"personal-os: summarize file {args.file_id}")
+    print_json({"run_id": record["run_id"], "file_id": args.file_id, "summary_status": manifest.get("summary_status"), "summary": str(file_summary_path(root, args.file_id))})
+
+
+def cmd_file_inspect(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    manifest = find_manifest(root, args.file_id)
+    file_id = str(manifest["file_id"])
+    print_json(
+        {
+            "manifest": manifest,
+            "paths": {
+                "manifest": str(file_manifest_path(root, file_id)),
+                "extracted": str(file_extracted_path(root, file_id)) if file_extracted_path(root, file_id).exists() else "",
+                "summary": str(file_summary_path(root, file_id)) if file_summary_path(root, file_id).exists() else "",
+                "outline": str(file_outline_path(root, file_id)) if file_outline_path(root, file_id).exists() else "",
+            },
+        }
+    )
+
+
+def snippet_for_query(text: str, query: str, limit: int = 280) -> str:
+    folded = text.casefold()
+    index = folded.find(query.casefold())
+    if index < 0:
+        return ""
+    start = max(0, index - limit // 2)
+    end = min(len(text), index + limit // 2)
+    return re.sub(r"\s+", " ", text[start:end]).strip()
+
+
+def cmd_file_search(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    query = args.query.casefold()
+    hits = []
+    for manifest in load_file_manifests(root):
+        file_id = str(manifest.get("file_id", ""))
+        haystacks = [
+            ("manifest", json.dumps(manifest, ensure_ascii=False)),
+        ]
+        for label, path in (("summary", file_summary_path(root, file_id)), ("extracted", file_extracted_path(root, file_id))):
+            if path.exists():
+                haystacks.append((label, path.read_text(encoding="utf-8", errors="replace")))
+        for label, text in haystacks:
+            if query in text.casefold():
+                hits.append(
+                    {
+                        "file_id": file_id,
+                        "title": manifest.get("title"),
+                        "kind": manifest.get("kind"),
+                        "match": label,
+                        "snippet": snippet_for_query(text, args.query),
+                        "manifest": str(file_manifest_path(root, file_id)),
+                    }
+                )
+                break
+    print_json({"query": args.query, "count": len(hits), "hits": hits[: args.limit]})
+
+
+def recheck_manifests(root: Path, touched: list[Path], write: bool) -> list[dict[str, Any]]:
+    updates = []
+    for manifest in load_file_manifests(root):
+        changed = False
+        source_value = manifest.get("source_path")
+        copied_value = manifest.get("copied_path")
+        if source_value:
+            source = Path(str(source_value)).expanduser()
+            source_exists = source.exists()
+            current_sha = sha256_file(source) if source_exists and source.is_file() else ""
+            source_changed = bool(current_sha and current_sha != manifest.get("sha256"))
+            if manifest.get("source_exists") != source_exists or manifest.get("source_current_sha") != current_sha or manifest.get("source_changed") != source_changed:
+                manifest["source_exists"] = source_exists
+                manifest["source_current_sha"] = current_sha
+                manifest["source_changed"] = source_changed
+                manifest["source_checked_at"] = utc_now().isoformat().replace("+00:00", "Z")
+                changed = True
+        if copied_value:
+            copied = Path(str(copied_value)).expanduser()
+            copied_exists = copied.exists()
+            copied_sha = sha256_file(copied) if copied_exists and copied.is_file() else ""
+            copied_changed = bool(copied_sha and copied_sha != manifest.get("sha256"))
+            if manifest.get("copied_exists") != copied_exists or manifest.get("copied_current_sha") != copied_sha or manifest.get("copied_changed") != copied_changed:
+                manifest["copied_exists"] = copied_exists
+                manifest["copied_current_sha"] = copied_sha
+                manifest["copied_changed"] = copied_changed
+                changed = True
+        if changed:
+            updates.append(manifest)
+            if write:
+                write_manifest(root, manifest, touched)
+    return updates
+
+
+def cmd_file_recheck(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    if not args.write:
+        touched: list[Path] = []
+        print_json({"updates": recheck_manifests(root, touched, write=False), "write_required": True})
+        return
+    record = start_run(args, "file recheck", root)
+    touched = []
+    updates = recheck_manifests(root, touched, write=True)
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append("Use git revert for the recheck commit.")
+    finish_run(args, root, record, touched, "personal-os: recheck files")
+    print_json({"run_id": record["run_id"], "updated_count": len(updates)})
+
+
+def verify_file_layer(root: Path) -> list[str]:
+    errors: list[str] = []
+    for name in ("files/originals", "files/manifests", "files/extracted", "files/summaries", "files/outlines", "files/indexes"):
+        if not (root / name).is_dir():
+            errors.append(f"Missing file-layer directory: {name}")
+    routing_file = things_routing_path(root)
+    routing = load_json(routing_file, None)
+    if routing is None:
+        errors.append(f"Missing Things routing file: {relative(root, routing_file)}")
+    else:
+        for field in ("destination", "project_name", "project_id", "tag"):
+            if field not in routing:
+                errors.append(f"Things routing missing {field}")
+    for path in sorted((root / "files" / "manifests").glob("*.json")):
+        try:
+            manifest = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            errors.append(f"Invalid file manifest JSON: {relative(root, path)}")
+            continue
+        for field in ("file_id", "title", "kind", "sensitivity", "source_path", "copied_path", "original_filename", "sha256", "size_bytes", "mime_type", "added_at", "source_modified_at", "extraction_status", "summary_status", "notes", "tags", "related_people", "related_places", "review_after", "supersedes", "duplicate_of"):
+            if field not in manifest:
+                errors.append(f"Manifest missing {field}: {relative(root, path)}")
+        if manifest.get("kind") not in FILE_KINDS:
+            errors.append(f"Manifest has unsupported kind: {relative(root, path)}")
+        if manifest.get("extraction_status") not in EXTRACTION_STATUSES:
+            errors.append(f"Manifest has invalid extraction_status: {relative(root, path)}")
+        if manifest.get("summary_status") not in SUMMARY_STATUSES:
+            errors.append(f"Manifest has invalid summary_status: {relative(root, path)}")
+        copied = str(manifest.get("copied_path") or "")
+        if copied and not Path(copied).expanduser().exists():
+            errors.append(f"Copied file missing for manifest: {relative(root, path)}")
+    return errors
+
+
+def cmd_file_verify(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    errors = verify_file_layer(root)
+    print_json({"root": str(root), "ok": not errors, "errors": errors, "file_count": len(load_file_manifests(root))})
+    if errors:
+        raise SystemExit(1)
+
+
 def things_effective_status(item: dict[str, Any]) -> str:
     if item.get("cancellationDate"):
         return "canceled"
@@ -711,6 +1725,76 @@ def things_state_path(root: Path) -> Path:
     return root / "_state" / "things-created.json"
 
 
+def verify_agent_tasks_project(root: Path) -> dict[str, Any]:
+    routing = load_things_routing(root)
+    data = call_things(["lists"])
+    for project in data.get("projects", []):
+        if project.get("id") == routing["project_id"] and project.get("name") == routing["project_name"]:
+            return project
+    by_name = [project for project in data.get("projects", []) if project.get("name") == routing["project_name"]]
+    if by_name:
+        raise SystemExit(
+            f"Things project {routing['project_name']!r} exists but id differs. "
+            f"Expected {routing['project_id']}, found {[project.get('id') for project in by_name]}."
+        )
+    raise SystemExit(f"Things project not found: {routing['project_name']}")
+
+
+def active_things_source_keys(state: list[Any]) -> set[str]:
+    keys = set()
+    for row in state:
+        if isinstance(row, dict) and not row.get("rolled_back") and row.get("source_key"):
+            keys.add(str(row["source_key"]))
+    return keys
+
+
+def create_personal_os_things_task(
+    root: Path,
+    *,
+    title: str,
+    notes: str,
+    source: str,
+    source_key: str,
+    run_id_value: str,
+    state: list[Any],
+) -> dict[str, Any] | None:
+    if source_key in active_things_source_keys(state):
+        return None
+    routing = load_things_routing(root)
+    verify_agent_tasks_project(root)
+    result = call_things(
+        [
+            "add",
+            title,
+            "--notes",
+            f"{notes}\n\nPersonal OS source: {source}\nPersonal OS run: {run_id_value}",
+            "--tag",
+            routing["tag"],
+            "--list",
+            routing["project_name"],
+        ]
+    )
+    item_id = result.get("id") or result.get("uuid") or result.get("identifier")
+    created_row = {
+        "id": item_id,
+        "title": result.get("name", title),
+        "source": source,
+        "source_key": source_key,
+        "project_name": routing["project_name"],
+        "project_id": routing["project_id"],
+        "tag": routing["tag"],
+        "run_id": run_id_value,
+        "created_at": utc_now().isoformat().replace("+00:00", "Z"),
+        "rolled_back": False,
+    }
+    if item_id:
+        created_row["creation_verification"] = verify_things_item(str(item_id))
+        if created_row["creation_verification"]:
+            created_row["creation_effective_status"] = things_effective_status(created_row["creation_verification"][0])
+    state.append(created_row)
+    return created_row
+
+
 def cmd_actions_apply(args: argparse.Namespace) -> None:
     root = root_from_args(args)
     ensure_root_exists(root)
@@ -720,28 +1804,26 @@ def cmd_actions_apply(args: argparse.Namespace) -> None:
     touched: list[Path] = []
     state = load_json(things_state_path(root), [])
     created = []
+    verify_agent_tasks_project(root)
     for task in plan.get("tasks", []):
         title = str(task.get("title", "")).strip()
         if not title:
             continue
         notes = f"{task.get('notes', '')}\n\nPersonal OS run: {record['run_id']}"
-        result = call_things(["add", title, "--notes", notes, "--tag", "Personal OS", "--list", "Inbox"])
-        item_id = result.get("id") or result.get("uuid") or result.get("identifier")
-        created_row = {
-            "id": item_id,
-            "title": result.get("name", title),
-            "source": task.get("source", plan.get("source_reflection", "")),
-            "plan": relative(root, plan_path),
-            "run_id": record["run_id"],
-            "created_at": utc_now().isoformat().replace("+00:00", "Z"),
-            "rolled_back": False,
-        }
-        created.append(created_row)
-        state.append(created_row)
-        if item_id:
-            created_row["creation_verification"] = verify_things_item(str(item_id))
-            if created_row["creation_verification"]:
-                created_row["creation_effective_status"] = things_effective_status(created_row["creation_verification"][0])
+        source = str(task.get("source", plan.get("source_reflection", "")))
+        source_key = str(task.get("source_key") or f"action:{source}:{slugify(title)}")
+        created_row = create_personal_os_things_task(
+            root,
+            title=title,
+            notes=notes,
+            source=source,
+            source_key=source_key,
+            run_id_value=record["run_id"],
+            state=state,
+        )
+        if created_row:
+            created_row["plan"] = relative(root, plan_path)
+            created.append(created_row)
     write_json(things_state_path(root), state, touched)
     record["things_created"] = created
     record["rollback"].append(f"Run `personal.py actions rollback --run-id {record['run_id']}` to cancel created Things tasks.")
@@ -779,6 +1861,205 @@ def cmd_actions_rollback(args: argparse.Namespace) -> None:
     record["rollback"].append("Rollback command only cancels tasks created by the target Personal OS run.")
     finish_run(args, root, record, touched, "personal-os: rollback Things actions")
     print_json({"run_id": record["run_id"], "rolled_back": rolled_back, "errors": record["errors"]})
+
+
+def garden_task_candidates(root: Path, manifests: list[dict[str, Any]]) -> list[dict[str, str]]:
+    needs_ocr = [manifest for manifest in manifests if manifest.get("extraction_status") == "needs_ocr"]
+    extraction_failures = [manifest for manifest in manifests if manifest.get("extraction_status") in {"failed", "unsupported"}]
+    pending_agent = [manifest for manifest in manifests if manifest.get("summary_status") == "pending_agent"]
+    duplicates = [manifest for manifest in manifests if manifest.get("duplicate_of")]
+    candidates: list[dict[str, str]] = []
+    if needs_ocr:
+        candidates.append(
+            {
+                "title": f"Review Personal OS OCR failures ({len(needs_ocr)} files)",
+                "notes": "\n".join(f"- {item.get('title')} ({item.get('file_id')})" for item in needs_ocr),
+                "source": "_views/review-needed.md",
+                "source_key": "garden:needs-ocr",
+            }
+        )
+    if extraction_failures:
+        candidates.append(
+            {
+                "title": f"Review Personal OS extraction failures ({len(extraction_failures)} files)",
+                "notes": "\n".join(f"- {item.get('title')} ({item.get('file_id')}): {item.get('extraction_error', '')}" for item in extraction_failures),
+                "source": "_views/review-needed.md",
+                "source_key": "garden:extraction-failures",
+            }
+        )
+    if pending_agent:
+        candidates.append(
+            {
+                "title": f"Ask Codex to synthesize pending Personal OS file summaries ({len(pending_agent)} files)",
+                "notes": "\n".join(f"- {item.get('title')} ({item.get('file_id')})" for item in pending_agent),
+                "source": "_views/review-needed.md",
+                "source_key": "garden:pending-agent-summaries",
+            }
+        )
+    if duplicates:
+        candidates.append(
+            {
+                "title": f"Decide what to do with duplicate Personal OS files ({len(duplicates)} files)",
+                "notes": "\n".join(f"- {item.get('title')} ({item.get('file_id')}) duplicates {item.get('duplicate_of')}" for item in duplicates),
+                "source": "_views/review-needed.md",
+                "source_key": "garden:duplicates",
+            }
+        )
+    return candidates
+
+
+def garden_report(
+    root: Path,
+    day: dt.date,
+    *,
+    rechecked: list[dict[str, Any]],
+    extracted: list[dict[str, Any]],
+    summarized: list[dict[str, Any]],
+    tasks: list[dict[str, Any]],
+    errors: list[str],
+) -> str:
+    manifests = load_file_manifests(root)
+    review_rows = review_needed_rows(manifests)
+    lines = [
+        frontmatter(
+            {
+                "type": "garden_report",
+                "date": day.isoformat(),
+                "updated": utc_now().isoformat().replace("+00:00", "Z"),
+                "file_count": len(manifests),
+                "review_count": len(review_rows),
+            }
+        ).rstrip(),
+        "",
+        f"# Personal OS Garden Report {day.isoformat()}",
+        "",
+        "## Summary",
+        "",
+        f"- Files tracked: {len(manifests)}",
+        f"- Rechecked: {len(rechecked)}",
+        f"- Extracted: {len(extracted)}",
+        f"- Intake summaries/outlines updated: {len(summarized)}",
+        f"- Things tasks created: {len(tasks)}",
+        f"- Errors: {len(errors)}",
+        "",
+        "## Review Needed",
+        "",
+    ]
+    if review_rows:
+        for row in review_rows[:80]:
+            manifest = row["manifest"]
+            lines.append(f"- {manifest.get('title')} (`{manifest.get('file_id')}`): {', '.join(row['reasons'])}")
+    else:
+        lines.append("- None.")
+    lines.extend(["", "## Things Tasks Created", ""])
+    if tasks:
+        for task in tasks:
+            lines.append(f"- {task.get('title')} (`{task.get('id', '')}`)")
+    else:
+        lines.append("- None.")
+    if errors:
+        lines.extend(["", "## Errors", ""])
+        for error in errors:
+            lines.append(f"- {error}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def cmd_garden_daily(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    day = parse_day(args.date)
+    manifests = load_file_manifests(root)
+    pending_extract = [m for m in manifests if m.get("extraction_status") in ("pending", None)]
+    pending_summary = [m for m in manifests if m.get("summary_status") in ("pending", None)]
+    if not args.write:
+        print_json(
+            {
+                "date": day.isoformat(),
+                "file_count": len(manifests),
+                "pending_extract_count": len(pending_extract),
+                "pending_summary_count": len(pending_summary),
+                "write_required": True,
+            }
+        )
+        return
+    record = start_run(args, "garden daily", root)
+    touched: list[Path] = []
+    errors: list[str] = []
+    rechecked = recheck_manifests(root, touched, write=True)
+    extracted = []
+    summarized = []
+    for manifest in load_file_manifests(root):
+        try:
+            if manifest.get("extraction_status") in ("pending", None) or manifest.get("source_changed"):
+                manifest = extract_manifest(root, manifest, touched)
+                extracted.append(manifest)
+            if manifest.get("summary_status") in ("pending", None) or manifest.get("source_changed"):
+                manifest = summarize_manifest(root, manifest, touched)
+                summarized.append(manifest)
+        except Exception as exc:  # Keep the garden run useful even if one file fails.
+            errors.append(f"{manifest.get('file_id', '<unknown>')}: {exc}")
+    rebuild_file_views(root, touched)
+    manifests = load_file_manifests(root)
+    state = load_json(things_state_path(root), [])
+    if not isinstance(state, list):
+        state = []
+    tasks_created = []
+    candidates = garden_task_candidates(root, manifests)
+    if candidates:
+        try:
+            verify_agent_tasks_project(root)
+            for candidate in candidates:
+                created = create_personal_os_things_task(
+                    root,
+                    title=candidate["title"],
+                    notes=candidate["notes"],
+                    source=candidate["source"],
+                    source_key=candidate["source_key"],
+                    run_id_value=record["run_id"],
+                    state=state,
+                )
+                if created:
+                    tasks_created.append(created)
+        except SystemExit as exc:
+            errors.append(str(exc))
+    if candidates or tasks_created:
+        write_json(things_state_path(root), state, touched)
+    report_text = garden_report(root, day, rechecked=rechecked, extracted=extracted, summarized=summarized, tasks=tasks_created, errors=errors)
+    report_path = root / "_reports" / "garden" / f"{day.isoformat()}.md"
+    write_text(report_path, report_text, touched)
+    write_text(root / "_views" / "garden-report-latest.md", report_text, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["things_created"] = tasks_created
+    record["errors"] = errors
+    record["rollback"].append(f"Use git revert for the garden commit, and run `personal.py actions rollback --run-id {record['run_id']}` for created Things tasks.")
+    finish_run(args, root, record, touched, f"personal-os: garden daily {day.isoformat()}")
+    print_json(
+        {
+            "run_id": record["run_id"],
+            "report": str(report_path),
+            "rechecked_count": len(rechecked),
+            "extracted_count": len(extracted),
+            "summarized_count": len(summarized),
+            "things_created_count": len(tasks_created),
+            "errors": errors,
+        }
+    )
+
+
+def cmd_butler_rebuild(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    if not args.write:
+        print(butlers_book_view(root, load_file_manifests(root)))
+        return
+    record = start_run(args, "butler rebuild", root)
+    touched: list[Path] = []
+    rebuild_file_views(root, touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append("Use git revert for the butler rebuild commit.")
+    finish_run(args, root, record, touched, "personal-os: rebuild butler views")
+    print_json({"run_id": record["run_id"], "butlers_book": str(root / "_views" / "butlers-book.md")})
 
 
 def cmd_automation_install(args: argparse.Namespace) -> None:
@@ -875,6 +2156,12 @@ def verify_frontmatter(root: Path) -> list[str]:
     errors: list[str] = []
     for path in root.glob("**/*.md"):
         if ".git" in path.parts:
+            continue
+        try:
+            rel_parts = path.relative_to(root).parts
+        except ValueError:
+            rel_parts = path.parts
+        if len(rel_parts) >= 2 and rel_parts[0] == "files" and rel_parts[1] == "originals":
             continue
         try:
             text = path.read_text(encoding="utf-8")
@@ -976,6 +2263,7 @@ def cmd_verify(args: argparse.Namespace) -> None:
     run_log_errors, latest_daily_run = verify_run_logs(root, run_logs)
     errors.extend(run_log_errors)
     errors.extend(verify_things_state(root) if root.exists() else [])
+    errors.extend(verify_file_layer(root) if root.exists() else [])
     automation = launch_agent_state(root) if root.exists() else {}
     if root.exists() and not automation.get("template_exists"):
         errors.append("Missing disabled LaunchAgent template in _state/launchagents")
@@ -1055,6 +2343,66 @@ def build_parser() -> argparse.ArgumentParser:
     actions_rollback = actions_sub.add_parser("rollback", help="Cancel Things tasks created by a Personal OS run.")
     actions_rollback.add_argument("--run-id", required=True)
     actions_rollback.set_defaults(func=cmd_actions_rollback)
+
+    file_cmd = sub.add_parser("file", help="Add, inspect, extract, summarize, search, or verify Personal OS files.")
+    file_sub = file_cmd.add_subparsers(dest="file_command", required=True)
+    file_add = file_sub.add_parser("add", help="Add one file to Personal OS.")
+    file_add.add_argument("path")
+    file_add.add_argument("--kind", choices=FILE_KINDS, default="other")
+    file_add.add_argument("--title")
+    file_add.add_argument("--notes", default="")
+    copy_group = file_add.add_mutually_exclusive_group()
+    copy_group.add_argument("--copy", dest="copy_mode", action="store_const", const="copy", help="Copy the raw file into Personal OS. Default.")
+    copy_group.add_argument("--external", dest="copy_mode", action="store_const", const="external", help="Track the file without copying the raw file.")
+    file_add.set_defaults(func=cmd_file_add, copy_mode="copy")
+
+    file_add_folder = file_sub.add_parser("add-folder", help="Add files from a folder to Personal OS.")
+    file_add_folder.add_argument("path")
+    file_add_folder.add_argument("--kind", choices=FILE_KINDS, default="other")
+    file_add_folder.add_argument("--notes", default="")
+    file_add_folder.add_argument("--recursive", action="store_true")
+    file_add_folder.add_argument("--dry-run", action="store_true", help="Preview only. This is the default without --write.")
+    file_add_folder.add_argument("--write", action="store_true")
+    file_add_folder.set_defaults(func=cmd_file_add_folder)
+
+    file_inspect = file_sub.add_parser("inspect", help="Inspect one Personal OS file manifest.")
+    file_inspect.add_argument("file_id")
+    file_inspect.set_defaults(func=cmd_file_inspect)
+
+    file_extract = file_sub.add_parser("extract", help="Extract text for one Personal OS file.")
+    file_extract.add_argument("--file-id", required=True)
+    file_extract.add_argument("--write", action="store_true")
+    file_extract.set_defaults(func=cmd_file_extract)
+
+    file_summarize = file_sub.add_parser("summarize", help="Write a deterministic intake summary for one Personal OS file.")
+    file_summarize.add_argument("--file-id", required=True)
+    file_summarize.add_argument("--write", action="store_true")
+    file_summarize.set_defaults(func=cmd_file_summarize)
+
+    file_search = file_sub.add_parser("search", help="Search Personal OS file manifests, summaries, and extracted text.")
+    file_search.add_argument("query")
+    file_search.add_argument("--limit", type=int, default=30)
+    file_search.set_defaults(func=cmd_file_search)
+
+    file_verify = file_sub.add_parser("verify", help="Verify Personal OS file layer.")
+    file_verify.set_defaults(func=cmd_file_verify)
+
+    file_recheck = file_sub.add_parser("recheck", help="Recheck source/copied file hashes.")
+    file_recheck.add_argument("--write", action="store_true")
+    file_recheck.set_defaults(func=cmd_file_recheck)
+
+    garden = sub.add_parser("garden", help="Run Personal OS gardening passes.")
+    garden_sub = garden.add_subparsers(dest="garden_command", required=True)
+    garden_daily = garden_sub.add_parser("daily", help="Run the daily Personal OS garden.")
+    garden_daily.add_argument("--date", default="today")
+    garden_daily.add_argument("--write", action="store_true")
+    garden_daily.set_defaults(func=cmd_garden_daily)
+
+    butler = sub.add_parser("butler", help="Rebuild Butler's Book views.")
+    butler_sub = butler.add_subparsers(dest="butler_command", required=True)
+    butler_rebuild = butler_sub.add_parser("rebuild", help="Rebuild the Butler's Book and related file views.")
+    butler_rebuild.add_argument("--write", action="store_true")
+    butler_rebuild.set_defaults(func=cmd_butler_rebuild)
 
     automation = sub.add_parser("automation", help="Install, enable, disable, or uninstall daily automation.")
     automation_sub = automation.add_subparsers(dest="automation_command", required=True)

@@ -22,6 +22,8 @@ the user explicitly asks for the matching command.
 | `PERSONAL_EPISODES` | `~/.codex/personal-os/episodes` | Explicit session or Chronicle distillations |
 | `PERSONAL_REFLECTIONS` | `~/.codex/personal-os/reflections` | Generated reflection drafts |
 | `PERSONAL_PROFILE` | `~/.codex/personal-os/profile` | Durable synthesized personal notes |
+| `PERSONAL_FILES` | `~/.codex/personal-os/files` | Private important files, manifests, extracts, summaries, and indexes |
+| `PERSONAL_BUTLER` | `~/.codex/personal-os/_views/butlers-book.md` | Main private context entrypoint for agents |
 | `PERSONAL_LOGS` | `~/.codex/personal-os/_logs/runs` | Side-effect run logs |
 
 ## Operating Rules
@@ -30,13 +32,18 @@ the user explicitly asks for the matching command.
 - Keep raw personal material out of `~/.codex/wiki`.
 - Do not write to `~/.codex/memories`; that is Codex operational memory.
 - Calendar writes are not allowed in v1. Generate candidates only.
-- Personal files are not bulk-indexed in v1. Add them only when the user gives
-  a specific file or folder.
+- Personal files are added only when the user gives a specific file or folder.
+  Raw copies live under `files/originals/` by default and are committed to the
+  private Personal OS git repo.
+- Use `files/manifests/` as the source of truth for document provenance,
+  extraction state, duplicate state, and review state.
+- Use `_views/butlers-book.md` as the first read for private personal context.
 - Side effects must be explicit: `--write`, `--apply`, `install`, `enable`,
   `disable`, or `uninstall`.
 - Every side-effecting command writes a JSON run log and commits local Personal
   OS file changes unless `--no-commit` is passed before the subcommand.
-- Things writeback goes to Inbox with a `Personal OS` tag and source note.
+- Things writeback goes to the `🤖 Agent Tasks` project with a `Personal OS`
+  marker and source note.
 - Things rollback uses recorded Things IDs and cancels only tasks created by
   Personal OS.
 
@@ -95,6 +102,38 @@ written line cites the source reflection path.
 Only explicit action lines are used, such as `ACTION: ...`, `TODO: ...`,
 `NEXT: ...`, `FOLLOW UP: ...`, or Markdown unchecked checkboxes.
 
+### Files And Butler's Book
+
+```bash
+~/.codex/skills/personal-os/scripts/personal.py file add ~/Documents/example.pdf --kind reference
+~/.codex/skills/personal-os/scripts/personal.py file add-folder ~/Documents/Important --recursive --dry-run
+~/.codex/skills/personal-os/scripts/personal.py file add-folder ~/Documents/Important --recursive --write
+~/.codex/skills/personal-os/scripts/personal.py file extract --file-id FILE_ID --write
+~/.codex/skills/personal-os/scripts/personal.py file summarize --file-id FILE_ID --write
+~/.codex/skills/personal-os/scripts/personal.py file search "insurance"
+~/.codex/skills/personal-os/scripts/personal.py file verify
+~/.codex/skills/personal-os/scripts/personal.py file recheck --write
+~/.codex/skills/personal-os/scripts/personal.py butler rebuild --write
+```
+
+`file add` copies the raw file into `files/originals/` by default and creates a
+JSON manifest in `files/manifests/`. Bulk folder intake is dry-run by default
+and needs `--write` to copy files. Local extraction uses deterministic tools
+first; missing OCR/model synthesis is surfaced as `needs_ocr` or
+`pending_agent` instead of being hidden.
+
+### Daily Gardening
+
+```bash
+~/.codex/skills/personal-os/scripts/personal.py garden daily --date today
+~/.codex/skills/personal-os/scripts/personal.py garden daily --date today --write
+```
+
+The garden rechecks file hashes, extracts pending files, writes deterministic
+intake summaries/outlines, rebuilds `_views/`, writes a garden report, and
+creates deduped Things follow-ups in `🤖 Agent Tasks` for concrete maintenance
+queues.
+
 ### Automation
 
 ```bash
@@ -105,6 +144,8 @@ Only explicit action lines are used, such as `ACTION: ...`, `TODO: ...`,
 ```
 
 Automation is opt-in. Bootstrap does not install or enable the LaunchAgent.
+When installed and enabled, the LaunchAgent runs `garden daily --date today
+--write` at 10:30 PM local time.
 
 ### Inspect
 

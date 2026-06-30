@@ -247,16 +247,48 @@ on run argv
     set whenDay to item 10 of argv
 
     tell application "Things3"
-        if dueYear is "" then
-            set newToDo to make new to do with properties {name:titleText, notes:notesText, tag names:tagsText}
-        else
-            set dueDate to my makeDate(dueYear, dueMonth, dueDay)
-            set newToDo to make new to do with properties {name:titleText, notes:notesText, tag names:tagsText, due date:dueDate}
+        set targetContainer to missing value
+        set targetKind to ""
+        if listName is not "" then
+            try
+                set targetContainer to first list whose name is listName
+                set targetKind to "list"
+            end try
+            if targetContainer is missing value then
+                try
+                    set targetContainer to first project whose name is listName
+                    set targetKind to "project"
+                end try
+            end if
+            if targetContainer is missing value then
+                try
+                    set targetContainer to first area whose name is listName
+                    set targetKind to "area"
+                end try
+            end if
+            if targetContainer is missing value then
+                error "No Things list, project, or area found with name " & listName
+            end if
         end if
 
-        if listName is not "" then
-            set targetList to first list whose name is listName
-            move newToDo to targetList
+        if targetKind is "project" then
+            if dueYear is "" then
+                set newToDo to make new to do at end of to dos of targetContainer with properties {name:titleText, notes:notesText, tag names:tagsText}
+            else
+                set dueDate to my makeDate(dueYear, dueMonth, dueDay)
+                set newToDo to make new to do at end of to dos of targetContainer with properties {name:titleText, notes:notesText, tag names:tagsText, due date:dueDate}
+            end if
+        else
+            if dueYear is "" then
+                set newToDo to make new to do with properties {name:titleText, notes:notesText, tag names:tagsText}
+            else
+                set dueDate to my makeDate(dueYear, dueMonth, dueDay)
+                set newToDo to make new to do with properties {name:titleText, notes:notesText, tag names:tagsText, due date:dueDate}
+            end if
+
+            if listName is not "" then
+                move newToDo to targetContainer
+            end if
         end if
 
         if whenYear is not "" then
@@ -326,8 +358,34 @@ on run argv
             set due date of targetToDo to dueDate
             return _private_experimental_ json of targetToDo
         else if actionName is "move" then
-            set targetList to first list whose name is valueOne
-            move targetToDo to targetList
+            set targetContainer to missing value
+            set targetKind to ""
+            try
+                set targetContainer to first list whose name is valueOne
+                set targetKind to "list"
+            end try
+            if targetContainer is missing value then
+                try
+                    set targetContainer to first project whose name is valueOne
+                    set targetKind to "project"
+                end try
+            end if
+            if targetContainer is missing value then
+                try
+                    set targetContainer to first area whose name is valueOne
+                    set targetKind to "area"
+                end try
+            end if
+            if targetContainer is missing value then
+                error "No Things list, project, or area found with name " & valueOne
+            end if
+            if targetKind is "project" then
+                set project of targetToDo to targetContainer
+            else if targetKind is "area" then
+                set area of targetToDo to targetContainer
+            else
+                move targetToDo to targetContainer
+            end if
             return _private_experimental_ json of targetToDo
         else if actionName is "show" then
             show targetToDo
