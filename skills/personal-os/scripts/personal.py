@@ -102,6 +102,8 @@ TEXT_EXTENSIONS = {
 HTML_EXTENSIONS = {".html", ".htm"}
 RTF_EXTENSIONS = {".rtf"}
 DOCX_EXTENSIONS = {".docx"}
+LEGACY_WORD_EXTENSIONS = {".doc"}
+XLSX_EXTENSIONS = {".xlsx"}
 PDF_EXTENSIONS = {".pdf"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".tif", ".tiff", ".heic", ".webp"}
 
@@ -460,6 +462,13 @@ print(json.dumps({"status": status, "method": method, "text": text, "error": err
     return {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
 
 
+def extract_word_with_textutil(path: Path, method: str = "textutil-word") -> dict[str, str]:
+    proc = run_command(["textutil", "-convert", "txt", "-stdout", str(path)])
+    if proc.returncode != 0:
+        return {"status": "failed", "method": method, "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+    return {"status": "complete" if proc.stdout.strip() else "failed", "method": method, "text": proc.stdout, "error": ""}
+
+
 def extract_docx(path: Path) -> dict[str, str]:
     if not bundled_python_available():
         return {"status": "failed", "method": "python-docx", "text": "", "error": f"Bundled Python missing: {BUNDLED_PYTHON}"}
@@ -489,6 +498,46 @@ print(json.dumps({"status": "complete" if text.strip() else "failed", "method": 
         data = json.loads(proc.stdout)
     except json.JSONDecodeError:
         return {"status": "failed", "method": "python-docx", "text": "", "error": proc.stdout[:500]}
+    result = {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+    if result.get("status") != "complete":
+        fallback = extract_word_with_textutil(path, "textutil-docx")
+        if fallback.get("status") == "complete":
+            return fallback
+    return result
+
+
+def extract_xlsx(path: Path) -> dict[str, str]:
+    if not bundled_python_available():
+        return {"status": "failed", "method": "openpyxl", "text": "", "error": f"Bundled Python missing: {BUNDLED_PYTHON}"}
+    code = r'''
+import json, sys
+path = sys.argv[1]
+parts = []
+error = ""
+try:
+    import openpyxl
+    workbook = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    for worksheet in workbook.worksheets:
+        parts.append(f"# Sheet: {worksheet.title}")
+        for row in worksheet.iter_rows(values_only=True):
+            values = ["" if value is None else str(value) for value in row]
+            while values and values[-1] == "":
+                values.pop()
+            if any(value.strip() for value in values):
+                parts.append("\t".join(values))
+        parts.append("")
+except Exception as exc:
+    error = str(exc)
+text = "\n".join(parts).strip()
+print(json.dumps({"status": "complete" if text else "failed", "method": "openpyxl", "text": text, "error": error}))
+'''
+    proc = run_command([str(BUNDLED_PYTHON), "-c", code, str(path)])
+    if proc.returncode != 0:
+        return {"status": "failed", "method": "openpyxl", "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+    try:
+        data = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        return {"status": "failed", "method": "openpyxl", "text": "", "error": proc.stdout[:500]}
     return {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
 
 
@@ -515,6 +564,10 @@ def extract_file_text(path: Path) -> dict[str, str]:
             return extract_pdf(path)
         if suffix in DOCX_EXTENSIONS:
             return extract_docx(path)
+        if suffix in LEGACY_WORD_EXTENSIONS:
+            return extract_word_with_textutil(path)
+        if suffix in XLSX_EXTENSIONS:
+            return extract_xlsx(path)
         if suffix in IMAGE_EXTENSIONS:
             return {"status": "needs_ocr", "method": "image-metadata", "text": image_metadata(path), "error": "OCR provider is not configured"}
     except OSError as exc:
@@ -653,9 +706,9 @@ def review_needed_rows(manifests: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for manifest in manifests:
         reasons = []
-        if manifest.get("extraction_status") in {"failed", "needs_ocr", "unsupported"}:
+        if manifest.get("extraction_status") in {"pending", "failed", "needs_ocr", "unsupported"}:
             reasons.append(str(manifest.get("extraction_status")))
-        if manifest.get("summary_status") in {"failed", "pending_agent"}:
+        if manifest.get("summary_status") in {"pending", "failed"}:
             reasons.append(f"summary:{manifest.get('summary_status')}")
         if manifest.get("duplicate_of"):
             reasons.append(f"duplicate_of:{manifest.get('duplicate_of')}")
