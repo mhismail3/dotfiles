@@ -77,6 +77,7 @@ FILE_KINDS = (
 )
 
 SENSITIVE_FILE_KINDS = {"financial", "medical", "legal", "identity"}
+SENSITIVITY_LABELS = ("normal", "sensitive")
 EXTRACTION_STATUSES = {"pending", "complete", "failed", "needs_ocr", "unsupported"}
 SUMMARY_STATUSES = {"pending", "complete", "failed", "pending_agent"}
 BULK_EXCLUDE_PATTERNS = (
@@ -1492,6 +1493,7 @@ def add_file_to_root(
     source: Path,
     *,
     kind: str,
+    sensitivity: str | None,
     title: str | None,
     notes: str,
     copy_file: bool,
@@ -1504,6 +1506,8 @@ def add_file_to_root(
         raise SystemExit(f"Expected a file: {source}")
     if kind not in FILE_KINDS:
         raise SystemExit(f"Unsupported file kind {kind!r}. Use one of: {', '.join(FILE_KINDS)}")
+    if sensitivity is not None and sensitivity not in SENSITIVITY_LABELS:
+        raise SystemExit(f"Unsupported sensitivity {sensitivity!r}. Use one of: {', '.join(SENSITIVITY_LABELS)}")
     digest = sha256_file(source)
     title_text = file_title_from_path(source, title)
     file_id = file_id_for(source, title_text, digest)
@@ -1533,7 +1537,7 @@ def add_file_to_root(
         "file_id": file_id,
         "title": title_text,
         "kind": kind,
-        "sensitivity": sensitivity_for_kind(kind),
+        "sensitivity": sensitivity or sensitivity_for_kind(kind),
         "source_path": str(source),
         "source_paths": source_paths,
         "copied_path": copied_path,
@@ -1621,6 +1625,7 @@ def cmd_file_add(args: argparse.Namespace) -> None:
         root,
         Path(args.path),
         kind=args.kind,
+        sensitivity=args.sensitivity,
         title=args.title,
         notes=args.notes or "",
         copy_file=args.copy_mode == "copy",
@@ -1649,6 +1654,7 @@ def cmd_file_add_folder(args: argparse.Namespace) -> None:
                 root,
                 Path(candidate["path"]),
                 kind=args.kind,
+                sensitivity=args.sensitivity,
                 title=None,
                 notes=args.notes or "",
                 copy_file=True,
@@ -2533,6 +2539,7 @@ def build_parser() -> argparse.ArgumentParser:
     file_add = file_sub.add_parser("add", help="Add one file to Personal OS.")
     file_add.add_argument("path")
     file_add.add_argument("--kind", choices=FILE_KINDS, default="other")
+    file_add.add_argument("--sensitivity", choices=SENSITIVITY_LABELS)
     file_add.add_argument("--title")
     file_add.add_argument("--notes", default="")
     copy_group = file_add.add_mutually_exclusive_group()
@@ -2543,6 +2550,7 @@ def build_parser() -> argparse.ArgumentParser:
     file_add_folder = file_sub.add_parser("add-folder", help="Add files from a folder to Personal OS.")
     file_add_folder.add_argument("path")
     file_add_folder.add_argument("--kind", choices=FILE_KINDS, default="other")
+    file_add_folder.add_argument("--sensitivity", choices=SENSITIVITY_LABELS)
     file_add_folder.add_argument("--notes", default="")
     file_add_folder.add_argument("--recursive", action="store_true")
     file_add_folder.add_argument("--dry-run", action="store_true", help="Preview only. This is the default without --write.")
