@@ -612,6 +612,7 @@ import json, sys
 path = sys.argv[1]
 parts = []
 error = ""
+method = "openpyxl"
 try:
     import openpyxl
     workbook = openpyxl.load_workbook(path, read_only=True, data_only=True)
@@ -626,8 +627,86 @@ try:
         parts.append("")
 except Exception as exc:
     error = str(exc)
+    try:
+        import posixpath
+        import re
+        import zipfile
+        import xml.etree.ElementTree as ET
+
+        ns = {
+            "m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
+            "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+            "rel": "http://schemas.openxmlformats.org/package/2006/relationships",
+        }
+
+        def read_xml(zf, name):
+            return ET.fromstring(zf.read(name))
+
+        def cell_column(cell_ref):
+            match = re.match(r"([A-Z]+)", cell_ref or "")
+            if not match:
+                return 0
+            value = 0
+            for char in match.group(1):
+                value = value * 26 + (ord(char) - ord("A") + 1)
+            return value
+
+        def text_content(element):
+            return "".join(element.itertext()) if element is not None else ""
+
+        with zipfile.ZipFile(path) as zf:
+            shared = []
+            if "xl/sharedStrings.xml" in zf.namelist():
+                root = read_xml(zf, "xl/sharedStrings.xml")
+                for item in root.findall("m:si", ns):
+                    shared.append(text_content(item))
+
+            workbook_root = read_xml(zf, "xl/workbook.xml")
+            rels_root = read_xml(zf, "xl/_rels/workbook.xml.rels")
+            rels = {}
+            for rel in rels_root.findall("rel:Relationship", ns):
+                target = rel.attrib.get("Target", "")
+                if not target.startswith("/"):
+                    target = posixpath.normpath(posixpath.join("xl", target))
+                else:
+                    target = target.lstrip("/")
+                rels[rel.attrib.get("Id", "")] = target
+
+            for sheet in workbook_root.findall("m:sheets/m:sheet", ns):
+                title = sheet.attrib.get("name", "Sheet")
+                rid = sheet.attrib.get("{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id", "")
+                sheet_path = rels.get(rid)
+                if not sheet_path or sheet_path not in zf.namelist():
+                    continue
+                sheet_root = read_xml(zf, sheet_path)
+                parts.append(f"# Sheet: {title}")
+                for row in sheet_root.findall("m:sheetData/m:row", ns):
+                    cells = []
+                    for cell in row.findall("m:c", ns):
+                        col = cell_column(cell.attrib.get("r", ""))
+                        while len(cells) < max(col - 1, 0):
+                            cells.append("")
+                        cell_type = cell.attrib.get("t", "")
+                        if cell_type == "s":
+                            raw = text_content(cell.find("m:v", ns))
+                            value = shared[int(raw)] if raw.isdigit() and int(raw) < len(shared) else raw
+                        elif cell_type == "inlineStr":
+                            value = text_content(cell.find("m:is", ns))
+                        else:
+                            value = text_content(cell.find("m:v", ns))
+                        cells.append(value)
+                    while cells and cells[-1] == "":
+                        cells.pop()
+                    if any(value.strip() for value in cells):
+                        parts.append("\t".join(cells))
+                parts.append("")
+        if parts:
+            method = "ooxml-xlsx"
+            error = f"openpyxl failed: {error}; used raw OOXML fallback"
+    except Exception as fallback_exc:
+        error = f"{error}; OOXML fallback failed: {fallback_exc}"
 text = "\n".join(parts).strip()
-print(json.dumps({"status": "complete" if text else "failed", "method": "openpyxl", "text": text, "error": error}))
+print(json.dumps({"status": "complete" if text else "failed", "method": method, "text": text, "error": error}))
 '''
     proc = run_command([str(BUNDLED_PYTHON), "-c", code, str(path)])
     if proc.returncode != 0:
