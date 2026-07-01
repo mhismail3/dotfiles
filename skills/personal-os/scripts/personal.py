@@ -22,6 +22,7 @@ import secrets
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +32,8 @@ THINGS_SCRIPT = Path("~/.codex/skills/things-3/scripts/things.py").expanduser()
 LAUNCH_AGENT_LABEL = "com.moose.personal-os.daily"
 LAUNCH_AGENT_PATH = Path("~/Library/LaunchAgents").expanduser() / f"{LAUNCH_AGENT_LABEL}.plist"
 BUNDLED_PYTHON = Path("~/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3").expanduser()
+BUNDLED_BIN = BUNDLED_PYTHON.parent.parent.parent / "bin"
+PDFTOPPM = BUNDLED_BIN / "pdftoppm"
 THINGS_PROJECT_NAME = "🤖 Agent Tasks"
 THINGS_PROJECT_ID = "Du31k5uGbRWNgX6F4WFAnK"
 THINGS_TAG = "Personal OS"
@@ -426,6 +429,93 @@ def bundled_python_available() -> bool:
     return BUNDLED_PYTHON.exists() and os.access(BUNDLED_PYTHON, os.X_OK)
 
 
+VISION_OCR_SWIFT = r'''
+import Foundation
+import Vision
+import AppKit
+
+func loadCGImage(_ path: String) -> CGImage? {
+    let url = URL(fileURLWithPath: path)
+    guard let image = NSImage(contentsOf: url),
+          let tiff = image.tiffRepresentation,
+          let bitmap = NSBitmapImageRep(data: tiff) else {
+        return nil
+    }
+    return bitmap.cgImage
+}
+
+var hadError = false
+var emitted = false
+
+for path in CommandLine.arguments.dropFirst() {
+    guard let cgImage = loadCGImage(path) else {
+        fputs("Could not load image: \(path)\n", stderr)
+        hadError = true
+        continue
+    }
+    let request = VNRecognizeTextRequest()
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = true
+    let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+    do {
+        try handler.perform([request])
+    } catch {
+        fputs("OCR failed for \(path): \(error)\n", stderr)
+        hadError = true
+        continue
+    }
+    let observations = request.results ?? []
+    let lines = observations.compactMap { observation in
+        observation.topCandidates(1).first?.string
+    }
+    if !lines.isEmpty {
+        if emitted {
+            print("")
+            print("")
+        }
+        print("## OCR: \(URL(fileURLWithPath: path).lastPathComponent)")
+        print("")
+        print(lines.joined(separator: "\n"))
+        emitted = true
+    }
+}
+
+if hadError && !emitted {
+    exit(2)
+}
+'''
+
+
+def vision_ocr_available() -> bool:
+    return shutil.which("swift") is not None
+
+
+def ocr_images_with_vision(paths: list[Path], method: str = "vision-ocr") -> dict[str, str]:
+    if not paths:
+        return {"status": "needs_ocr", "method": method, "text": "", "error": "No rendered images to OCR"}
+    if not vision_ocr_available():
+        return {"status": "needs_ocr", "method": method, "text": "", "error": "macOS Vision OCR provider is not available"}
+    proc = run_command(["swift", "-", *[str(path) for path in paths]], input_text=VISION_OCR_SWIFT)
+    text = proc.stdout.strip()
+    if proc.returncode != 0 and not text:
+        return {"status": "needs_ocr", "method": method, "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+    if text:
+        return {"status": "complete", "method": method, "text": text, "error": proc.stderr.strip()}
+    return {"status": "needs_ocr", "method": method, "text": "", "error": proc.stderr.strip() or "OCR completed without recognized text"}
+
+
+def ocr_pdf_with_vision(path: Path) -> dict[str, str]:
+    if not PDFTOPPM.exists():
+        return {"status": "needs_ocr", "method": "vision-ocr-pdf", "text": "", "error": f"pdftoppm missing: {PDFTOPPM}"}
+    with tempfile.TemporaryDirectory(prefix="personal-os-ocr-") as tmp:
+        prefix = Path(tmp) / "page"
+        proc = run_command([str(PDFTOPPM), "-r", "200", "-png", str(path), str(prefix)])
+        if proc.returncode != 0:
+            return {"status": "needs_ocr", "method": "vision-ocr-pdf", "text": "", "error": proc.stderr.strip() or proc.stdout.strip()}
+        pages = sorted(Path(tmp).glob("page-*.png"))
+        return ocr_images_with_vision(pages, "vision-ocr-pdf")
+
+
 def extract_pdf(path: Path) -> dict[str, str]:
     if not bundled_python_available():
         return {"status": "failed", "method": "pdf", "text": "", "error": f"Bundled Python missing: {BUNDLED_PYTHON}"}
@@ -459,7 +549,14 @@ print(json.dumps({"status": status, "method": method, "text": text, "error": err
         data = json.loads(proc.stdout)
     except json.JSONDecodeError:
         return {"status": "failed", "method": "pdf", "text": "", "error": proc.stdout[:500]}
-    return {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+    result = {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+    if result.get("status") == "needs_ocr":
+        ocr_result = ocr_pdf_with_vision(path)
+        if ocr_result.get("status") == "complete":
+            if result.get("error"):
+                ocr_result["error"] = (ocr_result.get("error", "") + "\n" + result["error"]).strip()
+            return ocr_result
+    return result
 
 
 def extract_word_with_textutil(path: Path, method: str = "textutil-word") -> dict[str, str]:
@@ -569,7 +666,15 @@ def extract_file_text(path: Path) -> dict[str, str]:
         if suffix in XLSX_EXTENSIONS:
             return extract_xlsx(path)
         if suffix in IMAGE_EXTENSIONS:
-            return {"status": "needs_ocr", "method": "image-metadata", "text": image_metadata(path), "error": "OCR provider is not configured"}
+            ocr_result = ocr_images_with_vision([path], "vision-ocr-image")
+            if ocr_result.get("status") == "complete":
+                return ocr_result
+            return {
+                "status": "needs_ocr",
+                "method": "image-metadata",
+                "text": image_metadata(path),
+                "error": ocr_result.get("error") or "OCR provider did not recognize text",
+            }
     except OSError as exc:
         return {"status": "failed", "method": "filesystem", "text": "", "error": str(exc)}
     return {"status": "unsupported", "method": "extension", "text": "", "error": f"Unsupported file extension: {suffix or '<none>'}"}
@@ -706,11 +811,13 @@ def review_needed_rows(manifests: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for manifest in manifests:
         reasons = []
+        source_path = str(manifest.get("source_path", ""))
+        generated_seed_artifact = "/personal-os-" in source_path and "-seed/" in source_path
         if manifest.get("extraction_status") in {"pending", "failed", "needs_ocr", "unsupported"}:
             reasons.append(str(manifest.get("extraction_status")))
         if manifest.get("summary_status") in {"pending", "failed"}:
             reasons.append(f"summary:{manifest.get('summary_status')}")
-        if manifest.get("duplicate_of"):
+        if manifest.get("duplicate_of") and not generated_seed_artifact:
             reasons.append(f"duplicate_of:{manifest.get('duplicate_of')}")
         if manifest.get("source_changed"):
             reasons.append("source_changed")
