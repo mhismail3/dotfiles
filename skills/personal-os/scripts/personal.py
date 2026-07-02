@@ -927,6 +927,93 @@ def review_needed_view(root: Path, manifests: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def manifest_domain(manifest: dict[str, Any]) -> str:
+    paths = manifest.get("source_paths")
+    source_path = ""
+    if isinstance(paths, list) and paths:
+        source_path = str(paths[0])
+    if not source_path:
+        source_path = str(manifest.get("source_path", ""))
+    parts = Path(source_path).parts
+    if "[Documents]" in parts:
+        index = parts.index("[Documents]")
+        if index + 1 < len(parts):
+            return parts[index + 1]
+    return "(unknown)"
+
+
+def model_summary_progress_view(root: Path, manifests: list[dict[str, Any]]) -> str:
+    by_status: dict[str, int] = {}
+    by_domain: dict[str, dict[str, int]] = {}
+    for manifest in manifests:
+        status = str(manifest.get("summary_status", "pending"))
+        by_status[status] = by_status.get(status, 0) + 1
+        domain = manifest_domain(manifest)
+        by_domain.setdefault(domain, {})
+        by_domain[domain][status] = by_domain[domain].get(status, 0) + 1
+
+    lines = [
+        frontmatter(
+            {
+                "type": "view",
+                "view": "model-summary-progress",
+                "updated": utc_now().isoformat().replace("+00:00", "Z"),
+                "file_count": len(manifests),
+                "complete_count": by_status.get("complete", 0),
+                "pending_agent_count": by_status.get("pending_agent", 0),
+                "failed_count": by_status.get("failed", 0),
+            }
+        ).rstrip(),
+        "",
+        "# Model Summary Progress",
+        "",
+        "This view tracks files whose summaries have been model-authored and reviewed in a Codex session. Deterministic intake summaries remain `pending_agent`.",
+        "",
+        "## Totals",
+        "",
+    ]
+    if not manifests:
+        lines.append("- No files tracked.")
+    else:
+        for status in sorted(by_status):
+            lines.append(f"- `{status}`: {by_status[status]}")
+    lines.extend(["", "## By Domain", ""])
+    for domain in sorted(by_domain):
+        bits = [f"`{status}` {count}" for status, count in sorted(by_domain[domain].items())]
+        lines.append(f"- {domain}: {'; '.join(bits)}")
+    lines.extend(["", "## Recently Completed", ""])
+    completed = [
+        manifest
+        for manifest in manifests
+        if manifest.get("summary_status") == "complete" and manifest.get("model_summary_completed_at")
+    ]
+    completed.sort(key=lambda item: str(item.get("model_summary_completed_at", "")), reverse=True)
+    if completed:
+        for manifest in completed[:40]:
+            file_id = str(manifest.get("file_id", ""))
+            title = str(manifest.get("title", file_id))
+            lines.append(
+                f"- [{title}]({relative(root, file_summary_path(root, file_id))}) - completed {manifest.get('model_summary_completed_at', '')}"
+            )
+    else:
+        lines.append("- None yet.")
+    lines.extend(["", "## Remaining Queue", ""])
+    remaining = [manifest for manifest in manifests if manifest.get("summary_status") != "complete"]
+    if remaining:
+        for manifest in remaining[:80]:
+            file_id = str(manifest.get("file_id", ""))
+            title = str(manifest.get("title", file_id))
+            lines.append(
+                f"- [{title}]({relative(root, file_manifest_path(root, file_id))}) - `{manifest.get('summary_status', 'pending')}` summary; `{manifest.get('extraction_status', 'pending')}` extraction"
+            )
+        if len(remaining) > 80:
+            lines.append(f"- ... {len(remaining) - 80} more")
+    else:
+        lines.append("- No remaining files.")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def butlers_book_view(root: Path, manifests: list[dict[str, Any]]) -> str:
     recent = manifests[:20]
     things_state = load_json(things_state_path(root), [])
@@ -968,6 +1055,7 @@ def butlers_book_view(root: Path, manifests: list[dict[str, Any]]) -> str:
         lines.append("- No files added yet.")
     lines.extend(["", "## Review Queues", ""])
     lines.append("- [File catalog](_views/file-catalog.md)")
+    lines.append("- [Model summary progress](_views/model-summary-progress.md)")
     lines.append("- [Review needed](_views/review-needed.md)")
     lines.append("- [Wiki promotion candidates](_views/wiki-promotion-candidates.md)")
     lines.append("- [Calendar candidates](_views/calendar-candidates.md)")
@@ -1009,6 +1097,7 @@ def rebuild_file_views(root: Path, touched: list[Path]) -> None:
     manifests = load_file_manifests(root)
     write_json(root / "files" / "indexes" / "files-index.json", file_index_data(root, manifests), touched)
     write_text(root / "_views" / "file-catalog.md", file_catalog_view(root, manifests), touched)
+    write_text(root / "_views" / "model-summary-progress.md", model_summary_progress_view(root, manifests), touched)
     write_text(root / "_views" / "review-needed.md", review_needed_view(root, manifests), touched)
     write_text(root / "_views" / "butlers-book.md", butlers_book_view(root, manifests), touched)
     if not (root / "_views" / "calendar-candidates.md").exists():
