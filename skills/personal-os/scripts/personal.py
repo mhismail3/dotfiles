@@ -551,6 +551,15 @@ print(json.dumps({"status": status, "method": method, "text": text, "error": err
     except json.JSONDecodeError:
         return {"status": "failed", "method": "pdf", "text": "", "error": proc.stdout[:500]}
     result = {key: str(data.get(key, "")) for key in ("status", "method", "text", "error")}
+    if result.get("status") == "complete" and result.get("text", "").count("(cid:") > 50:
+        ocr_result = ocr_pdf_with_vision(path)
+        if ocr_result.get("status") == "complete":
+            ocr_result["error"] = (
+                ocr_result.get("error", "")
+                + "\n"
+                + f"{result.get('method', 'pdf')} extraction produced CID font artifacts; used Vision OCR fallback"
+            ).strip()
+            return ocr_result
     if result.get("status") == "needs_ocr":
         ocr_result = ocr_pdf_with_vision(path)
         if ocr_result.get("status") == "complete":
