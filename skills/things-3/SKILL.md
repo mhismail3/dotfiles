@@ -12,6 +12,7 @@ Use Things' supported AppleScript automation for normal read/write work. Prefer
 
 ```bash
 ~/.codex/skills/things-3/scripts/things.py snapshot --open-only
+~/.codex/skills/things-3/scripts/things.py snapshot-db --open-only
 ~/.codex/skills/things-3/scripts/things.py search "call"
 ~/.codex/skills/things-3/scripts/things.py add "Review Q3 plan" --notes "Draft first" --when tomorrow --tag Work
 ~/.codex/skills/things-3/scripts/things.py complete <things-id>
@@ -37,7 +38,9 @@ automation, or inspecting local storage.
 
 Run `snapshot --open-only`, then group by `areaName`, `projectName`, `tagNames`,
 `status`, deadlines, and scheduled dates. Use this for planning, reviews, and
-finding stale tasks.
+finding stale tasks. If AppleScript hangs or times out during a read-only
+planning/review workflow, use `snapshot-db --open-only` as an emergency
+read-only fallback. Do not use the database for writes.
 
 ### Create Tasks
 

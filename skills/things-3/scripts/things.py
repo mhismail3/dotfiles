@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import pathlib
+import sqlite3
 import subprocess
 import sys
 from typing import Any
@@ -18,6 +20,8 @@ from typing import Any
 APP_NAME = "Things3"
 REC_SEP = "\x1e"
 FIELD_SEP = "\x1f"
+DATABASE_ROOT = pathlib.Path.home() / "Library/Group Containers/JLMPQHK86H.com.culturedcode.ThingsMac"
+DATABASE_GLOB = "ThingsData-*/Things Database.thingsdatabase/main.sqlite"
 
 
 def run_applescript(script: str, args: list[str] | None = None) -> str:
@@ -60,6 +64,156 @@ def split_records(text: str) -> list[list[str]]:
         if row:
             records.append(row.split(FIELD_SEP))
     return records
+
+
+def things_db_path() -> pathlib.Path:
+    candidates = sorted(DATABASE_ROOT.glob(DATABASE_GLOB))
+    candidates = [path for path in candidates if path.exists()]
+    if not candidates:
+        raise SystemExit(f"Things database not found: {DATABASE_ROOT / DATABASE_GLOB}")
+    return max(candidates, key=lambda path: path.stat().st_mtime)
+
+
+def cf_datetime(value: Any) -> str:
+    if value in (None, ""):
+        return ""
+    try:
+        seconds = float(value) + 978307200
+    except (TypeError, ValueError):
+        return ""
+    return dt.datetime.fromtimestamp(seconds, dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def compact_date(value: Any) -> str:
+    if value in (None, ""):
+        return ""
+    try:
+        raw = int(value)
+    except (TypeError, ValueError):
+        return ""
+    if raw <= 0:
+        return ""
+    year = raw >> 16
+    month = (raw >> 12) & 0x0F
+    day = (raw >> 7) & 0x1F
+    try:
+        return dt.date(year, month, day).isoformat() + "T07:00:00Z"
+    except ValueError:
+        return ""
+
+
+def db_status(code: Any) -> str:
+    try:
+        value = int(code)
+    except (TypeError, ValueError):
+        return "unknown"
+    if value == 0:
+        return "open"
+    if value == 2:
+        return "canceled"
+    if value == 3:
+        return "completed"
+    return f"unknown:{value}"
+
+
+def comma_join(values: list[str]) -> str:
+    return ", ".join(value for value in values if value)
+
+
+def snapshot_db_data() -> dict[str, Any]:
+    path = things_db_path()
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        areas = [
+            {
+                "id": row["uuid"],
+                "name": row["title"] or "",
+                "tagNames": "",
+                "collapsed": False,
+            }
+            for row in conn.execute("SELECT uuid, title FROM TMArea ORDER BY \"index\"")
+        ]
+        area_by_id = {area["id"]: area for area in areas}
+
+        tags = [
+            {
+                "id": row["uuid"],
+                "name": row["title"] or "",
+                "keyboardShortcut": row["shortcut"] or "",
+                "parentId": row["parent"] or "",
+                "parentName": "",
+            }
+            for row in conn.execute("SELECT uuid, title, shortcut, parent FROM TMTag ORDER BY \"index\"")
+        ]
+        tag_by_id = {tag["id"]: tag for tag in tags}
+        for tag in tags:
+            if tag["parentId"] in tag_by_id:
+                tag["parentName"] = tag_by_id[tag["parentId"]]["name"]
+
+        task_tags: dict[str, list[str]] = {}
+        for row in conn.execute("SELECT tasks, tags FROM TMTaskTag"):
+            name = tag_by_id.get(row["tags"], {}).get("name", "")
+            if name:
+                task_tags.setdefault(row["tasks"], []).append(name)
+
+        rows = list(
+            conn.execute(
+                """
+                SELECT uuid, creationDate, userModificationDate, type, status, stopDate, trashed,
+                       title, notes, start, startDate, deadline, area, project, "index"
+                FROM TMTask
+                WHERE title IS NOT NULL
+                ORDER BY "index"
+                """
+            )
+        )
+        project_by_id: dict[str, dict[str, Any]] = {}
+        projects: list[dict[str, Any]] = []
+        todos: list[dict[str, Any]] = []
+        for row in rows:
+            status = db_status(row["status"])
+            item = {
+                "id": row["uuid"],
+                "name": row["title"] or "",
+                "notes": row["notes"] or "",
+                "status": status,
+                "trashed": bool(row["trashed"]),
+                "creationDate": cf_datetime(row["creationDate"]),
+                "modificationDate": cf_datetime(row["userModificationDate"]),
+                "tagNames": comma_join(task_tags.get(row["uuid"], [])),
+                "areaId": row["area"] or "",
+                "areaName": area_by_id.get(row["area"] or "", {}).get("name", ""),
+            }
+            if row["stopDate"]:
+                if status == "completed":
+                    item["completionDate"] = cf_datetime(row["stopDate"])
+                elif status == "canceled":
+                    item["cancellationDate"] = cf_datetime(row["stopDate"])
+            if row["startDate"]:
+                item["when"] = compact_date(row["startDate"])
+            if row["deadline"]:
+                item["deadline"] = compact_date(row["deadline"])
+            if int(row["type"] or 0) == 1:
+                item["childTasks"] = []
+                project_by_id[row["uuid"]] = item
+                projects.append(item)
+            elif int(row["type"] or 0) == 0:
+                item["projectId"] = row["project"] or ""
+                item["projectName"] = ""
+                todos.append(item)
+
+        for todo in todos:
+            project = project_by_id.get(todo.get("projectId", ""))
+            if project:
+                todo["projectName"] = project.get("name", "")
+                if not todo.get("areaId"):
+                    todo["areaId"] = project.get("areaId", "")
+                    todo["areaName"] = project.get("areaName", "")
+                project.setdefault("childTasks", []).append({"id": todo["id"], "name": todo["name"], "status": todo["status"]})
+        return {"todos": todos, "areas": areas, "projects": projects, "tags": tags, "source": "sqlite-readonly", "database": str(path)}
+    finally:
+        conn.close()
 
 
 def load_json_field(fields: list[str], index: int = 0) -> dict[str, Any]:
@@ -200,6 +354,14 @@ def cmd_snapshot(args: argparse.Namespace) -> None:
     if args.open_only:
         data["todos"] = [t for t in data["todos"] if t.get("status") == "open"]
         data["projects"] = [p for p in data["projects"] if p.get("status") == "open"]
+    print_json(data)
+
+
+def cmd_snapshot_db(args: argparse.Namespace) -> None:
+    data = snapshot_db_data()
+    if args.open_only:
+        data["todos"] = [t for t in data["todos"] if t.get("status") == "open" and not t.get("trashed")]
+        data["projects"] = [p for p in data["projects"] if p.get("status") == "open" and not p.get("trashed")]
     print_json(data)
 
 
@@ -451,6 +613,10 @@ def build_parser() -> argparse.ArgumentParser:
     snapshot = sub.add_parser("snapshot", help="Export Things areas/projects/tags/to-dos as JSON.")
     snapshot.add_argument("--open-only", action="store_true", help="Include only open to-dos/projects.")
     snapshot.set_defaults(func=cmd_snapshot)
+
+    snapshot_db = sub.add_parser("snapshot-db", help="Export Things data from the local database in read-only mode.")
+    snapshot_db.add_argument("--open-only", action="store_true", help="Include only open to-dos/projects.")
+    snapshot_db.set_defaults(func=cmd_snapshot_db)
 
     search = sub.add_parser("search", help="Search to-dos by title, notes, tags, area, or project.")
     search.add_argument("query")

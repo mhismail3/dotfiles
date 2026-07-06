@@ -24,6 +24,8 @@ the user explicitly asks for the matching command.
 | `PERSONAL_PROFILE` | `~/.codex/personal-os/profile` | Durable synthesized personal notes |
 | `PERSONAL_FILES` | `~/.codex/personal-os/files` | Private important files, manifests, extracts, summaries, and indexes |
 | `PERSONAL_BUTLER` | `~/.codex/personal-os/_views/butlers-book.md` | Main private context entrypoint for agents |
+| `PERSONAL_TIME_DAILY` | `~/.codex/personal-os/_views/time-daily.md` | Daily time and next-action scan surface |
+| `PERSONAL_TIME_WEEKLY` | `~/.codex/personal-os/_views/time-weekly.md` | Weekly project-pressure scan surface |
 | `PERSONAL_LOGS` | `~/.codex/personal-os/_logs/runs` | Side-effect run logs |
 
 ## Operating Rules
@@ -46,6 +48,11 @@ the user explicitly asks for the matching command.
   marker and source note.
 - Things rollback uses recorded Things IDs and cancels only tasks created by
   Personal OS.
+- Things is the master source for concrete next actions. Calendar is read-only
+  context for time planning. Personal OS time reports are scan surfaces, not a
+  second task manager.
+- External wiki/Raindrop experiment queues stay separate unless a reviewed item
+  is explicitly promoted into Things.
 
 ## Common Tasks
 
@@ -101,6 +108,29 @@ written line cites the source reflection path.
 
 Only explicit action lines are used, such as `ACTION: ...`, `TODO: ...`,
 `NEXT: ...`, `FOLLOW UP: ...`, or Markdown unchecked checkboxes.
+
+### Time And Next Actions
+
+```bash
+~/.codex/skills/personal-os/scripts/personal.py time daily --date today
+~/.codex/skills/personal-os/scripts/personal.py time daily --date today --write
+~/.codex/skills/personal-os/scripts/personal.py time weekly --date today --write
+~/.codex/skills/personal-os/scripts/personal.py time agent-plan --from-report _views/time-daily.md
+~/.codex/skills/personal-os/scripts/personal.py time agent-plan --from-report _views/time-daily.md --write
+~/.codex/skills/personal-os/scripts/personal.py time agent-apply --plan _views/action-plan-RUN_ID.json
+~/.codex/skills/personal-os/scripts/personal.py time verify
+```
+
+Use `time daily` when the user asks what to do next or wants a grounded view of
+their day. It reads Things as the master next-action list, reads Apple Calendar
+as context only, and keeps Personal OS review pressure and external wiki
+experiments separate. With `--write`, it updates `_views/time-daily.md`,
+`_state/time/daily.json`, `_reports/time/YYYY-MM-DD-daily.md`, and
+`_views/agent-task-candidates.md`.
+
+Use `time weekly` for project pressure and backlog shape. Use `time agent-plan`
+and `time agent-apply` only for explicit `ACTION:` candidates that should become
+Things tasks in `🤖 Agent Tasks`.
 
 ### Files And Butler's Book
 

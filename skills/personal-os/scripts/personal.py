@@ -29,6 +29,8 @@ from typing import Any
 DEFAULT_ROOT = Path("~/.codex/personal-os").expanduser()
 CHRONICLE_RESOURCES = Path("~/.codex/memories/extensions/chronicle/resources").expanduser()
 THINGS_SCRIPT = Path("~/.codex/skills/things-3/scripts/things.py").expanduser()
+CALENDAR_SCRIPT = Path("~/.codex/skills/apple-calendar/scripts/calendar.py").expanduser()
+LLM_WIKI_ROOT = Path("~/.codex/wiki").expanduser()
 LAUNCH_AGENT_LABEL = "com.moose.personal-os.daily"
 LAUNCH_AGENT_PATH = Path("~/Library/LaunchAgents").expanduser() / f"{LAUNCH_AGENT_LABEL}.plist"
 BUNDLED_PYTHON = Path("~/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3").expanduser()
@@ -38,6 +40,7 @@ THINGS_PROJECT_NAME = "🤖 Agent Tasks"
 THINGS_PROJECT_ID = "Du31k5uGbRWNgX6F4WFAnK"
 THINGS_TAG = "Personal OS"
 LARGE_FILE_THRESHOLD_BYTES = 250 * 1024 * 1024
+THINGS_TIMEOUT_SECONDS = int(os.environ.get("PERSONAL_OS_THINGS_TIMEOUT", "15"))
 
 REQUIRED_DIRS = (
     "inbox",
@@ -55,8 +58,10 @@ REQUIRED_DIRS = (
     "_views",
     "_state",
     "_state/launchagents",
+    "_state/time",
     "_reports",
     "_reports/garden",
+    "_reports/time",
     "_logs",
     "_logs/runs",
 )
@@ -212,8 +217,14 @@ def run_id() -> str:
     return utc_now().strftime("%Y%m%dT%H%M%SZ") + "-" + secrets.token_hex(3)
 
 
-def run_command(cmd: list[str], input_text: str | None = None) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(cmd, input=input_text, text=True, capture_output=True, check=False)
+def run_command(cmd: list[str], input_text: str | None = None, timeout: int | None = None) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(cmd, input=input_text, text=True, capture_output=True, check=False, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        stdout = exc.stdout if isinstance(exc.stdout, str) else (exc.stdout or b"").decode(errors="replace")
+        stderr = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode(errors="replace")
+        message = stderr.strip() or stdout.strip() or f"Timed out after {timeout} seconds: {' '.join(cmd)}"
+        return subprocess.CompletedProcess(cmd, 124, stdout or "", message)
 
 
 def git_head(root: Path) -> str | None:
@@ -1063,6 +1074,9 @@ def butlers_book_view(root: Path, manifests: list[dict[str, Any]]) -> str:
     else:
         lines.append("- No files added yet.")
     lines.extend(["", "## Review Queues", ""])
+    lines.append("- [Daily time plan](_views/time-daily.md)")
+    lines.append("- [Weekly time plan](_views/time-weekly.md)")
+    lines.append("- [Agent task candidates](_views/agent-task-candidates.md)")
     lines.append("- [File catalog](_views/file-catalog.md)")
     lines.append("- [Model summary progress](_views/model-summary-progress.md)")
     lines.append("- [Review needed](_views/review-needed.md)")
@@ -1226,6 +1240,17 @@ lines in reflections. Every appended claim must cite a source file path.
 Agent-created Personal OS follow-ups go to the Things project `🤖 Agent Tasks`
 with the `Personal OS` marker. Writes must be recorded in
 `_state/things-created.json` and rollback must affect only recorded tasks.
+
+## Time And Next Actions
+
+- Things is the master source for concrete next actions.
+- Calendar is read-only context for time availability and deadline pressure.
+- Personal OS may generate time reports under `_views/`, `_state/time/`, and
+  `_reports/time/`; these are scan surfaces, not a second task manager.
+- Agent-facing follow-ups from time reports must be explicit action lines and
+  must route through the `🤖 Agent Tasks` project.
+- External wiki/Raindrop experiment queues remain separate unless a reviewed
+  item is promoted into Things.
 """
 
 
@@ -1248,6 +1273,8 @@ Use `~/.codex/skills/personal-os/scripts/personal.py` for writes.
 Start with `_views/butlers-book.md` when you need private personal context.
 Use `files/manifests/` for provenance and `files/summaries/` or
 `files/extracted/` for progressive disclosure into specific documents.
+Use `_views/time-daily.md` and `_views/time-weekly.md` for current time and
+next-action scan surfaces when they exist.
 """
 
 
@@ -1343,6 +1370,23 @@ def cmd_bootstrap(args: argparse.Namespace) -> None:
 Agent-created Personal OS follow-ups go to the Things project `🤖 Agent Tasks`
 with the `Personal OS` marker. Writes must be recorded in
 `_state/things-created.json` and rollback must affect only recorded tasks.
+""",
+        touched,
+    )
+    append_section_if_missing(
+        root / "rules.md",
+        "## Time And Next Actions",
+        """
+## Time And Next Actions
+
+- Things is the master source for concrete next actions.
+- Calendar is read-only context for time availability and deadline pressure.
+- Personal OS may generate time reports under `_views/`, `_state/time/`, and
+  `_reports/time/`; these are scan surfaces, not a second task manager.
+- Agent-facing follow-ups from time reports must be explicit action lines and
+  must route through the `🤖 Agent Tasks` project.
+- External wiki/Raindrop experiment queues remain separate unless a reviewed
+  item is promoted into Things.
 """,
         touched,
     )
@@ -1654,7 +1698,7 @@ def load_action_plan(root: Path, path: Path) -> dict[str, Any]:
 def call_things(args: list[str]) -> Any:
     if not THINGS_SCRIPT.exists():
         raise SystemExit(f"Things helper not found: {THINGS_SCRIPT}")
-    proc = run_command([str(THINGS_SCRIPT), *args])
+    proc = run_command([str(THINGS_SCRIPT), *args], timeout=THINGS_TIMEOUT_SECONDS)
     if proc.returncode != 0:
         raise SystemExit(proc.stderr.strip() or proc.stdout.strip() or "Things helper failed")
     return json.loads(proc.stdout)
@@ -2230,6 +2274,729 @@ def cmd_actions_rollback(args: argparse.Namespace) -> None:
     print_json({"run_id": record["run_id"], "rolled_back": rolled_back, "errors": record["errors"]})
 
 
+def resolve_personal_path(root: Path, value: str) -> Path:
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = root / path
+    return ensure_under_root(root, path)
+
+
+def iso_week_id(day: dt.date) -> str:
+    year, week, _ = day.isocalendar()
+    return f"{year}-W{week:02d}"
+
+
+def parse_local_date(value: Any) -> dt.date | None:
+    if value in (None, ""):
+        return None
+    text = str(value)
+    if len(text) < 10:
+        return None
+    try:
+        if "T" in text:
+            normalized = text.replace("Z", "+00:00")
+            parsed = dt.datetime.fromisoformat(normalized)
+            if parsed.tzinfo is not None:
+                return parsed.astimezone().date()
+            return parsed.date()
+        parsed_date = dt.date.fromisoformat(text[:10])
+    except ValueError:
+        return None
+    if parsed_date.year >= 3999:
+        return None
+    return parsed_date
+
+
+def display_date(value: Any) -> str:
+    parsed = parse_local_date(value)
+    return parsed.isoformat() if parsed else ""
+
+
+def split_tag_names(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    return [part.strip() for part in str(value or "").split(",") if part.strip()]
+
+
+def read_things_snapshot_for_time() -> tuple[dict[str, Any], list[str]]:
+    try:
+        data = call_things(["snapshot", "--open-only"])
+    except SystemExit as exc:
+        primary_error = str(exc)
+        try:
+            data = call_things(["snapshot-db", "--open-only"])
+            if isinstance(data, dict):
+                data.setdefault("todos", [])
+                data.setdefault("projects", [])
+                return data, [f"Things AppleScript snapshot failed; used read-only SQLite fallback. Error: {primary_error}"]
+        except SystemExit as fallback_exc:
+            return {"todos": [], "projects": [], "areas": [], "tags": []}, [
+                f"Things AppleScript snapshot failed: {primary_error}",
+                f"Things read-only SQLite fallback failed: {fallback_exc}",
+            ]
+    if not isinstance(data, dict):
+        return {"todos": [], "projects": [], "areas": [], "tags": []}, ["Things snapshot did not return a JSON object."]
+    data.setdefault("todos", [])
+    data.setdefault("projects", [])
+    return data, []
+
+
+def verify_agent_tasks_project_for_time(root: Path) -> tuple[dict[str, Any] | None, list[str]]:
+    warnings: list[str] = []
+    try:
+        return verify_agent_tasks_project(root), warnings
+    except SystemExit as exc:
+        warnings.append(f"Things AppleScript project verification failed; trying read-only SQLite fallback. Error: {exc}")
+    routing = load_things_routing(root)
+    data = call_things(["snapshot-db", "--open-only"])
+    for project in data.get("projects", []):
+        if project.get("id") == routing["project_id"] and project.get("name") == routing["project_name"]:
+            return project, warnings
+    raise SystemExit(f"Things project not found by AppleScript or read-only fallback: {routing['project_name']}")
+
+
+def project_open_counts(snapshot: dict[str, Any]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for todo in snapshot.get("todos", []):
+        if not isinstance(todo, dict):
+            continue
+        project = str(todo.get("projectName") or "(No Project)")
+        counts[project] = counts.get(project, 0) + 1
+    return counts
+
+
+def things_pressure(snapshot: dict[str, Any], day: dt.date, horizon_end: dt.date) -> dict[str, int]:
+    pressure = {
+        "open": 0,
+        "overdue_scheduled": 0,
+        "scheduled_today": 0,
+        "scheduled_horizon": 0,
+        "deadline_overdue": 0,
+        "deadline_today": 0,
+        "deadline_horizon": 0,
+        "stale_scheduled": 0,
+        "stale_deadline": 0,
+        "agent_tasks": 0,
+        "personal_os": 0,
+        "unscheduled": 0,
+    }
+    for todo in snapshot.get("todos", []):
+        if not isinstance(todo, dict):
+            continue
+        pressure["open"] += 1
+        when = parse_local_date(todo.get("when"))
+        deadline = parse_local_date(todo.get("deadline"))
+        tags = split_tag_names(todo.get("tagNames"))
+        if when:
+            if when < day:
+                pressure["overdue_scheduled"] += 1
+                if (day - when).days > 30:
+                    pressure["stale_scheduled"] += 1
+            elif when == day:
+                pressure["scheduled_today"] += 1
+            elif when <= horizon_end:
+                pressure["scheduled_horizon"] += 1
+        if deadline:
+            if deadline < day:
+                pressure["deadline_overdue"] += 1
+                if (day - deadline).days > 30:
+                    pressure["stale_deadline"] += 1
+            elif deadline == day:
+                pressure["deadline_today"] += 1
+            elif deadline <= horizon_end:
+                pressure["deadline_horizon"] += 1
+        if not when and not deadline:
+            pressure["unscheduled"] += 1
+        if todo.get("projectName") == THINGS_PROJECT_NAME:
+            pressure["agent_tasks"] += 1
+        if THINGS_TAG in tags:
+            pressure["personal_os"] += 1
+    return pressure
+
+
+def score_thing(todo: dict[str, Any], day: dt.date, horizon_end: dt.date, counts: dict[str, int]) -> tuple[int, list[str]]:
+    score = 0
+    reasons: list[str] = []
+    when = parse_local_date(todo.get("when"))
+    deadline = parse_local_date(todo.get("deadline"))
+    tags = split_tag_names(todo.get("tagNames"))
+    project = str(todo.get("projectName") or "(No Project)")
+    if when:
+        days = (when - day).days
+        if days < 0:
+            overdue_days = abs(days)
+            if overdue_days > 30:
+                score += 260
+                reasons.append(f"stale scheduled date overdue by {overdue_days}d")
+            elif overdue_days > 14:
+                score += 650
+                reasons.append(f"scheduled overdue by {overdue_days}d")
+            else:
+                score += 1000 + overdue_days
+                reasons.append(f"scheduled overdue by {overdue_days}d")
+        elif days == 0:
+            score += 900
+            reasons.append("scheduled today")
+        elif when <= horizon_end:
+            score += 720 - min(days * 20, 300)
+            reasons.append(f"scheduled in {days}d")
+    if deadline:
+        days = (deadline - day).days
+        if days < 0:
+            overdue_days = abs(days)
+            if overdue_days > 30:
+                score += 300
+                reasons.append(f"stale deadline overdue by {overdue_days}d")
+            elif overdue_days > 14:
+                score += 620
+                reasons.append(f"deadline overdue by {overdue_days}d")
+            else:
+                score += 950 + overdue_days
+                reasons.append(f"deadline overdue by {overdue_days}d")
+        elif days == 0:
+            score += 860
+            reasons.append("deadline today")
+        elif deadline <= horizon_end:
+            score += 680 - min(days * 25, 350)
+            reasons.append(f"deadline in {days}d")
+    if project == THINGS_PROJECT_NAME:
+        score += 520
+        reasons.append("agent task queue")
+    if THINGS_TAG in tags:
+        score += 420
+        reasons.append("Personal OS follow-up")
+    if score == 0 and project != "(No Project)":
+        score += min(counts.get(project, 0) * 4, 80)
+        reasons.append("project backlog momentum")
+    if score == 0:
+        score = 10
+        reasons.append("unscheduled backlog")
+    return score, reasons
+
+
+def ranked_things(snapshot: dict[str, Any], day: dt.date, horizon_days: int) -> list[dict[str, Any]]:
+    horizon_end = day + dt.timedelta(days=horizon_days)
+    counts = project_open_counts(snapshot)
+    ranked: list[dict[str, Any]] = []
+    for todo in snapshot.get("todos", []):
+        if not isinstance(todo, dict):
+            continue
+        score, reasons = score_thing(todo, day, horizon_end, counts)
+        ranked.append(
+            {
+                "id": todo.get("id", ""),
+                "title": todo.get("name") or todo.get("title") or "Untitled",
+                "project": todo.get("projectName") or "",
+                "area": todo.get("areaName") or "",
+                "tags": split_tag_names(todo.get("tagNames")),
+                "when": display_date(todo.get("when")),
+                "deadline": display_date(todo.get("deadline")),
+                "score": score,
+                "reasons": reasons,
+            }
+        )
+    ranked.sort(key=lambda item: (-int(item["score"]), str(item["title"]).casefold()))
+    return ranked
+
+
+def calendar_context(day: dt.date, horizon_days: int) -> dict[str, Any]:
+    if not CALENDAR_SCRIPT.exists():
+        return {"events": [], "warnings": [f"Calendar helper not found: {CALENDAR_SCRIPT}"]}
+    end = day + dt.timedelta(days=horizon_days + 1)
+    proc = run_command([sys.executable, str(CALENDAR_SCRIPT), "agenda", "--from", day.isoformat(), "--to", end.isoformat()])
+    if proc.returncode != 0:
+        return {"events": [], "warnings": [proc.stderr.strip() or proc.stdout.strip() or "Calendar agenda failed."]}
+    try:
+        data = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError:
+        return {"events": [], "warnings": ["Calendar agenda returned invalid JSON."]}
+    if not isinstance(data, list):
+        return {"events": [], "warnings": ["Calendar agenda returned an unexpected shape."]}
+    events = []
+    for event in data:
+        if isinstance(event, dict):
+            events.append(
+                {
+                    "title": event.get("title", "Untitled"),
+                    "start": event.get("start", ""),
+                    "end": event.get("end", ""),
+                    "calendar": event.get("calendarName", ""),
+                    "all_day": bool(event.get("allDay")),
+                    "location": event.get("location", ""),
+                }
+            )
+    return {"events": events, "warnings": []}
+
+
+def read_review_needed_items(root: Path, limit: int = 20) -> list[str]:
+    path = root / "_views" / "review-needed.md"
+    if not path.exists():
+        return []
+    items: list[str] = []
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        clean = line.strip()
+        if clean.startswith("- ") and not clean.startswith("- None"):
+            items.append(clean[2:])
+        if len(items) >= limit:
+            break
+    return items
+
+
+def wiki_experiment_status() -> dict[str, Any]:
+    candidates = [
+        LLM_WIKI_ROOT / "_views" / "experiment-scan.md",
+        LLM_WIKI_ROOT / "_views" / "agent-experiments.md",
+        LLM_WIKI_ROOT / "_views" / "recent-sources.md",
+    ]
+    existing = [path for path in candidates if path.exists()]
+    if not existing:
+        return {"available": False, "views": [], "note": "No local wiki experiment scan view found."}
+    views = []
+    for path in existing:
+        try:
+            rel = str(path.relative_to(LLM_WIKI_ROOT))
+        except ValueError:
+            rel = str(path)
+        views.append({"path": str(path), "wiki_relative": rel})
+    return {"available": True, "views": views, "note": "External wiki experiment queues are separate from Things until promoted."}
+
+
+def time_agent_candidates(data: dict[str, Any]) -> list[dict[str, str]]:
+    candidates: list[dict[str, str]] = []
+    pressure = data.get("things_pressure", {})
+    review_items = data.get("personal_os_review", [])
+    warnings = data.get("warnings", [])
+    if int(pressure.get("agent_tasks", 0) or 0) > 0:
+        candidates.append(
+            {
+                "title": f"Work through Agent Tasks queue ({pressure.get('agent_tasks')} open)",
+                "notes": "Generated from Personal OS time planning because the dedicated agent queue has open tasks.",
+                "source_key": "time:agent-tasks-open",
+            }
+        )
+    stale_count = int(pressure.get("stale_scheduled", 0) or 0) + int(pressure.get("stale_deadline", 0) or 0)
+    if stale_count > 0:
+        candidates.append(
+            {
+                "title": f"Review stale dated Things items ({stale_count} date signals)",
+                "notes": "Generated from Personal OS time planning because old scheduled/deadline dates may no longer represent real priority.",
+                "source_key": "time:stale-dated-things",
+            }
+        )
+    if review_items:
+        candidates.append(
+            {
+                "title": f"Review Personal OS review-needed queue ({len(review_items)} visible items)",
+                "notes": "\n".join(f"- {item}" for item in review_items),
+                "source_key": "time:personal-os-review-needed",
+            }
+        )
+    if warnings:
+        for index, warning in enumerate(warnings):
+            if "Calendar" in warning or "calendar" in warning:
+                candidates.append(
+                    {
+                        "title": "Restore Calendar read access for Personal OS time planning",
+                        "notes": warning,
+                        "source_key": f"time:calendar-warning:{index}",
+                    }
+                )
+                break
+    return candidates
+
+
+def build_time_daily_data(root: Path, day: dt.date, horizon_days: int, limit: int) -> dict[str, Any]:
+    snapshot, things_warnings = read_things_snapshot_for_time()
+    horizon_end = day + dt.timedelta(days=horizon_days)
+    calendar = calendar_context(day, horizon_days)
+    ranked = ranked_things(snapshot, day, horizon_days)
+    pressure = things_pressure(snapshot, day, horizon_end)
+    review_items = read_review_needed_items(root)
+    wiki_status = wiki_experiment_status()
+    data = {
+        "type": "personal_os_time_daily",
+        "date": day.isoformat(),
+        "generated_at": utc_now().isoformat().replace("+00:00", "Z"),
+        "horizon_days": horizon_days,
+        "limit": limit,
+        "warnings": [*things_warnings, *calendar.get("warnings", [])],
+        "things_pressure": pressure,
+        "ranked_next_actions": ranked[:limit],
+        "calendar_events": calendar.get("events", []),
+        "personal_os_review": review_items,
+        "wiki_experiments": wiki_status,
+    }
+    data["agent_task_candidates"] = time_agent_candidates(data)
+    return data
+
+
+def build_time_weekly_data(root: Path, day: dt.date, horizon_days: int, limit: int) -> dict[str, Any]:
+    snapshot, things_warnings = read_things_snapshot_for_time()
+    horizon_end = day + dt.timedelta(days=horizon_days)
+    ranked = ranked_things(snapshot, day, horizon_days)
+    counts = project_open_counts(snapshot)
+    scheduled_by_project: dict[str, int] = {}
+    deadline_by_project: dict[str, int] = {}
+    for todo in snapshot.get("todos", []):
+        if not isinstance(todo, dict):
+            continue
+        project = str(todo.get("projectName") or "(No Project)")
+        when = parse_local_date(todo.get("when"))
+        deadline = parse_local_date(todo.get("deadline"))
+        if when and when <= horizon_end:
+            scheduled_by_project[project] = scheduled_by_project.get(project, 0) + 1
+        if deadline and deadline <= horizon_end:
+            deadline_by_project[project] = deadline_by_project.get(project, 0) + 1
+    project_rows = []
+    for project, count in sorted(counts.items(), key=lambda row: (-row[1], row[0].casefold())):
+        project_rows.append(
+            {
+                "project": project,
+                "open": count,
+                "scheduled_horizon": scheduled_by_project.get(project, 0),
+                "deadline_horizon": deadline_by_project.get(project, 0),
+            }
+        )
+    data = {
+        "type": "personal_os_time_weekly",
+        "week": iso_week_id(day),
+        "date": day.isoformat(),
+        "generated_at": utc_now().isoformat().replace("+00:00", "Z"),
+        "horizon_days": horizon_days,
+        "warnings": things_warnings,
+        "things_pressure": things_pressure(snapshot, day, horizon_end),
+        "project_pressure": project_rows[:limit],
+        "ranked_next_actions": ranked[:limit],
+        "personal_os_review": read_review_needed_items(root),
+        "wiki_experiments": wiki_experiment_status(),
+    }
+    data["agent_task_candidates"] = time_agent_candidates(data)
+    return data
+
+
+def render_time_daily(data: dict[str, Any]) -> str:
+    lines = [
+        frontmatter(
+            {
+                "type": data["type"],
+                "date": data["date"],
+                "updated": data["generated_at"],
+                "horizon_days": data["horizon_days"],
+            }
+        ).rstrip(),
+        "",
+        f"# Time Daily {data['date']}",
+        "",
+        "## Summary",
+        "",
+    ]
+    pressure = data["things_pressure"]
+    lines.extend(
+        [
+            f"- Open Things tasks: {pressure.get('open', 0)}",
+            f"- Scheduled overdue/today/horizon: {pressure.get('overdue_scheduled', 0)}/{pressure.get('scheduled_today', 0)}/{pressure.get('scheduled_horizon', 0)}",
+            f"- Deadline overdue/today/horizon: {pressure.get('deadline_overdue', 0)}/{pressure.get('deadline_today', 0)}/{pressure.get('deadline_horizon', 0)}",
+            f"- Stale dated signals: scheduled {pressure.get('stale_scheduled', 0)}, deadline {pressure.get('stale_deadline', 0)}",
+            f"- Agent Tasks open: {pressure.get('agent_tasks', 0)}",
+            f"- Personal OS follow-ups open: {pressure.get('personal_os', 0)}",
+            "",
+        ]
+    )
+    if data.get("warnings"):
+        lines.extend(["## Warnings", ""])
+        for warning in data["warnings"]:
+            lines.append(f"- {warning}")
+        lines.append("")
+    lines.extend(["## Calendar Context", ""])
+    events = data.get("calendar_events", [])
+    if events:
+        for event in events[:40]:
+            prefix = "all day" if event.get("all_day") else f"{event.get('start', '')} - {event.get('end', '')}"
+            suffix = f" ({event.get('calendar')})" if event.get("calendar") else ""
+            lines.append(f"- {prefix}: {event.get('title', 'Untitled')}{suffix}")
+    else:
+        lines.append("- No events found or Calendar read was unavailable.")
+    lines.extend(["", "## Ranked Next Actions", ""])
+    for index, item in enumerate(data.get("ranked_next_actions", []), start=1):
+        where = item.get("project") or item.get("area") or "Inbox"
+        schedule = []
+        if item.get("when"):
+            schedule.append(f"when {item['when']}")
+        if item.get("deadline"):
+            schedule.append(f"deadline {item['deadline']}")
+        schedule_text = "; ".join(schedule) or "unscheduled"
+        reasons = ", ".join(item.get("reasons", []))
+        lines.append(f"{index}. {item.get('title')} - {where}; {schedule_text}; {reasons}; id `{item.get('id')}`")
+    if not data.get("ranked_next_actions"):
+        lines.append("- No Things actions available.")
+    lines.extend(["", "## Personal OS Review Pressure", ""])
+    for item in data.get("personal_os_review", [])[:20]:
+        lines.append(f"- {item}")
+    if not data.get("personal_os_review"):
+        lines.append("- None visible.")
+    lines.extend(["", "## Separate External Experiment Queue", ""])
+    wiki = data.get("wiki_experiments", {})
+    lines.append(f"- {wiki.get('note', '')}")
+    for view in wiki.get("views", []):
+        lines.append(f"- `{view.get('wiki_relative')}`")
+    lines.extend(["", "## Agent Task Candidates", ""])
+    if data.get("agent_task_candidates"):
+        for candidate in data["agent_task_candidates"]:
+            lines.append(f"- ACTION: {candidate['title']}")
+    else:
+        lines.append("- None.")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def render_time_weekly(data: dict[str, Any]) -> str:
+    lines = [
+        frontmatter(
+            {
+                "type": data["type"],
+                "week": data["week"],
+                "date": data["date"],
+                "updated": data["generated_at"],
+                "horizon_days": data["horizon_days"],
+            }
+        ).rstrip(),
+        "",
+        f"# Time Weekly {data['week']}",
+        "",
+        "## Summary",
+        "",
+    ]
+    pressure = data["things_pressure"]
+    lines.extend(
+        [
+            f"- Open Things tasks: {pressure.get('open', 0)}",
+            f"- Scheduled in horizon: {pressure.get('scheduled_horizon', 0)} plus today {pressure.get('scheduled_today', 0)} and overdue {pressure.get('overdue_scheduled', 0)}",
+            f"- Deadlines in horizon: {pressure.get('deadline_horizon', 0)} plus today {pressure.get('deadline_today', 0)} and overdue {pressure.get('deadline_overdue', 0)}",
+            f"- Stale dated signals: scheduled {pressure.get('stale_scheduled', 0)}, deadline {pressure.get('stale_deadline', 0)}",
+            f"- Unscheduled backlog: {pressure.get('unscheduled', 0)}",
+            "",
+        ]
+    )
+    if data.get("warnings"):
+        lines.extend(["## Warnings", ""])
+        for warning in data["warnings"]:
+            lines.append(f"- {warning}")
+        lines.append("")
+    lines.extend(["## Project Pressure", ""])
+    for row in data.get("project_pressure", []):
+        lines.append(
+            f"- {row['project']}: {row['open']} open; {row['scheduled_horizon']} scheduled; {row['deadline_horizon']} deadlines"
+        )
+    if not data.get("project_pressure"):
+        lines.append("- No open project pressure.")
+    lines.extend(["", "## Top Next Actions", ""])
+    for index, item in enumerate(data.get("ranked_next_actions", []), start=1):
+        where = item.get("project") or item.get("area") or "Inbox"
+        reasons = ", ".join(item.get("reasons", []))
+        lines.append(f"{index}. {item.get('title')} - {where}; {reasons}; id `{item.get('id')}`")
+    if not data.get("ranked_next_actions"):
+        lines.append("- No Things actions available.")
+    lines.extend(["", "## Agent Task Candidates", ""])
+    if data.get("agent_task_candidates"):
+        for candidate in data["agent_task_candidates"]:
+            lines.append(f"- ACTION: {candidate['title']}")
+    else:
+        lines.append("- None.")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def action_plan_from_time_report(root: Path, source: Path) -> dict[str, Any]:
+    text = source.read_text(encoding="utf-8")
+    tasks = []
+    source_rel = relative(root, source)
+    for title in explicit_actions_from_text(text):
+        tasks.append(
+            {
+                "title": title,
+                "notes": f"Created from Personal OS time report: {source_rel}",
+                "source": source_rel,
+                "source_key": f"time:{source_rel}:{slugify(title)}",
+                "tag": THINGS_TAG,
+            }
+        )
+    return {
+        "type": "personal_os_action_plan",
+        "created": utc_now().isoformat().replace("+00:00", "Z"),
+        "source_reflection": source_rel,
+        "source_report": source_rel,
+        "tasks": tasks,
+    }
+
+
+def cmd_time_daily(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    day = parse_day(args.date)
+    data = build_time_daily_data(root, day, args.horizon_days, args.limit)
+    rendered = render_time_daily(data)
+    if not args.write:
+        print(rendered)
+        return
+    record = start_run(args, "time daily", root)
+    touched: list[Path] = []
+    report_path = root / "_reports" / "time" / f"{day.isoformat()}-daily.md"
+    write_text(root / "_views" / "time-daily.md", rendered, touched)
+    write_text(report_path, rendered, touched)
+    write_json(root / "_state" / "time" / "daily.json", data, touched)
+    write_text(root / "_views" / "agent-task-candidates.md", render_agent_task_candidates_view(data, "time-daily"), touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append(f"Use git revert for the time daily commit, or remove {relative(root, report_path)}.")
+    finish_run(args, root, record, touched, f"personal-os: time daily {day.isoformat()}")
+    print_json({"run_id": record["run_id"], "report": str(report_path), "view": str(root / "_views" / "time-daily.md")})
+
+
+def cmd_time_weekly(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    day = parse_day(args.date)
+    data = build_time_weekly_data(root, day, args.horizon_days, args.limit)
+    rendered = render_time_weekly(data)
+    if not args.write:
+        print(rendered)
+        return
+    record = start_run(args, "time weekly", root)
+    touched: list[Path] = []
+    week = iso_week_id(day)
+    report_path = root / "_reports" / "time" / f"{week}-weekly.md"
+    write_text(root / "_views" / "time-weekly.md", rendered, touched)
+    write_text(report_path, rendered, touched)
+    write_json(root / "_state" / "time" / "weekly.json", data, touched)
+    write_text(root / "_views" / "agent-task-candidates.md", render_agent_task_candidates_view(data, "time-weekly"), touched)
+    write_text(root / "index.md", render_index(root), touched)
+    record["rollback"].append(f"Use git revert for the time weekly commit, or remove {relative(root, report_path)}.")
+    finish_run(args, root, record, touched, f"personal-os: time weekly {week}")
+    print_json({"run_id": record["run_id"], "report": str(report_path), "view": str(root / "_views" / "time-weekly.md")})
+
+
+def render_agent_task_candidates_view(data: dict[str, Any], source_view: str) -> str:
+    lines = [
+        frontmatter(
+            {
+                "type": "view",
+                "view": "agent-task-candidates",
+                "source_view": source_view,
+                "updated": data.get("generated_at", utc_now().isoformat().replace("+00:00", "Z")),
+            }
+        ).rstrip(),
+        "",
+        "# Agent Task Candidates",
+        "",
+        "These are explicit candidate actions generated from Personal OS time planning. Apply them with `personal.py time agent-plan` and `personal.py time agent-apply` only when they should become Things tasks.",
+        "",
+    ]
+    candidates = data.get("agent_task_candidates", [])
+    if not candidates:
+        lines.append("- None.")
+    for candidate in candidates:
+        lines.append(f"- ACTION: {candidate['title']}")
+        if candidate.get("notes"):
+            lines.append(f"  - Notes: {candidate['notes'].splitlines()[0]}")
+    lines.append("")
+    return "\n".join(lines)
+
+
+def cmd_time_agent_plan(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    source = resolve_personal_path(root, args.from_report)
+    plan = action_plan_from_time_report(root, source)
+    if not args.write:
+        print_json(plan)
+        return
+    record = start_run(args, "time agent-plan", root)
+    touched: list[Path] = []
+    plan_path = root / "_views" / f"action-plan-{record['run_id']}.json"
+    write_json(plan_path, plan, touched)
+    record["rollback"].append(f"Remove {relative(root, plan_path)} or use git revert.")
+    finish_run(args, root, record, touched, "personal-os: time action plan")
+    print_json({"run_id": record["run_id"], "plan": str(plan_path), "task_count": len(plan["tasks"])})
+
+
+def cmd_time_agent_apply(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    plan_path = resolve_personal_path(root, args.plan)
+    plan = load_action_plan(root, plan_path)
+    record = start_run(args, "time agent-apply", root)
+    touched: list[Path] = []
+    state = load_json(things_state_path(root), [])
+    created = []
+    verify_agent_tasks_project(root)
+    for task in plan.get("tasks", []):
+        title = str(task.get("title", "")).strip()
+        if not title:
+            continue
+        notes = f"{task.get('notes', '')}\n\nPersonal OS run: {record['run_id']}"
+        source = str(task.get("source", plan.get("source_report", plan.get("source_reflection", ""))))
+        source_key = str(task.get("source_key") or f"time:{source}:{slugify(title)}")
+        created_row = create_personal_os_things_task(
+            root,
+            title=title,
+            notes=notes,
+            source=source,
+            source_key=source_key,
+            run_id_value=record["run_id"],
+            state=state,
+        )
+        if created_row:
+            created_row["plan"] = relative(root, plan_path)
+            created.append(created_row)
+    write_json(things_state_path(root), state, touched)
+    record["things_created"] = created
+    record["rollback"].append(f"Run `personal.py actions rollback --run-id {record['run_id']}` to cancel created Things tasks.")
+    finish_run(args, root, record, touched, "personal-os: apply time agent actions")
+    print_json({"run_id": record["run_id"], "created": created})
+
+
+def verify_time_layer(root: Path) -> list[str]:
+    errors: list[str] = []
+    for name in ("_state/time", "_reports/time"):
+        if not (root / name).is_dir():
+            errors.append(f"Missing time directory: {name}")
+    for path in (root / "_state" / "time").glob("*.json"):
+        try:
+            json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            errors.append(f"Invalid time state JSON: {relative(root, path)}")
+    if not THINGS_SCRIPT.exists():
+        errors.append(f"Things helper missing: {THINGS_SCRIPT}")
+    if not CALENDAR_SCRIPT.exists():
+        errors.append(f"Calendar helper missing: {CALENDAR_SCRIPT}")
+    return errors
+
+
+def cmd_time_verify(args: argparse.Namespace) -> None:
+    root = root_from_args(args)
+    ensure_root_exists(root)
+    errors = verify_time_layer(root)
+    warnings: list[str] = []
+    try:
+        _, project_warnings = verify_agent_tasks_project_for_time(root)
+        warnings.extend(project_warnings)
+    except SystemExit as exc:
+        errors.append(str(exc))
+    calendar = calendar_context(dt.date.today(), 0)
+    warnings.extend(calendar.get("warnings", []))
+    print_json(
+        {
+            "root": str(root),
+            "ok": not errors,
+            "errors": errors,
+            "warnings": warnings,
+            "latest_daily_view": str(root / "_views" / "time-daily.md") if (root / "_views" / "time-daily.md").exists() else "",
+            "latest_weekly_view": str(root / "_views" / "time-weekly.md") if (root / "_views" / "time-weekly.md").exists() else "",
+        }
+    )
+    if errors:
+        raise SystemExit(1)
+
+
 def garden_task_candidates(root: Path, manifests: list[dict[str, Any]]) -> list[dict[str, str]]:
     needs_ocr = [manifest for manifest in manifests if manifest.get("extraction_status") == "needs_ocr"]
     extraction_failures = [manifest for manifest in manifests if manifest.get("extraction_status") in {"failed", "unsupported"}]
@@ -2556,7 +3323,7 @@ def verify_run_logs(root: Path, run_logs: list[Path]) -> tuple[list[str], dict[s
             touched_path = root / touched
             if not touched_path.exists():
                 errors.append(f"Run log touched missing file: {relative(root, path)} -> {touched}")
-        if data.get("things_created") and data.get("command") != "actions apply":
+        if data.get("things_created") and data.get("command") not in {"actions apply", "garden daily", "time agent-apply"}:
             errors.append(f"Unexpected Things creation log: {relative(root, path)}")
         if data.get("command") == "reflect daily":
             if latest_daily is None or str(data.get("started_at", "")) > str(latest_daily.get("started_at", "")):
@@ -2631,6 +3398,7 @@ def cmd_verify(args: argparse.Namespace) -> None:
     errors.extend(run_log_errors)
     errors.extend(verify_things_state(root) if root.exists() else [])
     errors.extend(verify_file_layer(root) if root.exists() else [])
+    errors.extend(verify_time_layer(root) if root.exists() else [])
     automation = launch_agent_state(root) if root.exists() else {}
     if root.exists() and not automation.get("template_exists"):
         errors.append("Missing disabled LaunchAgent template in _state/launchagents")
@@ -2759,6 +3527,30 @@ def build_parser() -> argparse.ArgumentParser:
     file_recheck = file_sub.add_parser("recheck", help="Recheck source/copied file hashes.")
     file_recheck.add_argument("--write", action="store_true")
     file_recheck.set_defaults(func=cmd_file_recheck)
+
+    time_cmd = sub.add_parser("time", help="Generate time and next-action planning surfaces.")
+    time_sub = time_cmd.add_subparsers(dest="time_command", required=True)
+    time_daily = time_sub.add_parser("daily", help="Generate a daily time and next-action plan.")
+    time_daily.add_argument("--date", default="today")
+    time_daily.add_argument("--horizon-days", type=int, default=7)
+    time_daily.add_argument("--limit", type=int, default=10)
+    time_daily.add_argument("--write", action="store_true")
+    time_daily.set_defaults(func=cmd_time_daily)
+    time_weekly = time_sub.add_parser("weekly", help="Generate a weekly project-pressure plan.")
+    time_weekly.add_argument("--date", default="today")
+    time_weekly.add_argument("--horizon-days", type=int, default=7)
+    time_weekly.add_argument("--limit", type=int, default=20)
+    time_weekly.add_argument("--write", action="store_true")
+    time_weekly.set_defaults(func=cmd_time_weekly)
+    time_agent_plan = time_sub.add_parser("agent-plan", help="Extract explicit Agent Tasks candidates from a time report.")
+    time_agent_plan.add_argument("--from-report", required=True)
+    time_agent_plan.add_argument("--write", action="store_true")
+    time_agent_plan.set_defaults(func=cmd_time_agent_plan)
+    time_agent_apply = time_sub.add_parser("agent-apply", help="Create Things Agent Tasks from a time action plan.")
+    time_agent_apply.add_argument("--plan", required=True)
+    time_agent_apply.set_defaults(func=cmd_time_agent_apply)
+    time_verify = time_sub.add_parser("verify", help="Verify time planning prerequisites and state.")
+    time_verify.set_defaults(func=cmd_time_verify)
 
     garden = sub.add_parser("garden", help="Run Personal OS gardening passes.")
     garden_sub = garden.add_subparsers(dest="garden_command", required=True)
