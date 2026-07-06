@@ -17,6 +17,7 @@ Calendar database or slow Calendar.app AppleScript event queries.
 ~/.codex/skills/apple-calendar/scripts/calendar.py agenda --from today --to tomorrow
 ~/.codex/skills/apple-calendar/scripts/calendar.py search "dentist" --from today --to 2026-07-31
 ~/.codex/skills/apple-calendar/scripts/calendar.py create "Focus block" --start "2026-07-01 09:00" --duration-minutes 90 --calendar Default
+~/.codex/skills/apple-calendar/scripts/calendar.py create "Building window cleaning" --start "2026-07-14" --duration-days 4 --all-day --calendar Default --notes "Service window: 9:00 AM-4:00 PM each day."
 ~/.codex/skills/apple-calendar/scripts/calendar.py create "Class" --start "2026-08-04 15:00" --end "2026-08-04 17:00" --time-zone America/Los_Angeles --repeat weekly --repeat-days tue,thu --repeat-until 2026-08-31 --calendar Default
 ~/.codex/skills/apple-calendar/scripts/calendar.py validate-write --calendar Default
 ```
@@ -28,6 +29,11 @@ Calendar database or slow Calendar.app AppleScript event queries.
 - Before editing or deleting an existing event, search/list first and identify
   the target `id` or `calendarItemId`.
 - Prefer `update` for rescheduling/editing.
+- For consecutive multi-day maintenance or service windows that list daily
+  working hours, create one all-day multi-day event per workstream and put the
+  daily hours in notes. Do not create daily recurring timed events unless the
+  user asks for separate occurrences or the notice describes separate
+  appointments.
 - Use `delete` only when the user explicitly asks or the script is deleting a
   temporary event it created for validation.
 - For recurring events, use `delete <id> --yes --span all` to remove the whole
@@ -55,7 +61,11 @@ Run `calendars` to identify writable calendars, then `today`, `tomorrow`, or
 Use `create` with `--start` and either `--end` or `--duration-minutes`.
 Use `--all-day` for all-day events.
 Use `--time-zone IANA_ID` when the user's requested time zone differs from this
-Mac's local time zone.
+Mac's local time zone. Do not pass `--time-zone` with `--all-day`; all-day
+events should use local calendar dates.
+For multi-day all-day events, prefer `--duration-days N` or set `--end` to the
+exclusive next date. Put any daily service window, such as "9:00 AM-4:00 PM",
+in `--notes` instead of making repeated timed blocks.
 Use `--repeat weekly --repeat-days tue,thu --repeat-until YYYY-MM-DD` for
 bounded weekly recurrence.
 

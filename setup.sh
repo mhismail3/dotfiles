@@ -384,7 +384,7 @@ step_packages() {
         repair_private_internet_access || true
     fi
 
-    if ! brew bundle check --file="$DOTFILES/Brewfile"; then
+    if ! brew bundle check --no-upgrade --file="$DOTFILES/Brewfile"; then
         package_status=1
     fi
 
@@ -510,6 +510,41 @@ step_codex_skills() {
     fi
 
     success "Codex skills linked"
+}
+
+step_onepassword_cli() {
+    info "1Password CLI"
+    local helper="$HOME/.codex/skills/onepassword/scripts/op-safe.py"
+
+    if [[ ! -d "/Applications/1Password.app" ]]; then
+        warn "1Password app is not installed"
+        return 0
+    fi
+    if ! command -v op >/dev/null 2>&1; then
+        warn "1Password CLI is not installed"
+        echo "  Re-run: brew bundle --file=$DOTFILES/Brewfile --no-upgrade"
+        return 0
+    fi
+    if [[ ! -x "$helper" ]]; then
+        warn "1Password Codex helper is not linked yet"
+        echo "  Re-run: ./setup.sh"
+        return 0
+    fi
+
+    if "$helper" status --require-account >/dev/null 2>&1; then
+        if "$helper" signin >/dev/null 2>&1; then
+            success "1Password CLI authenticated through desktop app integration"
+        else
+            warn "1Password CLI account is configured, but sign-in did not complete"
+            echo "  Run visibly: $helper signin"
+        fi
+        return 0
+    fi
+
+    warn "1Password CLI app integration is not ready"
+    echo "  In 1Password: Settings > Security > enable system unlock."
+    echo "  In 1Password: Settings > Developer > Integrate with 1Password CLI."
+    echo "  Then run: $helper signin"
 }
 
 ###############################################################################
@@ -1099,21 +1134,20 @@ details[connection_id] = {
 }
 
 previous_session = metadata.get(connection_id, {})
-session_state = previous_session.get("sessionState", {})
-if not session_state:
-    session_state = {
-        "URL": url,
-        "restorationAttributes": {
-            "targetAddress": url,
-            "quality": 5,
-            "displayType": 1,
-            "controlMode": 1,
-            "scalingMode": 1,
-            "dynamicResolution": 0,
-            "autoClipboard": 1,
-            "isFullScreen": 0,
-        },
-    }
+session_state = dict(previous_session.get("sessionState", {}) or {})
+restoration = dict(session_state.get("restorationAttributes", {}) or {})
+restoration.update({
+    "targetAddress": url,
+    "quality": restoration.get("quality", 5),
+    "displayType": restoration.get("displayType", 1),
+    "controlMode": restoration.get("controlMode", 1),
+    "scalingMode": restoration.get("scalingMode", 1),
+    "dynamicResolution": restoration.get("dynamicResolution", 0),
+    "autoClipboard": restoration.get("autoClipboard", 1),
+    "isFullScreen": restoration.get("isFullScreen", 0),
+})
+session_state["URL"] = url
+session_state["restorationAttributes"] = restoration
 metadata[connection_id] = {
     **previous_session,
     "lastConnectedDate": previous_session.get("lastConnectedDate", dt.datetime.now()),
@@ -1537,6 +1571,7 @@ main() {
     step_symlinks
     step_codex_config
     step_codex_skills
+    step_onepassword_cli
     step_ssh
     step_gh_auth
     step_shell

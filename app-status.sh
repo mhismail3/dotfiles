@@ -11,9 +11,10 @@ Usage: ./app-status.sh <command> [app-id]
 
 Commands:
   summary          Show install and setup status for every tracked app
-  next             Show manual setup queue, sorted by priority
+  next             Show active setup queue; if empty, surface verification failures
   manual <app-id>  Show manual setup steps for one app
   verify <app-id>  Run repeatable verification commands for one app
+  verify-all       Run repeatable verification for ready/verify apps
   open <app-id>    Open an app by app_path
   ids              List tracked app ids
 EOF
@@ -69,16 +70,31 @@ next_steps() {
     local rows priority app_id name desired
     rows="$(yq -r '.apps[] | select(((.manual // []) | length) > 0 and (.desired_state == "needs_login" or .desired_state == "needs_config" or .desired_state == "needs_permissions")) | [.priority, .id, .name, .desired_state] | @tsv' "$REGISTRY" | sed '/^$/d' | sort -n)"
 
-    if [[ -z "$rows" ]]; then
-        echo "No active app setup steps."
+    if [[ -n "$rows" ]]; then
+        printf "%s\n" "$rows" |
+            while IFS=$'\t' read -r priority app_id name desired; do
+                printf "\n[%s] %s (%s)\n" "$priority" "$name" "$desired"
+                APP_ID="$app_id" yq -r '.apps[] | select(.id == strenv(APP_ID)) | (.manual // [])[] | "  - " + .' "$REGISTRY"
+            done
         return 0
     fi
 
-    printf "%s\n" "$rows" |
-        while IFS=$'\t' read -r priority app_id name desired; do
-            printf "\n[%s] %s (%s)\n" "$priority" "$name" "$desired"
-            APP_ID="$app_id" yq -r '.apps[] | select(.id == strenv(APP_ID)) | (.manual // [])[] | "  - " + .' "$REGISTRY"
-        done
+    local failures tmp
+    failures="$(verification_failures)"
+    if [[ -n "$failures" ]]; then
+        echo "No active login/config/permission queue entries."
+        echo ""
+        echo "Verification failures still need repair:"
+        printf "%s\n" "$failures" |
+            while IFS=$'\t' read -r priority app_id name tmp; do
+                printf "\n[%s] %s (%s)\n" "$priority" "$name" "$app_id"
+                sed 's/^/  /' "$tmp"
+                rm -f "$tmp"
+            done
+        return 1
+    fi
+
+    echo "No active app setup steps. Repeatable verification checks pass."
 }
 
 manual_steps() {
@@ -129,6 +145,44 @@ verify_app() {
             ;;
     esac
     return "$verify_status"
+}
+
+verification_targets() {
+    yq -r '.apps[] | select(.desired_state == "verify" or .desired_state == "ready") | [.priority, .id, .name] | @tsv' "$REGISTRY" | sed '/^$/d' | sort -n
+}
+
+verification_failures() {
+    local targets priority app_id name tmp
+    targets="$(verification_targets)"
+    [[ -z "$targets" ]] && return 0
+
+    printf "%s\n" "$targets" |
+        while IFS=$'\t' read -r priority app_id name; do
+            tmp="$(mktemp)"
+            if verify_app "$app_id" >"$tmp" 2>&1; then
+                rm -f "$tmp"
+            else
+                printf "%s\t%s\t%s\t%s\n" "$priority" "$app_id" "$name" "$tmp"
+            fi
+        done
+}
+
+verify_all() {
+    local targets priority app_id name failures=0
+    targets="$(verification_targets)"
+    [[ -z "$targets" ]] && { echo "No ready/verify apps to verify."; return 0; }
+
+    while IFS=$'\t' read -r priority app_id name; do
+        printf "\n[%s] %s (%s)\n" "$priority" "$name" "$app_id"
+        if verify_app "$app_id"; then
+            echo "  result: ok"
+        else
+            echo "  result: failed"
+            failures=1
+        fi
+    done <<< "$targets"
+
+    return "$failures"
 }
 
 verify_tailscale() {
@@ -793,6 +847,10 @@ main() {
         verify)
             [[ $# -eq 2 ]] || { usage; exit 2; }
             verify_app "$2"
+            ;;
+        verify-all)
+            [[ $# -eq 1 ]] || { usage; exit 2; }
+            verify_all
             ;;
         open)
             [[ $# -eq 2 ]] || { usage; exit 2; }

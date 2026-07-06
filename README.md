@@ -85,12 +85,12 @@ zsh -n .zshrc
 bash -n .macos
 zsh -n .macos
 git config --file .gitconfig --list
-brew bundle check --file=Brewfile
+HOMEBREW_NO_AUTO_UPDATE=1 brew bundle check --no-upgrade --file=Brewfile
 python3.14 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path("codex.config.toml").read_text())'
 yq e '.' apps.yaml >/dev/null
 zsh -n app-status.sh
 ./app-status.sh summary
-python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py skills/llm-wiki/scripts/wiki.py
+python3 -m py_compile skills/things-3/scripts/things.py skills/apple-calendar/scripts/calendar.py skills/llm-wiki/scripts/wiki.py skills/onepassword/scripts/op-safe.py
 swiftc -parse skills/apple-calendar/scripts/calendar_helper.swift
 uvx --with pyyaml python - <<'PY'
 import pathlib, yaml
@@ -136,6 +136,15 @@ for adding Favorites on this version.
 Known Raycast boundary: Spotlight's `Cmd+Space` shortcut is disabled
 automatically, but Raycast does not expose a stable pre-onboarding preference or
 CLI for setting its global hotkey. Set Raycast's hotkey in the app UI.
+
+Known 1Password boundary: 1Password CLI is installed and the `onepassword`
+Codex skill can safely search metadata and copy/paste fields without printing
+values, but CLI authorization still requires the 1Password desktop app
+integration. Enable Settings > Developer > Integrate with 1Password CLI in the
+1Password app, then authenticate with `op signin`. `setup.sh` verifies this
+state and runs a safe sign-in when the app integration is already configured;
+otherwise it prints the manual boundary. Do not store account passwords, Secret
+Keys, service account tokens, exports, or vault metadata in dotfiles.
 
 Known Lock Screen shortcut boundary: add `Lock Screen` with `Option+L` manually
 in System Settings > Keyboard > Keyboard Shortcuts > App Shortcuts. A direct

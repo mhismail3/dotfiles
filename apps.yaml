@@ -30,22 +30,34 @@ apps:
     desired_state: verify
     automated:
       - Installed by Brewfile.
+      - 1Password CLI is installed by Brewfile as `op` through the `1password-cli` cask.
       - Added to Dock by .macos.
       - Added to Login Items by .macos.
+      - Personal `onepassword` Codex skill is linked by setup.sh.
+      - setup.sh verifies the 1Password CLI app integration and runs a safe sign-in when the desktop integration is already enabled.
     manual:
       - Sign in to the 1Password account.
       - Enable unlock method preferences.
+      - Enable Settings > Developer > Integrate with 1Password CLI, then run `op signin`.
       - Install or enable the Chrome browser extension after Chrome setup.
     verify:
       commands:
         - test -d "/Applications/1Password.app"
+        - command -v op
+        - op --version
+        - test -x "$HOME/.codex/skills/onepassword/scripts/op-safe.py"
+        - $HOME/.codex/skills/onepassword/scripts/op-safe.py status --require-account
       user_checks:
         - 1Password opens and can unlock the primary vault.
+        - '`op signin` authenticates through the 1Password desktop app integration.'
         - Chrome can access the 1Password extension.
     state_locations:
       - ~/Library/Group Containers/2BUA8C4S2C.com.1password
+      - ~/.config/op
     notes:
       - Do not store 1Password account details, recovery keys, or vault metadata in this repo.
+      - Use the 1Password desktop app integration as the default CLI authorization boundary; avoid service account tokens unless a future scoped automation explicitly needs one.
+      - The `onepassword` Codex skill wraps `op` so item searches show metadata only and credential handoff copies or pastes values without printing them.
       - Prefer 1Password Quick Access (`Cmd+Shift+Space`) for agent credential handoff so username/password can be copied without opening full item details.
       - Agents may paste copied credentials into target apps, then clear the clipboard, but must not reveal fields or print clipboard contents.
 
@@ -135,6 +147,7 @@ apps:
         - codex --version
         - test -x "$HOME/.codex/skills/things-3/scripts/things.py"
         - test -x "$HOME/.codex/skills/apple-calendar/scripts/calendar.py"
+        - test -x "$HOME/.codex/skills/onepassword/scripts/op-safe.py"
       user_checks:
         - Codex app is signed in.
         - Computer Use can see and control approved apps.

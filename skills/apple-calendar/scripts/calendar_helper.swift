@@ -417,8 +417,9 @@ func commandCreate(store: EKEventStore, args: [String]) throws {
         throw CalendarCLIError(description: "create requires --start")
     }
 
-    let timeZone = try parseTimeZone(value(after: "--time-zone", in: args))
     let allDay = has("--all-day", in: args)
+    let requestedTimeZone = try parseTimeZone(value(after: "--time-zone", in: args))
+    let timeZone = allDay ? nil : requestedTimeZone
     var start = try parseDate(rawStart, timeZone: timeZone)
     if allDay {
         start = calendarFor(timeZone: timeZone).startOfDay(for: start)

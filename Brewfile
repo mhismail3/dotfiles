@@ -55,6 +55,7 @@ brew "ruby-build"
 
 cask "raycast"
 cask "1password"
+cask "1password-cli"
 cask "superwhisper"
 cask "claude"
 cask "obsidian"
