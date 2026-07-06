@@ -8,8 +8,9 @@
 - Local database:
   `~/Library/Group Containers/JLMPQHK86H.com.culturedcode.ThingsMac/ThingsData-*/Things Database.thingsdatabase/main.sqlite`
 
-Use AppleScript for writes. The SQLite database is useful for emergency
-inspection only and must be treated as read-only/private.
+Use AppleScript for writes. The SQLite database is useful for read-heavy
+planning and inspection because AppleScript per-to-do reads are slow on large
+task sets. It must be treated as read-only/private.
 
 ## AppleScript Capabilities
 
@@ -46,7 +47,8 @@ Avoid destructive writes:
 
 ## Script Notes
 
-`scripts/things.py` shells out to `osascript` and expects Things 3 to be
-installed. It can launch Things implicitly through AppleScript. Output is JSON.
+`scripts/things.py` shells out to `osascript` for writes and UI-compatible
+reads, and reads the local SQLite database in read-only mode for fast snapshots
+and search. Output is JSON.
 
 Date arguments accept `YYYY-MM-DD`, `today`, or `tomorrow`.

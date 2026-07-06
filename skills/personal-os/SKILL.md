@@ -53,6 +53,10 @@ the user explicitly asks for the matching command.
   second task manager.
 - External wiki/Raindrop experiment queues stay separate unless a reviewed item
   is explicitly promoted into Things.
+- Treat `personal.py` commands as agent-facing interfaces. Run them directly
+  when the user asks for Personal OS state, planning, gardening, or action
+  writeback; do not ask the user to run commands unless they explicitly want the
+  command text.
 
 ## Common Tasks
 

@@ -289,6 +289,101 @@ end tell
 '''
 
 
+LISTS_SCRIPT = r'''
+on joinList(theList, delimiter)
+    set oldDelimiters to AppleScript's text item delimiters
+    set AppleScript's text item delimiters to delimiter
+    set joined to theList as text
+    set AppleScript's text item delimiters to oldDelimiters
+    return joined
+end joinList
+
+tell application "Things3"
+    set recordDelimiter to ASCII character 30
+    set fieldDelimiter to ASCII character 31
+
+    set areaRows to {}
+    repeat with a in areas
+        set end of areaRows to (id of a) & fieldDelimiter & (name of a) & fieldDelimiter & (tag names of a) & fieldDelimiter & ((collapsed of a) as text)
+    end repeat
+
+    set projectRows to {}
+    repeat with p in projects
+        set areaId to ""
+        set areaName to ""
+        try
+            set a to area of p
+            set areaId to id of a
+            set areaName to name of a
+        end try
+        set end of projectRows to (id of p) & fieldDelimiter & (name of p) & fieldDelimiter & ((status of p) as text) & fieldDelimiter & areaId & fieldDelimiter & areaName
+    end repeat
+
+    set tagRows to {}
+    repeat with tg in tags
+        set parentId to ""
+        set parentName to ""
+        try
+            set pt to parent tag of tg
+            set parentId to id of pt
+            set parentName to name of pt
+        end try
+        set end of tagRows to (id of tg) & fieldDelimiter & (name of tg) & fieldDelimiter & (keyboard shortcut of tg) & fieldDelimiter & parentId & fieldDelimiter & parentName
+    end repeat
+
+    return (my joinList(areaRows, recordDelimiter)) & (ASCII character 29) & (my joinList(projectRows, recordDelimiter)) & (ASCII character 29) & (my joinList(tagRows, recordDelimiter))
+end tell
+'''
+
+
+def field(fields: list[str], index: int) -> str:
+    return fields[index] if len(fields) > index else ""
+
+
+def normalized_status(value: str) -> str:
+    text = value.strip().casefold()
+    if text in {"open", "completed", "canceled", "cancelled"}:
+        return "canceled" if text == "cancelled" else text
+    return value.strip() or "unknown"
+
+
+def lists_data() -> dict[str, Any]:
+    raw = run_applescript(LISTS_SCRIPT)
+    sections = raw.split("\x1d")
+    while len(sections) < 3:
+        sections.append("")
+    areas = [
+        {
+            "id": field(fields, 0),
+            "name": field(fields, 1),
+            "tagNames": field(fields, 2),
+            "collapsed": field(fields, 3).casefold() == "true",
+        }
+        for fields in split_records(sections[0])
+    ]
+    projects = [
+        {
+            "id": field(fields, 0),
+            "name": field(fields, 1),
+            "status": normalized_status(field(fields, 2)),
+            "areaId": field(fields, 3),
+            "areaName": field(fields, 4),
+        }
+        for fields in split_records(sections[1])
+    ]
+    tags = [
+        {
+            "id": field(fields, 0),
+            "name": field(fields, 1),
+            "keyboardShortcut": field(fields, 2),
+            "parentId": field(fields, 3),
+            "parentName": field(fields, 4),
+        }
+        for fields in split_records(sections[2])
+    ]
+    return {"areas": areas, "projects": projects, "tags": tags, "source": "applescript-lists-fast"}
+
+
 def snapshot_data() -> dict[str, Any]:
     raw = run_applescript(SNAPSHOT_SCRIPT)
     sections = raw.split("\x1d")
@@ -350,10 +445,10 @@ def print_json(data: Any) -> None:
 
 
 def cmd_snapshot(args: argparse.Namespace) -> None:
-    data = snapshot_data()
+    data = snapshot_data() if args.applescript else snapshot_db_data()
     if args.open_only:
-        data["todos"] = [t for t in data["todos"] if t.get("status") == "open"]
-        data["projects"] = [p for p in data["projects"] if p.get("status") == "open"]
+        data["todos"] = [t for t in data["todos"] if t.get("status") == "open" and not t.get("trashed")]
+        data["projects"] = [p for p in data["projects"] if p.get("status") == "open" and not p.get("trashed")]
     print_json(data)
 
 
@@ -367,10 +462,10 @@ def cmd_snapshot_db(args: argparse.Namespace) -> None:
 
 def cmd_search(args: argparse.Namespace) -> None:
     needle = args.query.casefold()
-    data = snapshot_data()
+    data = snapshot_db_data()
     results = []
     for item in data["todos"]:
-        if args.open_only and item.get("status") != "open":
+        if args.open_only and (item.get("status") != "open" or item.get("trashed")):
             continue
         haystack = "\n".join(
             str(item.get(key, ""))
@@ -382,7 +477,7 @@ def cmd_search(args: argparse.Namespace) -> None:
 
 
 def cmd_lists(_: argparse.Namespace) -> None:
-    data = snapshot_data()
+    data = lists_data()
     print_json({"areas": data["areas"], "projects": data["projects"], "tags": data["tags"]})
 
 
@@ -612,6 +707,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     snapshot = sub.add_parser("snapshot", help="Export Things areas/projects/tags/to-dos as JSON.")
     snapshot.add_argument("--open-only", action="store_true", help="Include only open to-dos/projects.")
+    snapshot.add_argument("--applescript", action="store_true", help="Use the slower AppleScript export instead of the read-only database.")
     snapshot.set_defaults(func=cmd_snapshot)
 
     snapshot_db = sub.add_parser("snapshot-db", help="Export Things data from the local database in read-only mode.")

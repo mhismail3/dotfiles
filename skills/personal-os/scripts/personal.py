@@ -1705,7 +1705,10 @@ def call_things(args: list[str]) -> Any:
 
 
 def verify_things_item(item_id: str) -> list[dict[str, Any]]:
-    snapshot = call_things(["snapshot"])
+    try:
+        snapshot = call_things(["snapshot-db"])
+    except SystemExit:
+        snapshot = call_things(["snapshot"])
     return [todo for todo in snapshot.get("todos", []) if str(todo.get("id")) == str(item_id)]
 
 
@@ -2320,19 +2323,19 @@ def split_tag_names(value: Any) -> list[str]:
 
 def read_things_snapshot_for_time() -> tuple[dict[str, Any], list[str]]:
     try:
-        data = call_things(["snapshot", "--open-only"])
+        data = call_things(["snapshot-db", "--open-only"])
     except SystemExit as exc:
         primary_error = str(exc)
         try:
-            data = call_things(["snapshot-db", "--open-only"])
+            data = call_things(["snapshot", "--open-only"])
             if isinstance(data, dict):
                 data.setdefault("todos", [])
                 data.setdefault("projects", [])
-                return data, [f"Things AppleScript snapshot failed; used read-only SQLite fallback. Error: {primary_error}"]
+                return data, [f"Things read-only SQLite snapshot failed; used AppleScript fallback. Error: {primary_error}"]
         except SystemExit as fallback_exc:
             return {"todos": [], "projects": [], "areas": [], "tags": []}, [
-                f"Things AppleScript snapshot failed: {primary_error}",
-                f"Things read-only SQLite fallback failed: {fallback_exc}",
+                f"Things read-only SQLite snapshot failed: {primary_error}",
+                f"Things AppleScript fallback failed: {fallback_exc}",
             ]
     if not isinstance(data, dict):
         return {"todos": [], "projects": [], "areas": [], "tags": []}, ["Things snapshot did not return a JSON object."]
