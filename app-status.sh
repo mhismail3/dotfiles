@@ -38,7 +38,16 @@ app_exists() {
 }
 
 install_state() {
-    local app_path="$1" command_name="$2"
+    local app_id="$1" app_path="$2" command_name="$3" candidate
+    local -a app_paths
+    app_paths=("${(@f)$(yq_app "$app_id" '(.app_paths // [])[]')}")
+    if (( ${#app_paths[@]} > 0 )) && [[ -n "${app_paths[1]:-}" && "${app_paths[1]}" != "null" ]]; then
+        for candidate in "${app_paths[@]}"; do
+            [[ -d "$candidate" ]] && { print -r -- "installed"; return; }
+        done
+        print -r -- "missing"
+        return
+    fi
     if [[ -n "$app_path" && "$app_path" != "null" ]]; then
         [[ -d "$app_path" ]] && print -r -- "installed" || print -r -- "missing"
         return
@@ -61,7 +70,7 @@ summary() {
             command_name="$(yq_app "$app_id" '.command // ""')"
             desired="$(yq_app "$app_id" '.desired_state')"
             manual_count="$(yq_app "$app_id" '(.manual // []) | length')"
-            installed="$(install_state "$app_path" "$command_name")"
+            installed="$(install_state "$app_id" "$app_path" "$command_name")"
             printf "%-4s %-24s %-12s %-16s %-8s %s\n" "$priority" "$name" "$installed" "$desired" "$manual_count" "$app_id"
         done
 }

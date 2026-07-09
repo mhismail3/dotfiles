@@ -1,7 +1,0 @@
-interface:
-  display_name: "Personal OS"
-  short_description: "Maintain private journal, reflection, profile, important-file, Butler's Book, and reversible task memory"
-  default_prompt: "Use $personal-os to inspect my private Personal OS state, Butler's Book, important files, reflections, or personal task follow-up."
-
-policy:
-  allow_implicit_invocation: true

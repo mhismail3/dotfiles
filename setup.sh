@@ -55,7 +55,6 @@ CONFIG_LINKS=(
     ".gitignore_global:$HOME/.gitignore_global"
     ".tmux.conf:$HOME/.tmux.conf"
     "starship.toml:$HOME/.config/starship.toml"
-    "codex.AGENTS.md:$HOME/.codex/AGENTS.md"
 )
 
 confirm() {
@@ -456,6 +455,12 @@ step_codex_config() {
         return 0
     fi
 
+    if [[ -L "$dst" ]] && [[ "${dst:A}" == "$HOME/Workspace/harness/"* ]]; then
+        success "Codex config is managed by the personal harness"
+        echo "  Left active harness config unchanged: ${dst:A}"
+        return 0
+    fi
+
     if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
         success "Already linked: $dst"
         return 0
@@ -466,55 +471,8 @@ step_codex_config() {
     echo "  Preserved app/plugin/project state from the live config."
 }
 
-step_codex_skills() {
-    info "Codex skills"
-    local src_dir="$DOTFILES/skills"
-    local dst_dir="$HOME/.codex/skills"
-    local backup_dir="$HOME/.codex/backups/skills"
-    local skill dst current backup count=0
-
-    if [[ ! -d "$src_dir" ]]; then
-        warn "No personal Codex skills found at $src_dir"
-        return 0
-    fi
-
-    mkdir -p "$dst_dir" "$backup_dir"
-    for skill in "$src_dir"/*(N/); do
-        dst="$dst_dir/${skill:t}"
-        if [[ -L "$dst" ]]; then
-            current="$(readlink "$dst")"
-            if [[ "$current" == "$skill" || "${current:A}" == "${skill:A}" ]]; then
-                echo "  Already linked: $dst"
-                (( count++ ))
-                continue
-            fi
-        fi
-
-        if [[ -e "$dst" || -L "$dst" ]]; then
-            backup="$backup_dir/${skill:t}.bak.$(date +%s)"
-            mv "$dst" "$backup"
-            echo "  Backed up existing skill to $backup"
-        fi
-
-        if ln -s "$skill" "$dst"; then
-            echo "  Linked: $dst -> $skill"
-            (( count++ ))
-        else
-            warn "Could not link Codex skill: $skill"
-        fi
-    done
-
-    if (( count == 0 )); then
-        warn "No personal Codex skills found at $src_dir"
-        return 0
-    fi
-
-    success "Codex skills linked"
-}
-
 step_onepassword_cli() {
     info "1Password CLI"
-    local helper="$HOME/.codex/skills/onepassword/scripts/op-safe.py"
 
     if [[ ! -d "/Applications/1Password.app" ]]; then
         warn "1Password app is not installed"
@@ -525,26 +483,14 @@ step_onepassword_cli() {
         echo "  Re-run: brew bundle --file=$DOTFILES/Brewfile --no-upgrade"
         return 0
     fi
-    if [[ ! -x "$helper" ]]; then
-        warn "1Password Codex helper is not linked yet"
-        echo "  Re-run: ./setup.sh"
-        return 0
+    if op account list --format=json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; raise SystemExit(0 if json.load(sys.stdin) else 1)' 2>/dev/null; then
+        success "1Password CLI account is configured"
+    else
+        warn "1Password CLI app integration is not ready"
+        echo "  In 1Password: Settings > Security > enable system unlock."
+        echo "  In 1Password: Settings > Developer > Integrate with 1Password CLI."
+        echo "  Then run visibly: op signin"
     fi
-
-    if "$helper" status --require-account >/dev/null 2>&1; then
-        if "$helper" signin >/dev/null 2>&1; then
-            success "1Password CLI authenticated through desktop app integration"
-        else
-            warn "1Password CLI account is configured, but sign-in did not complete"
-            echo "  Run visibly: $helper signin"
-        fi
-        return 0
-    fi
-
-    warn "1Password CLI app integration is not ready"
-    echo "  In 1Password: Settings > Security > enable system unlock."
-    echo "  In 1Password: Settings > Developer > Integrate with 1Password CLI."
-    echo "  Then run: $helper signin"
 }
 
 ###############################################################################
@@ -1570,7 +1516,6 @@ main() {
     step_xcode_app
     step_symlinks
     step_codex_config
-    step_codex_skills
     step_onepassword_cli
     step_ssh
     step_gh_auth

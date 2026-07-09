@@ -115,7 +115,11 @@ if command -v dockutil &>/dev/null; then
     add_dock_app "/Applications/Google Chrome.app"
     add_dock_app "/System/Applications/Photos.app"
     add_dock_app "/Applications/Claude.app"
-    add_dock_app "/Applications/Codex.app"
+    if [[ -d "/Applications/ChatGPT.app" ]]; then
+        add_dock_app "/Applications/ChatGPT.app"
+    else
+        add_dock_app "/Applications/Codex.app"
+    fi
     add_dock_app "/Applications/Xcode.app"
     add_dock_app "/System/Applications/Utilities/Terminal.app"
     add_dock_app "/System/Applications/Utilities/Screen Sharing.app"

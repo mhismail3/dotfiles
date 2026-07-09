@@ -33,8 +33,7 @@ apps:
       - 1Password CLI is installed by Brewfile as `op` through the `1password-cli` cask.
       - Added to Dock by .macos.
       - Added to Login Items by .macos.
-      - Personal `onepassword` Codex skill is linked by setup.sh.
-      - setup.sh verifies the 1Password CLI app integration and runs a safe sign-in when the desktop integration is already enabled.
+      - setup.sh verifies whether a 1Password CLI account is configured without reading vault data.
     manual:
       - Sign in to the 1Password account.
       - Enable unlock method preferences.
@@ -45,8 +44,7 @@ apps:
         - test -d "/Applications/1Password.app"
         - command -v op
         - op --version
-        - test -x "$HOME/.codex/skills/onepassword/scripts/op-safe.py"
-        - $HOME/.codex/skills/onepassword/scripts/op-safe.py status --require-account
+        - op account list --format=json >/dev/null
       user_checks:
         - 1Password opens and can unlock the primary vault.
         - '`op signin` authenticates through the 1Password desktop app integration.'
@@ -57,7 +55,7 @@ apps:
     notes:
       - Do not store 1Password account details, recovery keys, or vault metadata in this repo.
       - Use the 1Password desktop app integration as the default CLI authorization boundary; avoid service account tokens unless a future scoped automation explicitly needs one.
-      - The `onepassword` Codex skill wraps `op` so item searches show metadata only and credential handoff copies or pastes values without printing them.
+      - A separate personal agent harness may provide a safe 1Password skill; dotfiles does not own that agent behavior.
       - Prefer 1Password Quick Access (`Cmd+Shift+Space`) for agent credential handoff so username/password can be copied without opening full item details.
       - Agents may paste copied credentials into target apps, then clear the clipboard, but must not reveal fields or print clipboard contents.
 
@@ -123,7 +121,10 @@ apps:
     name: Codex
     source: brew_cask
     package: codex-app
-    app_path: /Applications/Codex.app
+    app_path: /Applications/ChatGPT.app
+    app_paths:
+      - /Applications/ChatGPT.app
+      - /Applications/Codex.app
     command: codex
     priority: 40
     setup_phase: agent
@@ -133,8 +134,7 @@ apps:
       - Installed by Brewfile.
       - Added to Dock by .macos.
       - Durable defaults merged from codex.config.toml by setup.sh.
-      - Global personal AGENTS.md linked by setup.sh.
-      - Personal Codex skills linked from dotfiles by setup.sh.
+      - No global agent instructions or personal skills are owned by dotfiles.
     manual:
       - Sign in to Codex if not already authenticated.
       - Enable or verify Computer Use permissions in macOS Privacy and Security.
@@ -142,12 +142,9 @@ apps:
       - Review Settings after config changes that require app restart.
     verify:
       commands:
-        - test -d "/Applications/Codex.app"
+        - test -d "/Applications/ChatGPT.app" || test -d "/Applications/Codex.app"
         - command -v codex
         - codex --version
-        - test -x "$HOME/.codex/skills/things-3/scripts/things.py"
-        - test -x "$HOME/.codex/skills/apple-calendar/scripts/calendar.py"
-        - test -x "$HOME/.codex/skills/onepassword/scripts/op-safe.py"
       user_checks:
         - Codex app is signed in.
         - Computer Use can see and control approved apps.
@@ -160,6 +157,7 @@ apps:
     notes:
       - Do not commit Codex auth, sessions, logs, cache, plugin runtime state, or project trust history.
       - Apple Calendar access is granted to the generated helper app, not to the dotfiles repo itself.
+      - Ongoing Codex instructions, skills, hooks, and control-plane state belong in the separate personal harness.
 
   - id: tailscale
     name: Tailscale
@@ -519,8 +517,6 @@ apps:
     verify:
       commands:
         - test -d "/Applications/Things3.app"
-        - test -x "$HOME/.codex/skills/things-3/scripts/things.py"
-        - '"$HOME/.codex/skills/things-3/scripts/things.py" snapshot --open-only >/dev/null'
       user_checks:
         - Things opens with expected areas, projects, and inbox state.
     state_locations:
@@ -529,7 +525,7 @@ apps:
       - First-run tutorial was completed and the sample project was declined on this Mac.
       - Current baseline leaves Things Cloud, Calendar integration, and Reminders import off until explicitly enabled.
       - Task data should be managed by Things Cloud or its native storage, not dotfiles.
-      - Personal Codex Things 3 skill is installed from dotfiles and can read/write through Things AppleScript automation.
+      - A separate personal agent harness may provide a Things integration; dotfiles owns only the app install and Mac setup.
 
   - id: private-internet-access
     name: Private Internet Access

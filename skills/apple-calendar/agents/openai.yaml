@@ -1,7 +1,0 @@
-interface:
-  display_name: "Apple Calendar"
-  short_description: "Read and update Apple Calendar events"
-  default_prompt: "Use $apple-calendar to review my calendar and help schedule my time."
-
-policy:
-  allow_implicit_invocation: true

@@ -19,10 +19,10 @@ agent memory.
   failed cask install. `setup.sh` now removes the top-level quarantine attribute
   when present and retries `brew install --cask private-internet-access --adopt`.
 - Fresh Codex app installs write live plugin, MCP, desktop, and project trust
-  state into `~/.codex/config.toml`. Do not symlink over that file blindly;
-  keep `codex.config.toml` as a durable baseline. `setup.sh` now deep-merges
-  those durable defaults into the live config while preserving app-managed
-  sections.
+  state into `~/.codex/config.toml`. Keep `codex.config.toml` as a device
+  baseline and deep-merge it while preserving app-managed sections. Ongoing
+  global instructions, skills, hooks, and control-plane state belong to the
+  separate personal harness, not dotfiles.
 - Zsh completion directories may become group-writable during Homebrew setup.
   Fix `go-w` permissions before `compinit`, and do not run `compinit` unless
   stdin/stdout are real terminals.

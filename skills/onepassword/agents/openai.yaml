@@ -1,4 +1,0 @@
-interface:
-  display_name: "1Password"
-  short_description: "Safe 1Password CLI credential handoff"
-  default_prompt: "Use $onepassword to help me log in with 1Password CLI without revealing secrets."
