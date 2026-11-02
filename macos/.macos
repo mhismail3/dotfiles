@@ -121,8 +121,7 @@ echo "Disabling Siri..."
 defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 defaults write com.apple.Siri StatusMenuVisible -bool false
 defaults write com.apple.Siri UserHasDeclinedEnable -bool true
-launchctl disable "user/$UID/com.apple.assistantd" 2>/dev/null || true
-launchctl disable "user/$UID/com.apple.Siri.agent" 2>/dev/null || true
+# assistantd / Siri.agent are disabled in lean.sh
 
 ###############################################################################
 # Menu Bar
@@ -281,6 +280,12 @@ sudo chown root:wheel "$KEYREMAP_PLIST"
 sudo chmod 644 "$KEYREMAP_PLIST"
 sudo launchctl bootstrap system "$KEYREMAP_PLIST" 2>/dev/null || true
 sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
+
+###############################################################################
+# Lean background services (Spotlight indexing off, idle agents disabled)
+###############################################################################
+
+source "${DOTFILES:-$HOME/.dotfiles}/macos/lean.sh"
 
 ###############################################################################
 # Restart affected apps

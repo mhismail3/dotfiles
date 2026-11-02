@@ -82,7 +82,8 @@ The `.macos` script automates these System Settings:
 | Display | Night Shift off, auto-brightness off |
 | Finder | Show hidden files, extensions, path bar; column view; folders first |
 | Keyboard | Fast repeat (2/15), no press-and-hold, full keyboard nav |
-| Spotlight | Only indexes: Apps, System Prefs, Directories, Documents |
+| Spotlight | Indexing off on all volumes (`macos/lean.sh`); search categories trimmed |
+| Background services | Siri, Folder Actions, Script Menu, MDM enroll agents, Time Machine off; reduced motion/transparency (`macos/lean.sh`) |
 | Screen Time | Disabled |
 | Privacy | Analytics off, ad tracking off, crash reports off |
 | Security | Password required immediately on wake |
