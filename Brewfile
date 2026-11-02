@@ -1,4 +1,4 @@
-# Brewfile — mac-server (M5 Max MacBook Pro)
+# Brewfile — mac-mini (M4 Mac mini, headless server)
 # Install: brew bundle --file=~/.dotfiles/Brewfile
 
 ###############################################################################
@@ -63,7 +63,7 @@ cask "ghostty"
 cask "google-chrome"
 cask "db-browser-for-sqlite"
 cask "docker"
-cask "container"
+brew "container"           # Apple Linux containers (now a formula)
 
 ###############################################################################
 # Apps — AI
@@ -71,7 +71,7 @@ cask "container"
 
 cask "claude-code"
 cask "codex"
-cask "agent-browser"
+brew "agent-browser"       # now a formula
 brew "ollama"
 
 ###############################################################################
