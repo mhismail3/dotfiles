@@ -1,92 +1,27 @@
-# Brewfile — mac-mini (M4 Mac mini, headless server)
+# Brewfile — test-host (headless M4 Mac mini that runs builds and tests)
 # Install: brew bundle --file=~/.dotfiles/Brewfile
+#
+# Deliberately small. Project toolchains (Node, xcodegen) are pinned and
+# installed by each repo itself, e.g. tron's scripts/install-ci-tools.sh.
 
-###############################################################################
-# Taps
-###############################################################################
+tap "cirruslabs/cli"
 
-tap "mhismail3/tools"
-
-###############################################################################
-# CLI — Core
-###############################################################################
-
+# Core CLI
 brew "coreutils"
-brew "findutils"
-brew "gnu-sed"
-brew "gawk"
-brew "grep"
-brew "curl"
-brew "openssh"
-brew "websocat"
-
-###############################################################################
-# CLI — Development
-###############################################################################
-
 brew "git"
 brew "git-lfs"
 brew "gh"
 brew "jq"
-brew "yq"
 brew "tmux"
-brew "ast-grep"
-brew "mas"
-brew "xcodegen"
+brew "uv"                     # Python interpreters/venvs for repo scripts
 
-###############################################################################
-# CLI — Shell
-###############################################################################
+# Xcode + simulator runtimes, installed headlessly
+brew "xcodes"
+brew "aria2"                  # faster xcodes downloads
 
-brew "starship"
-brew "zsh-autosuggestions"
-brew "zsh-completions"
+# Isolation for test runs
+brew "cirruslabs/cli/tart"    # macOS/Linux VMs (Apple limits macOS guests to 2)
 
-###############################################################################
-# Languages & Runtimes
-###############################################################################
-
-brew "uv"                   # Python (primary — manages interpreters + venvs)
-brew "python@3.12"          # Python for Codex portable tooling (tomllib)
-brew "rustup-init"          # Rust toolchain
-brew "oven-sh/bun/bun"      # Bun (fast JS runtime)
-brew "nvm"                  # Node version manager
-brew "rbenv"                # Ruby version manager
-brew "ruby-build"           # rbenv plugin to install Ruby versions
-
-###############################################################################
-# Apps — Development
-###############################################################################
-
-cask "cursor"
-cask "ghostty"
-cask "google-chrome"
-cask "db-browser-for-sqlite"
-cask "docker"
-brew "container"           # Apple Linux containers (now a formula)
-
-###############################################################################
-# Apps — AI
-###############################################################################
-
-cask "claude-code"
-cask "codex"
-brew "agent-browser"       # now a formula
-brew "ollama"
-
-###############################################################################
-# Apps — Remote Access & Networking
-###############################################################################
-
-cask "tailscale-app"
-cask "rustdesk"
-cask "private-internet-access"
-
-###############################################################################
-# Apps — Cloud Storage & Services
-###############################################################################
-
-cask "synology-drive"
-cask "google-drive"
-brew "googleworkspace-cli"
-brew "mhismail3/tools/tron-twitter"
+# Networking — open-source tailscaled runs as a boot daemon and is the
+# macOS variant that supports Tailscale SSH server
+brew "tailscale"

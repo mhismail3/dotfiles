@@ -1,16 +1,20 @@
 #!/usr/bin/env zsh
 
-# setup.sh — Bootstrap mac-server from scratch
+# setup.sh — Bootstrap test-host (headless M4 Mac mini for builds/tests)
 # Run: ~/.dotfiles/setup.sh [--reset]
 #
 # Default mode: skip what's already done (safe to re-run)
 # --reset mode: force re-apply everything to match dotfiles
+#
+# Pins (keep in sync with tron/config/ci-toolchain.env):
+XCODE_VERSION="${XCODE_VERSION:-26.6}"
+IOS_RUNTIME="${IOS_RUNTIME:-26.5}"
 
 set -o pipefail
 
 DOTFILES="$HOME/.dotfiles"
 GITHUB_USER="mhismail3"
-DOTFILES_BRANCH="${DOTFILES_BRANCH:-mac-mini}"
+DOTFILES_BRANCH="${DOTFILES_BRANCH:-test-host}"
 RESET=false
 
 # Parse args
@@ -69,11 +73,12 @@ symlink() {
     ln -s "$src" "$dst" && echo "  Linked: $dst -> $src"
 }
 
+
 ###############################################################################
 # Step 1: Xcode Command Line Tools
 ###############################################################################
 
-step_xcode() {
+step_clt() {
     info "Xcode Command Line Tools"
     if xcode-select -p &>/dev/null; then
         success "Already installed"
@@ -91,20 +96,14 @@ step_xcode() {
 
 step_homebrew() {
     info "Homebrew"
-
-    if [[ $(uname -m) == "arm64" ]]; then
-        HOMEBREW_PREFIX="/opt/homebrew"
-    else
-        HOMEBREW_PREFIX="/usr/local"
-    fi
-
+    HOMEBREW_PREFIX="/opt/homebrew"
+    [[ $(uname -m) == "arm64" ]] || HOMEBREW_PREFIX="/usr/local"
     if [[ ! -f "$HOMEBREW_PREFIX/bin/brew" ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" </dev/tty
         success "Installed"
     else
         success "Already installed"
     fi
-
     eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
     brew update || warn "Update failed (continuing)"
 }
@@ -131,23 +130,11 @@ step_dotfiles() {
 
 step_packages() {
     info "Installing packages from Brewfile"
-    sudo -v < /dev/tty 2>/dev/null || sudo -v
-    (while true; do sudo -n true; sleep 30; kill -0 "$$" 2>/dev/null || exit; done) &
-    local keepalive=$!
-
     if [[ "$RESET" == "true" ]]; then
-        # Force reinstall/upgrade everything
         brew bundle --file="$DOTFILES/Brewfile" --force
     else
         brew bundle --file="$DOTFILES/Brewfile" --no-upgrade
     fi
-    kill "$keepalive" 2>/dev/null || true
-
-    # Fix zsh compinit permissions
-    local dirs=("$HOMEBREW_PREFIX/share" "$HOMEBREW_PREFIX/share/zsh" "$HOMEBREW_PREFIX/share/zsh/site-functions" "$HOMEBREW_PREFIX/share/zsh-completions")
-    for d in "${dirs[@]}"; do
-        [[ -d "$d" ]] && chmod go-w "$d" 2>/dev/null || true
-    done
     success "Packages installed"
 }
 
@@ -161,69 +148,12 @@ step_symlinks() {
     symlink "$DOTFILES/git/.gitconfig"         "$HOME/.gitconfig"
     symlink "$DOTFILES/git/.gitignore_global"  "$HOME/.gitignore_global"
     symlink "$DOTFILES/tmux/.tmux.conf"        "$HOME/.tmux.conf"
-    symlink "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
-    symlink "$DOTFILES/ghostty/config"         "$HOME/.config/ghostty/config"
+    mkdir -p "$HOME/Workspace" "$HOME/.local/bin"
     success "Symlinks created"
 }
 
 ###############################################################################
-# Step 6: SSH key
-###############################################################################
-
-step_ssh() {
-    info "SSH key"
-    local key="$HOME/.ssh/id_ed25519"
-    mkdir -p "$HOME/.ssh" && chmod 700 "$HOME/.ssh"
-
-    if [[ -f "$key" ]] && [[ "$RESET" != "true" ]]; then
-        success "Key already exists"
-        return 0
-    fi
-
-    if [[ -f "$key" ]] && [[ "$RESET" == "true" ]]; then
-        success "Key already exists (keeping existing key)"
-        return 0
-    fi
-
-    if ! confirm "Generate SSH key?" "y"; then
-        echo "  Skipped"
-        return 0
-    fi
-
-    ssh-keygen -t ed25519 -C "mhismail3@gmail.com" -f "$key" </dev/tty
-    eval "$(ssh-agent -s)" > /dev/null
-    ssh-add --apple-use-keychain "$key" 2>/dev/null || ssh-add "$key"
-
-    if [[ ! -f "$HOME/.ssh/config" ]] || [[ "$RESET" == "true" ]]; then
-        cat > "$HOME/.ssh/config" << 'EOF'
-Host *
-    IgnoreUnknown UseKeychain,AddKeysToAgent
-    AddKeysToAgent yes
-    UseKeychain yes
-    IdentityFile ~/.ssh/id_ed25519
-
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_ed25519
-EOF
-        chmod 600 "$HOME/.ssh/config"
-    fi
-
-    chmod 600 "$key"
-    chmod 644 "$key.pub"
-    pbcopy < "$key.pub"
-    echo ""
-    echo "  Public key copied to clipboard!"
-    echo "  Add to GitHub: https://github.com/settings/keys"
-    echo ""
-    echo -n "  Press Enter after adding..."
-    read </dev/tty
-    success "SSH key configured"
-}
-
-###############################################################################
-# Step 7: GitHub CLI auth
+# Step 6: GitHub CLI auth + Git LFS
 ###############################################################################
 
 step_gh_auth() {
@@ -231,239 +161,73 @@ step_gh_auth() {
     if gh auth status &>/dev/null && [[ "$RESET" != "true" ]]; then
         success "Already authenticated"
     else
-        echo "  This sets up git credential helper for HTTPS."
+        echo "  Sets up the git credential helper for HTTPS clones."
         gh auth login </dev/tty
+        gh auth setup-git
         success "Authenticated"
     fi
-
-    # Git LFS (always safe to re-run)
-    if command -v git-lfs &>/dev/null; then
-        git lfs install --system 2>/dev/null || git lfs install
-        success "Git LFS configured"
-    fi
+    git lfs install 2>/dev/null && success "Git LFS configured"
 }
 
 ###############################################################################
-# Step 8: Shell setup
+# Step 7: Xcode + iOS simulator runtime
 ###############################################################################
 
-step_shell() {
-    info "Shell"
-    if [[ "$SHELL" != *"zsh"* ]]; then
-        chsh -s "$(which zsh)" || warn "Failed to change shell"
-        success "Zsh set as default"
+step_xcode() {
+    info "Xcode $XCODE_VERSION + iOS $IOS_RUNTIME runtime"
+    local want="/Applications/Xcode.app"
+    if [[ -d "$want" ]] && /usr/bin/xcodebuild -version 2>/dev/null | grep -qx "Xcode $XCODE_VERSION"; then
+        success "Xcode $XCODE_VERSION already installed"
     else
-        success "Zsh already default"
+        echo "  xcodes needs your Apple ID once (stored in Keychain)."
+        xcodes install "$XCODE_VERSION" --experimental-unxip --directory /Applications </dev/tty || \
+            { warn "xcodes install failed; install Xcode $XCODE_VERSION manually"; return 0; }
+        local installed
+        installed="$(ls -d /Applications/Xcode-"$XCODE_VERSION"*.app 2>/dev/null | head -1)"
+        [[ -n "$installed" && ! -e "$want" ]] && sudo mv "$installed" "$want"
     fi
+    sudo xcode-select -s "$want/Contents/Developer"
+    sudo xcodebuild -license accept
+    sudo xcodebuild -runFirstLaunch
+    sudo DevToolsSecurity -enable >/dev/null 2>&1 || true
+    sudo dseditgroup -o edit -a "$(whoami)" -t user _developer 2>/dev/null || true
 
-    mkdir -p "$HOME/Workspace" "$HOME/.local/bin"
-    success "Directories created"
-}
-
-###############################################################################
-# Step 9: Language runtimes
-###############################################################################
-
-step_languages() {
-    info "Language runtimes"
-
-    # Rust
-    if [[ ! -d "$HOME/.rustup" ]] && command -v rustup-init &>/dev/null; then
-        rustup-init -y --no-modify-path || warn "Rust install failed"
-        success "Rust installed"
-    elif [[ -d "$HOME/.rustup" ]]; then
-        if [[ "$RESET" == "true" ]]; then
-            rustup update 2>/dev/null || true
-            success "Rust updated"
-        else
-            success "Rust already installed"
-        fi
-    fi
-
-    # Node (via nvm)
-    export NVM_DIR="$HOME/.nvm"
-    mkdir -p "$NVM_DIR"
-    if [[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ]]; then
-        source "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
-        if ! command -v node &>/dev/null; then
-            nvm install --lts --latest-npm 2>/dev/null && \
-                nvm alias default "lts/*" >/dev/null 2>&1
-            success "Node LTS installed"
-        elif [[ "$RESET" == "true" ]]; then
-            nvm install --lts --latest-npm --reinstall-packages-from=current 2>/dev/null && \
-                nvm alias default "lts/*" >/dev/null 2>&1
-            success "Node LTS updated"
-        else
-            success "Node already installed ($(node -v))"
-        fi
-    fi
-
-    # Ruby (via rbenv)
-    if command -v rbenv &>/dev/null; then
-        success "rbenv available"
-    fi
-
-    # Python
-    if command -v uv &>/dev/null; then
-        success "uv available (Python managed via uv)"
-    fi
-
-    success "Languages configured"
-}
-
-###############################################################################
-# Step 10: Claude Code
-###############################################################################
-
-step_claude() {
-    info "Claude Code"
-    if ! command -v claude &>/dev/null; then
-        warn "Claude Code not installed yet (will be available after Brewfile)"
-        return 0
-    fi
-
-    local src="$DOTFILES/claude"
-    local dst="$HOME/.claude"
-    mkdir -p "$dst"
-
-    [[ -f "$src/CLAUDE.md" ]]     && symlink "$src/CLAUDE.md"     "$dst/CLAUDE.md"
-    [[ -f "$src/settings.json" ]] && symlink "$src/settings.json" "$dst/settings.json"
-    [[ -f "$src/LEDGER.jsonl" ]]  && symlink "$src/LEDGER.jsonl"  "$dst/LEDGER.jsonl"
-    [[ -d "$src/skills" ]]        && {
-        if [[ "$RESET" == "true" ]] || [[ ! -L "$dst/skills" ]]; then
-            [[ -L "$dst/skills" ]] && rm "$dst/skills"
-            [[ -d "$dst/skills" ]] && rm -rf "$dst/skills"
-            ln -s "$src/skills" "$dst/skills" && echo "  Linked: skills/"
-        else
-            echo "  Already linked: skills/"
-        fi
-    }
-
-    success "Claude Code configured"
-}
-
-###############################################################################
-# Step 11: Codex
-###############################################################################
-
-codex_python() {
-    local candidates=(
-        "$HOMEBREW_PREFIX/bin/python3.12"
-        "$HOMEBREW_PREFIX/bin/python3"
-        "/opt/homebrew/bin/python3.12"
-        "/opt/homebrew/bin/python3"
-        "/usr/local/bin/python3"
-        "/usr/bin/python3"
-    )
-    local py
-    for py in "${candidates[@]}"; do
-        if [[ -x "$py" ]] && "$py" -c 'import tomllib' >/dev/null 2>&1; then
-            echo "$py"
-            return 0
-        fi
-    done
-    return 1
-}
-
-codex_portable_remote() {
-    local icloud="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Documents"
-    if [[ -d "$icloud" ]]; then
-        echo "$icloud/CodexPortable"
+    if xcrun simctl list runtimes 2>/dev/null | grep -q "iOS $IOS_RUNTIME"; then
+        success "iOS $IOS_RUNTIME runtime present"
     else
-        echo "$HOME/Documents/CodexPortable"
+        xcodebuild -downloadPlatform iOS -buildVersion "$IOS_RUNTIME" || \
+            xcodes runtimes install "iOS $IOS_RUNTIME" || warn "Install iOS $IOS_RUNTIME runtime manually"
     fi
-}
-
-step_codex() {
-    info "Codex"
-
-    if command -v codex &>/dev/null; then
-        success "Codex CLI available"
-    else
-        warn "Codex CLI not found yet (should be installed by Brewfile)"
-    fi
-
-    local src="$DOTFILES/codex/portable"
-    local dst="$HOME/.codex/portable"
-    mkdir -p "$dst"
-
-    if [[ -f "$src/codex_portable.py" ]]; then
-        cp "$src/codex_portable.py" "$dst/codex_portable.py"
-        chmod +x "$dst/codex_portable.py"
-        echo "  Installed: $dst/codex_portable.py"
-    else
-        warn "Missing $src/codex_portable.py"
-        return 0
-    fi
-
-    [[ -f "$src/README.md" ]] && cp "$src/README.md" "$dst/README.md"
-
-    local py
-    if ! py="$(codex_python)"; then
-        warn "No Python with tomllib found; install python@3.12 and re-run setup"
-        return 0
-    fi
-
-    local remote
-    remote="$(codex_portable_remote)"
-    "$py" "$dst/codex_portable.py" configure --remote "$remote" --create
-
-    if [[ -d "$remote/current" ]]; then
-        echo ""
-        echo "  Codex portable backup found at:"
-        echo "    $remote/current"
-        echo ""
-        if confirm "Pull Codex config from this backup now?" "n"; then
-            "$py" "$dst/codex_portable.py" sync-pull --yes
-            "$py" "$dst/codex_portable.py" doctor --verify-remote || true
-        else
-            echo "  Skipped. Pull later with:"
-            echo "    ~/.codex/portable/codex_portable.py sync-pull --yes"
-        fi
-    else
-        warn "No Codex portable backup found yet at $remote/current"
-        echo "  After configuring Codex on one machine, push a backup with:"
-        echo "    ~/.codex/portable/codex_portable.py sync-push"
-    fi
-
-    success "Codex portable tooling configured"
+    success "Xcode ready: $(xcodebuild -version | head -1)"
 }
 
 ###############################################################################
-# Step 12: Ollama
+# Step 8: Tailscale (system daemon, survives logout)
 ###############################################################################
 
-step_ollama() {
-    info "Ollama"
-    if command -v ollama &>/dev/null; then
-        brew services start ollama 2>/dev/null || true
-        success "Ollama installed and set to auto-start"
+step_tailscale() {
+    info "Tailscale"
+    sudo tailscaled install-system-daemon 2>/dev/null || true
+    sleep 2
+    if tailscale status &>/dev/null; then
+        success "Already on the tailnet as $(tailscale status --self --json 2>/dev/null | jq -r '.Self.DNSName' 2>/dev/null)"
     else
-        warn "Ollama not found"
+        echo "  Opens a login URL; sign in with the same tailnet as the main Mac."
+        sudo tailscale up --ssh --hostname "${HOST_NAME:-tron-test-mini}"
+        success "Joined tailnet"
     fi
 }
 
 ###############################################################################
-# Step 13: macOS preferences
+# Step 9: macOS preferences (headless, always-on, lean)
 ###############################################################################
 
 step_macos() {
     info "macOS preferences"
-    if [[ ! -f "$DOTFILES/macos/.macos" ]]; then
-        warn ".macos not found"
-        return 1
-    fi
-
-    if [[ "$RESET" == "true" ]]; then
-        echo "  Reset mode: re-applying all macOS preferences."
+    if [[ "$RESET" == "true" ]] || confirm "Apply macOS preferences (hostname, SSH, power, lean services)?" "y"; then
         source "$DOTFILES/macos/.macos"
     else
-        echo "  This will set system preferences and restart Finder/Dock."
-        if confirm "Apply macOS preferences?" "n"; then
-            source "$DOTFILES/macos/.macos"
-        else
-            echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
-        fi
+        echo "  Skipped. Run later: source ~/.dotfiles/macos/.macos"
     fi
 }
 
@@ -473,62 +237,24 @@ step_macos() {
 
 main() {
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  mac-server setup"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "  test-host setup — $( [[ "$RESET" == "true" ]] && echo RESET || echo normal ) mode"
+    echo "  Xcode $XCODE_VERSION, iOS runtime $IOS_RUNTIME, host ${HOST_NAME:-tron-test-mini}"
     echo ""
-    if [[ "$RESET" == "true" ]]; then
-        echo "  MODE: RESET — force re-apply everything to match dotfiles"
-    else
-        echo "  MODE: Normal — skip what's already done"
-    fi
-    echo "  You'll be prompted before each step."
-    echo ""
+    confirm "Start?" "y" || { echo "Aborted."; exit 0; }
 
-    if ! confirm "Start?" "y"; then
-        echo "Aborted."
-        exit 0
-    fi
-
-    step_xcode
+    step_clt
     step_homebrew
     step_dotfiles
     step_packages
     step_symlinks
-    step_ssh
     step_gh_auth
-    step_shell
-    step_languages
-    step_claude
-    step_codex
-    step_ollama
+    step_xcode
+    step_tailscale
     step_macos
 
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  Done!"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  Next:"
-    echo "    1. Open a new terminal (or: exec zsh)"
-    echo "    2. Logout/restart for macOS settings"
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "  APP LOGINS — Sign in to these manually"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo "  [ ] Google Chrome — sign in to sync bookmarks/extensions/passwords"
-    echo "  [ ] Tailscale — sign in to link this machine to your tailnet"
-    echo "  [ ] Synology Drive — connect to NAS (server address + credentials)"
-    echo "  [ ] Google Drive — sign in to Google account"
-    echo "  [ ] Private Internet Access — sign in with PIA credentials"
-    echo "  [ ] Cursor — sign in for AI features / settings sync"
-    echo "  [ ] RustDesk — set up password and ID for remote access"
-    echo "  [ ] Claude Code — run 'claude' to authenticate (browser-based)"
-    echo "  [ ] Codex — open Codex.app or run 'codex' to authenticate"
-    echo "  [ ] Codex Portable — pull/push with ~/.codex/portable/codex_portable.py"
-    echo "  [ ] Docker Desktop — enable 'Start Docker Desktop when you sign in'"
-    echo "      in Docker Desktop > Settings > General, then optionally log in"
+    echo "  Done. Restart once so auto-login, power and lean settings take effect."
+    echo "  Then from the main Mac:  ssh $(whoami)@${HOST_NAME:-tron-test-mini}"
     echo ""
 }
 

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-# .macos — System preferences for server-desktop (Mac Mini / Mac Studio)
+# .macos — System preferences for test-host (headless build/test Mac mini)
 # Run: source ~/.dotfiles/macos/.macos
+# Only what an unattended build box needs: name, remote access, never sleep,
+# auto-login (simulators and UI tests need a GUI session), no update surprises,
+# and lean background services.
 
 osascript -e 'tell application "System Settings" to quit' 2>/dev/null || true
 
@@ -9,277 +12,73 @@ sudo -v < /dev/tty
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 MACOS_USER="${MACOS_USER:-$(whoami)}"
+HOST_NAME="${HOST_NAME:-tron-test-mini}"
 
 ###############################################################################
-# Computer Name
+# Computer name
 ###############################################################################
 
-echo "Setting computer name to server-desktop..."
-sudo scutil --set ComputerName "server-desktop"
-sudo scutil --set HostName "server-desktop"
-sudo scutil --set LocalHostName "server-desktop"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smbd.plist NetBIOSName -string "server-desktop"
+echo "Setting computer name to $HOST_NAME..."
+sudo scutil --set ComputerName "$HOST_NAME"
+sudo scutil --set HostName "$HOST_NAME"
+sudo scutil --set LocalHostName "$HOST_NAME"
 
 ###############################################################################
-# Remote Access (SSH + Screen Sharing + Remote Management)
+# Remote access: SSH + Screen Sharing (for the odd GUI prompt)
 ###############################################################################
 
 echo "Enabling remote access..."
-
 sudo systemsetup -setremotelogin on 2>/dev/null || \
     echo "  Enable manually: System Settings > General > Sharing > Remote Login"
-
 sudo dseditgroup -o create -q com.apple.access_ssh 2>/dev/null || true
 sudo dseditgroup -o edit -a "$MACOS_USER" -t user com.apple.access_ssh 2>/dev/null || true
-
-sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || \
-    echo "  Enable manually: System Settings > General > Sharing > Screen Sharing"
-
-if [[ -f "/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart" ]]; then
-    sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart \
-        -activate -configure -access -on \
-        -restart -agent -privs -all 2>/dev/null || \
-        echo "  Enable manually: System Settings > General > Sharing > Remote Management"
-fi
+sudo launchctl enable system/com.apple.screensharing 2>/dev/null || true
+sudo launchctl bootstrap system /System/Library/LaunchDaemons/com.apple.screensharing.plist 2>/dev/null || true
 
 ###############################################################################
-# Power Management (always-on headless server)
+# Power: always on, recover by itself
 ###############################################################################
 
 echo "Configuring power management..."
-
-sudo pmset -a sleep 0              # Never sleep
-sudo pmset -a displaysleep 0       # Never turn off display (headless, no display)
-sudo pmset -a disksleep 0          # Never spin down disks
-sudo pmset -a hibernatemode 0      # No hibernation
-sudo pmset -a standby 0            # No deep sleep
-sudo pmset -a womp 1               # Wake on LAN
-sudo pmset -a tcpkeepalive 1       # Keep TCP connections alive
-sudo pmset -a ttyskeepawake 1      # SSH sessions prevent sleep
-sudo pmset -a powernap 1           # Background tasks during sleep (safety net)
-sudo pmset -a proximitywake 0      # No random wakes from iPhone nearby
-sudo pmset -a autorestart 1        # Restart after power failure
-
-###############################################################################
-# Auto-Restart on Freeze
-###############################################################################
-
-echo "Enabling auto-restart on freeze..."
+sudo pmset -a sleep 0 displaysleep 0 disksleep 0
+sudo pmset -a hibernatemode 0 standby 0 powernap 0 proximitywake 0
+sudo pmset -a womp 1 tcpkeepalive 1 ttyskeepawake 1 autorestart 1
 sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
 ###############################################################################
-# Auto-Login
+# Auto-login (requires FileVault off)
 ###############################################################################
 
 echo "Configuring auto-login for $MACOS_USER..."
 sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser -string "$MACOS_USER"
+defaults write com.apple.screensaver idleTime -int 0
+defaults -currentHost write com.apple.screensaver idleTime -int 0
 
 ###############################################################################
-# UI/UX
+# Updates: notify only — never move Xcode or macOS under a running test lane
 ###############################################################################
 
-echo "Configuring UI..."
+echo "Configuring updates (check only, never auto-install)..."
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool false
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -bool false
+sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
+sudo defaults write /Library/Preferences/com.apple.commerce AutoUpdate -bool false
+defaults write com.apple.commerce AutoUpdate -bool false
 
-defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+###############################################################################
+# Minimal UI/Finder hygiene
+###############################################################################
+
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-defaults write com.apple.LaunchServices LSQuarantine -bool false
-
-# Disable autocorrect/smart text
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-
-###############################################################################
-# Dock
-###############################################################################
-
-echo "Configuring Dock..."
-
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.3
-
-###############################################################################
-# Desktop & Window Manager
-###############################################################################
-
-echo "Configuring desktop..."
-
-defaults write com.apple.WindowManager GloballyEnabled -bool false
-defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
-defaults write com.apple.WindowManager StandardHideWidgets -int 1
-defaults write com.apple.WindowManager StageManagerHideWidgets -int 1
-
-###############################################################################
-# Siri
-###############################################################################
-
-echo "Disabling Siri..."
-
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
+defaults write com.apple.ScreenTime Enabled -bool false 2>/dev/null || true
+defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
 defaults write com.apple.assistant.support "Assistant Enabled" -bool false
 defaults write com.apple.Siri StatusMenuVisible -bool false
 defaults write com.apple.Siri UserHasDeclinedEnable -bool true
-# assistantd / Siri.agent are disabled in lean.sh
-
-###############################################################################
-# Menu Bar
-###############################################################################
-
-echo "Configuring menu bar..."
-
-# Hide Spotlight icon from menu bar
-defaults -currentHost write com.apple.Spotlight MenuItemHidden -int 1
-
-# Clock: 24-hour, show date, show seconds
-defaults write com.apple.menuextra.clock DateFormat -string "EEE d MMM HH:mm:ss"
-defaults write com.apple.menuextra.clock Show24Hour -bool true
-defaults write com.apple.menuextra.clock ShowDate -int 1
-defaults write com.apple.menuextra.clock ShowSeconds -bool true
-
-###############################################################################
-# Finder
-###############################################################################
-
-echo "Configuring Finder..."
-
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
-defaults write com.apple.finder NewWindowTarget -string "PfLo"
-defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Downloads/"
-defaults write com.apple.finder FXDefaultSearchScope -string "SCev"
-defaults write com.apple.finder _FXSortFoldersFirst -bool true
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool true
-defaults write com.apple.finder FinderSpawnTab -bool true
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
-defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
-defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-chflags nohidden ~/Library 2>/dev/null
-
-###############################################################################
-# Keyboard
-###############################################################################
-
-echo "Configuring keyboard..."
-
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
-
-###############################################################################
-# Spotlight (only index useful categories)
-###############################################################################
-
-echo "Configuring Spotlight..."
-
-defaults write com.apple.spotlight orderedItems -array \
-    '{"enabled" = 1;"name" = "APPLICATIONS";}' \
-    '{"enabled" = 1;"name" = "SYSTEM_PREFS";}' \
-    '{"enabled" = 1;"name" = "DIRECTORIES";}' \
-    '{"enabled" = 1;"name" = "DOCUMENTS";}' \
-    '{"enabled" = 0;"name" = "FONTS";}' \
-    '{"enabled" = 0;"name" = "MESSAGES";}' \
-    '{"enabled" = 0;"name" = "CONTACT";}' \
-    '{"enabled" = 0;"name" = "EVENT_TODO";}' \
-    '{"enabled" = 0;"name" = "IMAGES";}' \
-    '{"enabled" = 0;"name" = "BOOKMARKS";}' \
-    '{"enabled" = 0;"name" = "MUSIC";}' \
-    '{"enabled" = 0;"name" = "MOVIES";}' \
-    '{"enabled" = 0;"name" = "PRESENTATIONS";}' \
-    '{"enabled" = 0;"name" = "SPREADSHEETS";}' \
-    '{"enabled" = 0;"name" = "SOURCE";}' \
-    '{"enabled" = 0;"name" = "MENU_DEFINITION";}' \
-    '{"enabled" = 0;"name" = "MENU_OTHER";}' \
-    '{"enabled" = 0;"name" = "MENU_CONVERSION";}' \
-    '{"enabled" = 0;"name" = "MENU_EXPRESSION";}' \
-    '{"enabled" = 0;"name" = "PDF";}' \
-    '{"enabled" = 0;"name" = "MENU_WEBSEARCH";}' \
-    '{"enabled" = 0;"name" = "MENU_SPOTLIGHT_SUGGESTIONS";}'
-
-###############################################################################
-# Screen Time
-###############################################################################
-
-echo "Disabling Screen Time..."
-
-defaults write com.apple.ScreenTime Enabled -bool false 2>/dev/null || true
-
-###############################################################################
-# Privacy — Minimize data sharing
-###############################################################################
-
-echo "Minimizing analytics and tracking..."
-
-# Disable analytics
-defaults write com.apple.CrashReporter DialogType -string "none"
-defaults write com.apple.appleseed.FeedbackAssistant Autogather -bool false
-sudo defaults write /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist AutoSubmit -bool false 2>/dev/null || true
-
-# Disable personalized ads
-defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
-defaults write com.apple.AdLib allowIdentifierForAdvertising -bool false
-
-###############################################################################
-# Security
-###############################################################################
-
-echo "Configuring security..."
-
-defaults write com.apple.screensaver askForPassword -int 1
-defaults write com.apple.screensaver askForPasswordDelay -int 0
-
-###############################################################################
-# Software Updates
-###############################################################################
-
-echo "Configuring software updates (download only, no auto-install)..."
-
-defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-defaults write com.apple.SoftwareUpdate AutomaticDownload -bool true
-defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -bool false
-defaults write com.apple.SoftwareUpdate AutomaticallyInstallMacOSUpdates -bool false
-defaults write com.apple.commerce AutoUpdate -bool true
-
-###############################################################################
-# Caps Lock -> Command
-###############################################################################
-
-echo "Remapping Caps Lock to Command..."
-
-KEYREMAP_PLIST="/Library/LaunchDaemons/com.local.KeyRemapping.plist"
-
-sudo tee "$KEYREMAP_PLIST" > /dev/null << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.local.KeyRemapping</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/hidutil</string>
-        <string>property</string>
-        <string>--set</string>
-        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-EOF
-
-sudo chown root:wheel "$KEYREMAP_PLIST"
-sudo chmod 644 "$KEYREMAP_PLIST"
-sudo launchctl bootstrap system "$KEYREMAP_PLIST" 2>/dev/null || true
-sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E3}]}'
 
 ###############################################################################
 # Lean background services (Spotlight indexing off, idle agents disabled)
@@ -287,131 +86,20 @@ sudo hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc"
 
 source "${DOTFILES:-$HOME/.dotfiles}/macos/lean.sh"
 
-###############################################################################
-# Restart affected apps
-###############################################################################
-
-echo "Restarting affected apps..."
-
-for app in "Finder" "Dock" "SystemUIServer" "ControlCenter" "WindowManager"; do
+for app in "Finder" "Dock" "SystemUIServer"; do
     killall "${app}" &>/dev/null || true
 done
 
-###############################################################################
-# MANUAL STEPS — DO THESE NOW
-###############################################################################
+cat <<EOF
 
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  MANUAL STEPS — DO THESE NOW"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "  1. DISABLE FILEVAULT (required for auto-login)"
-echo "     System Settings > Privacy & Security > FileVault > Turn Off"
-echo "     This may take a while to decrypt. Wait for it to complete."
-echo ""
-echo "  2. ENABLE AUTO-LOGIN"
-echo "     System Settings > Users & Groups > Login Options"
-echo "     Set 'Automatic Login' to your user."
-echo "     (Only appears after FileVault is off.)"
-echo ""
-echo "  3. VERIFY REMOTE LOGIN (SSH)"
-echo "     System Settings > General > Sharing > Remote Login"
-echo "     Ensure ON and your user is allowed."
-echo ""
-echo "  4. VERIFY SCREEN SHARING"
-echo "     System Settings > General > Sharing > Screen Sharing"
-echo "     Ensure ON."
-echo ""
-echo "  5. ENERGY SETTINGS"
-echo "     System Settings > Energy Saver"
-echo "     Turn ON 'Start up automatically after a power failure'"
-echo "     Turn ON 'Prevent your Mac from automatically sleeping when the display is off'"
-echo ""
-echo "  6. LOCK SCREEN"
-echo "     System Settings > Lock Screen"
-echo "     'Turn display off when inactive': Never (headless)"
-echo ""
-echo "  7. FIREWALL"
-echo "     System Settings > Network > Firewall"
-echo "     Enable and allow connections for:"
-echo "       - SSH (Remote Login)"
-echo "       - Screen Sharing"
-echo "       - RustDesk"
-echo "       - Tailscale"
-echo "       - Ollama (port 11434)"
-echo "       - Docker services"
-echo ""
-echo "  8. WI-FI / ETHERNET"
-echo "     System Settings > Wi-Fi"
-echo "     Join your home network and enable auto-join."
-echo ""
-echo "  9. FOCUS MODE (optional)"
-echo "      System Settings > Focus"
-echo "      Create a 'Server' focus mode that suppresses non-critical"
-echo "      notifications. Set it to activate automatically."
-echo ""
-echo "  10. LOCATION SERVICES"
-echo "      System Settings > Privacy & Security > Location Services"
-echo "      Disable or limit to only system services (Find My Mac)."
-echo ""
-echo "  11. FULL DISK ACCESS FOR AUTOMATION"
-echo "      System Settings > Privacy & Security > Full Disk Access"
-echo "      Add Terminal.app and/or Ghostty."
-echo ""
-echo "  12. STATIC IP / DHCP RESERVATION"
-echo "      On your router, assign a fixed IP to server-desktop's MAC address."
-echo ""
-echo "  13. TEST REMOTE ACCESS"
-echo "      After completing all steps and restarting:"
-echo "      a. From another device: ssh $MACOS_USER@server-desktop.local"
-echo "      b. Or: connect via RustDesk / Screen Sharing over Tailscale"
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  FUTURE ENHANCEMENTS — DO LATER"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "  MONITORING & NOTIFICATIONS"
-echo "    Set up health monitoring with ntfy.sh + healthchecks.io:"
-echo "    - Shell script checks disk/CPU/RAM every 5 min (LaunchAgent)"
-echo "    - Alerts via ntfy.sh push notifications to your phone"
-echo "    - Heartbeat to healthchecks.io (alerts if server goes fully down)"
-echo "    - Install ntfy app on phone, create free healthchecks.io account"
-echo ""
-echo "  BACKUPS"
-echo "    Time Machine to Synology NAS:"
-echo "    - Enable Time Machine service on Synology (DSM > Control Panel)"
-echo "    - On Mac: System Settings > General > Time Machine > Add Backup Disk"
-echo "    - Or: sudo tmutil setdestination /Volumes/YourTimeMachineShare"
-echo "    Consider also: restic to Backblaze B2 for offsite backup"
-echo ""
-echo "  SSH HARDENING (if exposing SSH outside Tailscale)"
-echo "    - Disable password auth: PasswordAuthentication no"
-echo "    - Disable root login: PermitRootLogin no"
-echo "    - Limit attempts: MaxAuthTries 3"
-echo "    - Edit /etc/ssh/sshd_config and restart sshd"
-echo ""
-echo "  SCHEDULED MAINTENANCE"
-echo "    Weekly LaunchAgent to run:"
-echo "    - brew update && brew upgrade && brew cleanup"
-echo "    - docker system prune -f"
-echo "    - Report results via ntfy"
-echo ""
-echo "  SYSTEM AUDIT / CHANGE TRACKING"
-echo "    Periodic snapshot script that diffs machine state:"
-echo "    - Brew packages & casks installed/removed"
-echo "    - Global npm/pip/cargo packages"
-echo "    - Login Items & Extensions"
-echo "    - LaunchAgents and LaunchDaemons"
-echo "    - /Applications contents"
-echo "    - TCC/Privacy permissions (Full Disk Access, Accessibility)"
-echo "    - Firewall rules and open ports"
-echo "    - Run via LaunchAgent, store diffs in ~/.local/audit/"
-echo ""
-echo "  THERMAL NOTE"
-echo "    Running with lid closed reduces airflow. Monitor temps under load:"
-echo "      sudo powermetrics --samplers smc -i 5000 -n 1 | grep -i temp"
-echo "    Consider propping the lid slightly open if thermals are an issue."
-echo ""
-echo "  After completing the manual steps above, RESTART to apply everything."
-echo ""
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MANUAL STEPS (once)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  1. FileVault OFF (System Settings > Privacy & Security), so auto-login works.
+  2. Users & Groups > Automatic login: $MACOS_USER (appears after FileVault off).
+  3. Do NOT sign in to iCloud/Apple Account at the OS level.
+  4. Ethernet preferred; reserve a DHCP address for $HOST_NAME on the router.
+  5. Restart, then from the main Mac: ssh $MACOS_USER@$HOST_NAME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
